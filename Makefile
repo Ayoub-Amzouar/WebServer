@@ -1,14 +1,19 @@
 NAME = webserv
 CC = c++ -std=c++98
 FLAGS = -Wall -Wextra -Werror
-RM = rm -rf 
-HEADERS = webserv.hpp
-SRC = parsing.hpp
+RM = rm -rf
+
+DIR_SRCS = ./srcs/
+
+HEADERS = ./headers/webserv.hpp
+SRC = parsing/parsing.cpp
+
+SRCS =			$(addprefix $(DIR_SRCS), $(SRC))
 
 all : $(NAME)
 
-$(NAME) : $(SRC) $(HEADERS)
-			@$(CC) $(FLAGS) $(SRC) -o $(NAME)
+$(NAME) : $(SRCS)  $(HEADERS)
+			@$(CC) $(FLAGS) $(SRCS) -o $(NAME)
 
 clean :
 
