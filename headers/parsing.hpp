@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:14:09 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/05/26 20:36:57 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/05/30 23:18:40 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,31 @@
 
 class Location
 {
-    std::map<std::string, std::string> attributes;
+    public :
+        static int location_count;
+        std::map<std::string, std::string> attributes;
 };
 
 class Server
 {
-    std::vector<Location> locations;
-    // std::string listen;
-    // std::string sever_name;
-    std::map<std::string, std::string> attributes;
+    public :
+        static int server_count;    
+        std::vector<Location> locations;
+        std::map<std::string, std::string> attributes;
 };
 
-class  Http{
-    
-    std::vector<Server> servers;
-    std::string error_pages;
+class  Http
+{
+    public :
+        static int http_count;    
+        std::vector<Server> servers;
+        std::map<std::string, std::string> attributes;
 };
 
 
 Http  parsing(char *str);
+void check_file(std::ifstream &fin);
+void syntax_error();
+std::map<std::string, std::string> extract_key_value(std::string line);
+
 #endif
