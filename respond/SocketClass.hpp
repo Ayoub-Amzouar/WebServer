@@ -4,9 +4,9 @@
 #include <netinet/in.h>
 
 /*
-	1) make accept independent function
-	2) write getters for your private attributes
-	3) write both send and receive functions
+	1) write both send and receive functions
+	2) make a structure for content-types
+	3) maybe constructor parameters can have a default value instead of always specify them
 */
 
 class 	ft_socket
@@ -25,6 +25,9 @@ public:
 	~ft_socket( void );
 
 	void	accept_connections( void );
+	
+	void	response( const std::string& );
+	char	*request( void );
 
 	int					getSockFd( void ) const;
 	int					getAcceptFd( void ) const;
