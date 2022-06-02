@@ -16,8 +16,19 @@ class 	ft_socket
 	struct sockaddr_in	server_addr;
 	struct sockaddr_in	client_addr;
 	socklen_t			addrlen;
+
+	ft_socket( void );
+	ft_socket( const ft_socket& );
+	ft_socket&	operator=( const ft_socket& );
 public:
 	ft_socket(int domain, int type, int protocol, in_port_t port, in_addr_t ip);
+	~ft_socket( void );
 
 	void	accept_connections( void );
+
+	int					getSockFd( void ) const;
+	int					getAcceptFd( void ) const;
+	struct sockaddr_in	getServerAddr( void ) const;
+	struct sockaddr_in	getClientAddr( void ) const;
+
 };
