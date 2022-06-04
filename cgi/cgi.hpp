@@ -6,19 +6,24 @@
 #include <fcntl.h>
 #include <fstream>
 #include <map>
-#include "status_code.hpp"
 
 struct Cgi
 {
 private:
-    std::string _path;
-    char **_env;
-    const StatusCode _status_code;
+    std::string     _path;
+    char**          _env;
+    std::string     _file;
+    bool            _error;
+
+private:
+    std::map<std::string, std::string> parse_cgi_output(void);
+    std::vector<std::string> parse_uri(std::string);
+    void error(std::string);
+    void fileInOut(std::string, std::string);
 
 public:
-
-    Cgi(std::string path, char *env[]);
-    int execute(char *args[]);
-    std::string code_and_reason(int code);
+    Cgi(std::string, char **);
+    int execute(char **, int );
 };
+
 #endif
