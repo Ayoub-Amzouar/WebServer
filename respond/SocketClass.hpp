@@ -2,6 +2,7 @@
 
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <string>
 
 /*
 	1) write both send and receive functions
@@ -21,13 +22,13 @@ class 	ft_socket
 	ft_socket( const ft_socket& );
 	ft_socket&	operator=( const ft_socket& );
 public:
-	ft_socket(int domain, int type, int protocol, in_port_t port, in_addr_t ip);
+	ft_socket(in_port_t port, in_addr_t ip);
 	~ft_socket( void );
 
 	void	accept_connections( void );
 	
-	void	response( const std::string& );
-	char	*request( void );
+	void		response( const std::string& );
+	std::string request( void );
 
 	int					getSockFd( void ) const;
 	int					getAcceptFd( void ) const;
