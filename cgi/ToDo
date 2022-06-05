@@ -1,9 +1,0 @@
-POST{
-    CONTENT_LENGTH:
-    When the method of POST is used to send information, this variable contains the number of characters. Servers typically do not send an end-of-file flag when they forward the information by using stdin. If needed, you can use the CONTENT_LENGTH value to determine the end of the input string.
-    Example: 7034
-
-    CONTENT_TYPE:
-    When information is sent with the method of POST, this variable contains the type of data included. You can create your own content type in the server configuration file and map it to a viewer.
-    Example: Application/x-www-form-urlencoded
-}
