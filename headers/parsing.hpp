@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:14:09 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/05/30 23:18:40 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/01 15:25:50 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ class  Http
 Http  parsing(char *str);
 void check_file(std::ifstream &fin);
 void syntax_error();
+void check_file_syntax();
 std::map<std::string, std::string> extract_key_value(std::string line);
+void check_map(std::pair<std::map<std::string, std::string>::iterator,bool> ret);
 
 #endif

@@ -10,12 +10,15 @@
 #include <netinet/in.h>
 #include <string.h>
 
+
 #define PORT 8080
 int main(int argc, char const *argv[])
 {
     int server_fd, new_socket; long valread;
     struct sockaddr_in address;
     int addrlen = sizeof(address);
+
+
     
      char *hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
     
