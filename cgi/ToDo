@@ -6,4 +6,7 @@ POST{
     CONTENT_TYPE:
     When information is sent with the method of POST, this variable contains the type of data included. You can create your own content type in the server configuration file and map it to a viewer.
     Example: Application/x-www-form-urlencoded
+
+    Location:
+    https://datatracker.ietf.org/doc/html/rfc2616#section-14.30
 }
