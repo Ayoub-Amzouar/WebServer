@@ -1,9 +1,16 @@
 #include "../../headers/webserv.hpp"
+#include <fcntl.h>
 
 
 ft_socket::ft_socket(in_port_t port, in_addr_t ip) : accept_fd()
 {
 	sock_fd = socket(PF_INET, SOCK_STREAM, 0);
+
+	if (fcntl(sock_fd, F_GETFL, O_NONBLOCK) < 0)
+	{
+		std::cerr << "error: fcntl failed\n"; 
+		return ;
+	}
 
 	server_addr.sin_family = PF_INET;
 	server_addr.sin_port = htons(port);
