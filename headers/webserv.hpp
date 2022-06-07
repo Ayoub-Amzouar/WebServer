@@ -25,7 +25,7 @@
 #include <fcntl.h>
 
 #include "parsing.hpp"
-#include "socket.hpp"
+#include "SocketClass.hpp"
 
 
 #define RED "\033[1;31m"
