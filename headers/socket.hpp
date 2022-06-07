@@ -1,8 +1,6 @@
 #pragma once
 
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <string>
+#include "webserv.hpp"
 
 /*
 	1) write both send and receive functions

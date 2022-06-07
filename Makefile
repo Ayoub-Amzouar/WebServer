@@ -6,7 +6,7 @@
 #    By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/04 13:00:30 by mel-hadj          #+#    #+#              #
-#    Updated: 2022/06/05 10:50:32 by mel-hadj         ###   ########.fr        #
+#    Updated: 2022/06/07 15:42:33 by mel-hadj         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ RM = rm -rf
 DIR_SRCS = ./srcs/
 
 HEADERS = ./headers/webserv.hpp
-SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp
+SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp respond/socket.cpp
 
 SRCS =			$(addprefix $(DIR_SRCS), $(SRC))
 

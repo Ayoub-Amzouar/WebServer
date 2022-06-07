@@ -1,6 +1,5 @@
-#include "SocketClass.hpp"
-#include <iostream>
-#include <unistd.h>
+#include "../../headers/webserv.hpp"
+
 
 ft_socket::ft_socket(in_port_t port, in_addr_t ip) : accept_fd()
 {

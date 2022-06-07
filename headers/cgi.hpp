@@ -1,9 +1,8 @@
 #ifndef _CGI_HPP_
 #define _CGI_HPP_
 
-#include <string>
-#include <unistd.h>
-#include <fcntl.h>
+#include "webserv.hpp"
+
 
 struct Cgi
 {
