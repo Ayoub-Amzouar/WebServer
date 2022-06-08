@@ -134,13 +134,13 @@ void Cgi::send_response(int fd)
     in.close();
 }
 
-int Cgi::GET(int fd)
+int Cgi::GET(std::string uri, int write_socket, std::string root)
 {
     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
 
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", "GET", true);
-    execute((parsed_uri.first).c_str(), body_file);
+    execute((root + parsed_uri.first).c_str(), "");
     int cgi_code = cgi_status_code();
     if (cgi_code == 0) // no status by cgi.
         generate_response(0);
@@ -150,15 +150,13 @@ int Cgi::GET(int fd)
     return 0;
 }
 
-int Cgi::POST(std::string uri, int write_socket, std::string body_file)
+int Cgi::POST(std::string uri, int write_socket, std::string body_file, std::string root)
 {
     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
 
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", "POST", true);
-    std::cout << parsed_uri.first << std::endl;
-    std::cout << parsed_uri.second << std::endl;
-    // execute((parsed_uri.first).c_str(), body_file);
+    execute((root + parsed_uri.first).c_str(), body_file);
     int cgi_code = cgi_status_code();
     if (cgi_code == 0) // no status by cgi.
         generate_response(0);

@@ -30,8 +30,8 @@ private:
 
 public:
     Cgi(std::string, char **);
-    int POST(std::string uri, int socket_write, std::string body_file);
-    int GET(int fd);
+    int POST(std::string uri, int socket_write, std::string body_file, std::string root);
+    int GET(std::string uri, int socket_write, std::string root);
     // std::string DELETE();
 };
 
