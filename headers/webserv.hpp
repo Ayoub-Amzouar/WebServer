@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:13:59 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/07 15:40:36 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/08 12:55:40 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <string>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sstream>
 
 #include "parsing.hpp"
 #include "socket.hpp"

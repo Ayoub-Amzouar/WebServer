@@ -10,16 +10,15 @@ int main(int argc, char **argv)
     if (argc > 1)
     {
         Http http = parsing(argv[1]);
-        // std::cout << http.servers[0].locations[0].attributes["path"] << std::endl;
+        Request request;
+        std::cout << http.servers[0].locations[0].attributes["path"] << std::endl;
         ft_socket sock(std::stoi(http.servers[0].attributes["listen"]), INADDR_ANY);
 
         while (1)
         {
             sock.accept_connections();
-            std::cout << RED << "\n######## connection has occurred ########" << RESET << std::endl;
-            ;
-
-            std::cout << sock.request() << std::endl;
+            std::cout << RESET << "\n######## connection established ########" << RESET << std::endl;
+            request.parse_request(sock.request());
             sock.response("");
         }
     }
