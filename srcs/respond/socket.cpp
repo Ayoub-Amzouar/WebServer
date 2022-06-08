@@ -51,7 +51,7 @@ std::string	ft_socket::request( void )
 	std::string	res;
 
 	/*ssize_t recv_val = */recv(accept_fd, buffer, 30000, 0);
-	res = buffer;
+	res = buffer;      
 
 	return (res);
 }
