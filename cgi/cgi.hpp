@@ -19,7 +19,7 @@ private:
 
 private:
     int     cgi_status_code(void);
-    int     execute(std::string, std::string);
+    int     execute(std::string);
     void    error(std::string);
     void    fileInOut(std::string, std::string);
     void    generate_response(int);

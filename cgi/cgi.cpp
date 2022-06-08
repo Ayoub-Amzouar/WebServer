@@ -71,7 +71,7 @@ std::map<std::string, std::string> Cgi::parse_cgi_output(void)
     return data;
 }
 
-int Cgi::execute(std::string cgi_file, std::string body_file)
+int Cgi::execute(std::string body_file)
 {
     if (fork() == 0)
     {
@@ -87,10 +87,9 @@ int Cgi::execute(std::string cgi_file, std::string body_file)
             dup2(fd, STDIN_FILENO);
         }
         dup2(fd, STDOUT_FILENO);
-        char *args[3];
+        char *args[2];
         args[0] = (char *)_path.c_str();
-        args[1] = (char *)cgi_file.c_str();
-        args[2] = NULL;
+        args[1] = NULL;
         execve(_path.c_str(), args, _env);
         error("path to cgi executable not correct.");
         exit(1);
@@ -140,7 +139,8 @@ int Cgi::GET(std::string uri, int write_socket, std::string root)
 
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", "GET", true);
-    execute((root + parsed_uri.first).c_str(), "");
+    setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
+    execute("");
     int cgi_code = cgi_status_code();
     if (cgi_code == 0) // no status by cgi.
         generate_response(0);
@@ -156,7 +156,8 @@ int Cgi::POST(std::string uri, int write_socket, std::string body_file, std::str
 
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", "POST", true);
-    execute((root + parsed_uri.first).c_str(), body_file);
+    setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
+    execute(body_file);
     int cgi_code = cgi_status_code();
     if (cgi_code == 0) // no status by cgi.
         generate_response(0);
