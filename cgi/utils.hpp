@@ -6,6 +6,7 @@
 #include <map>
 
 std::string status_line(int code);
+std::string content_type(std::string exten);
 bool doesFileExist (const std::string&);
 std::vector<std::string> parse_line(std::string str, std::string &delim);
 
@@ -18,4 +19,12 @@ public:
     std::string get_message(int code) const;
 };
 
+class ContentType
+{
+    std::map<std::string, std::string> _code;
+
+public:
+    ContentType();
+    std::string get_mime(std::string extension) const;
+};
 #endif

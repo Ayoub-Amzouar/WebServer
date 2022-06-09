@@ -21,6 +21,18 @@ std::string status_line(int code)
         return std::string();
 }
 
+std::string content_type(std::string exten)
+{
+    static const ContentType s;
+    std::string exist = s.get_mime(exten);
+    if (!exist.empty())
+    {
+        return exist;
+    }
+    else
+        return std::string();
+}
+
 bool doesFileExist(const std::string &name)
 {
     std::ifstream f(name.c_str());
@@ -94,4 +106,57 @@ std::string StatusCode::get_message(int code) const
         return exist->second;
     else
         return std::string();
+}
+std::string ContentType::get_mime(std::string extension) const
+{
+    std::map<std::string, std::string>::const_iterator end = _code.end();
+    std::map<std::string, std::string>::const_iterator exist;
+    exist = _code.find(extension);
+    if (exist != end)
+        return exist->second;
+    else
+        return std::string();
+}
+ContentType::ContentType()
+{
+    _code["txt"] = "text/plain";
+    _code["htm"] = "text/html";
+    _code["html"] = "text/html";
+    _code["php"] = "text/html";
+    _code["css"] = "text/css";
+    _code["js"] = "application/javascript";
+    _code["json"] = "application/json";
+    _code["xml"] = "application/xml";
+    _code["swf"] = "application/x-shockwave-flash";
+    _code["flv"] = "video/x-flv";
+    _code["png"] = "image/png";
+    _code["jpe"] = "image/jpeg";
+    _code["jpeg"] = "image/jpeg";
+    _code["jpg"] = "image/jpeg";
+    _code["gif"] = "image/gif";
+    _code["bmp"] = "image/bmp";
+    _code["ico"] = "image/vnd.microsoft.icon";
+    _code["tiff"] = "image/tiff";
+    _code["tif"] = "image/tiff";
+    _code["svg"] = "image/svg+xml";
+    _code["svgz"] = "image/svg+xml";
+    _code["zip"] = "application/zip";
+    _code["rar"] = "application/x-rar-compressed";
+    _code["exe"] = "application/x-msdownload";
+    _code["msi"] = "application/x-msdownload";
+    _code["cab"] = "application/vnd.ms-cab-compressed";
+    _code["mp3"] = "audio/mpeg";
+    _code["qt"] = "video/quicktime";
+    _code["mov"] = "video/quicktime";
+    _code["pdf"] = "application/pdf";
+    _code["psd"] = "image/vnd.adobe.photoshop";
+    _code["ai"] = "application/postscript";
+    _code["eps"] = "application/postscript";
+    _code["ps"] = "application/postscript";
+    _code["doc"] = "application/msword";
+    _code["rtf"] = "application/rtf";
+    _code["xls"] = "application/vnd.ms-excel";
+    _code["ppt"] = "application/vnd.ms-powerpoint";
+    _code["odt"] = "application/vnd.oasis.opendocument.text";
+    _code["ods"] = "application/vnd.oasis.opendocument.spreadsheet";
 }

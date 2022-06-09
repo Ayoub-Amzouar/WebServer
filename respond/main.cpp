@@ -22,6 +22,8 @@ int		main(int ac, char *av[], char *env[])
 	(void)av;
 
 	std::string cgiName("php-cgi");
+	std::string cgiExten(".php");
+
 	Cgi cgi(cgiName, env);
 	while (1)
 	{
