@@ -11,13 +11,12 @@ int main(int argc, char **argv)
     {
         Http http = parsing(argv[1]);
         Request request;
-        std::cout << http.servers[0].locations[0].attributes["path"] << std::endl;
         ft_socket sock(std::stoi(http.servers[0].attributes["listen"]), INADDR_ANY);
-
         while (1)
         {
             sock.accept_connections();
             std::cout << RESET << "\n######## connection established ########" << RESET << std::endl;
+            // std::cout << sock.request() <<std::endl;
             request.parse_request(sock.request());
             sock.response("");
         }
