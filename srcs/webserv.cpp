@@ -21,9 +21,9 @@ int main(int argc, char **argv)
 
             // std::cout << sock.request() << std::endl;
 			request = sock.request();
-			std::cerr << request << std::endl;
 			if (request != "NON")
 				sock.response("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!");
+			request.clear();
         }
     }
     else

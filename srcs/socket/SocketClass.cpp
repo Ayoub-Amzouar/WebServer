@@ -48,7 +48,6 @@ void	ft_socket::accept_connections( void )
 		ufd.events = POLLIN;
 		ufd.revents = 0;
 		ufds.push_back(ufd);
-		poll(&ufds[0], ufds.size(), -1);
 	}
 }
 
@@ -64,6 +63,7 @@ std::string	ft_socket::request( void )
 	size_t	i = 0;
 
 	if (!ufds.empty()) {
+		poll(&ufds[0], ufds.size(), -1);
 		while (i < ufds.size()) {
 			if (ufds[i].revents == POLLIN)
 			{
