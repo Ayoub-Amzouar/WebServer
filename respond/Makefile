@@ -1,6 +1,6 @@
 NAME = server
 
-SRC = main.cpp SocketClass.cpp ../cgi/cgi.cpp ../cgi/utils.cpp ../cgi/status_code.cpp
+SRC = main.cpp SocketClass.cpp ../cgi/cgi.cpp ../cgi/utils.cpp
 
 # FLAGS = -Wextra -Wall -Werror
 

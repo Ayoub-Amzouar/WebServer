@@ -16,6 +16,7 @@ private:
     std::string     _cgi_out_file;
     std::string     _response_file;
     bool            _error;
+    std::string     _file;
 
 private:
     int     cgi_status_code(void);

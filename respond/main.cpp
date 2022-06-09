@@ -21,16 +21,19 @@ int		main(int ac, char *av[], char *env[])
 	(void)ac;
 	(void)av;
 
+	std::string cgiName("php-cgi");
+	Cgi cgi(cgiName, env);
 	while (1)
 	{
 		std::string paths(getenv("PATH"));
 		sock.accept_connections();
 		std::cout << RED << "\n######## connection has occurred ########" << RESET << std::endl;;
 
-		std::string cgiName("php-cgi");
-		Cgi cgi(cgiName, env);
-
+		std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+		std::cout << "@@@@@@@@@@@@@@@ REQUEST @@@@@@@@@@@@@@@@@@@@" << std::endl;
 		std::string request = sock.request();
+		std::cout << request << std::endl;
+		std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
 		
 		std::stringstream ss(request);
 		std::string to;
@@ -46,7 +49,10 @@ int		main(int ac, char *av[], char *env[])
 		else
 			std::cout << "METHOD NOT SEPORTED" << std::endl;
 
+		std::cout << RED << "\n######## START RESPONSE ########" << RESET << std::endl;
+		std::cout << response << std::endl;
 		sock.response(response);
+		std::cout << RED << "\n######## END RESPONSE ########" << RESET << std::endl;
 	}
 	return (0);
 }
