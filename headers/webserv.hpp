@@ -23,6 +23,7 @@
 #include <string>
 #include <unistd.h>
 #include <fcntl.h>
+#include <poll.h>
 
 #include "parsing.hpp"
 #include "SocketClass.hpp"

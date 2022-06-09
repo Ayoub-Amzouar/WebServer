@@ -10,11 +10,12 @@
 
 class 	ft_socket
 {
-	int					sock_fd;
-	int					accept_fd;
-	struct sockaddr_in	server_addr;
-	struct sockaddr_in	client_addr;
-	socklen_t			addrlen;
+	int							sock_fd;
+	int							ready_fd;
+	struct sockaddr_in			server_addr;
+	struct sockaddr_in			client_addr;
+	socklen_t					addrlen;
+	std::vector<struct pollfd>	ufds;
 
 	ft_socket( void );
 	ft_socket( const ft_socket& );
