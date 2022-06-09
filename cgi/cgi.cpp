@@ -40,15 +40,6 @@ void Cgi::error(std::string e)
     std::cerr << "CGI: " << e << std::endl;
 }
 
-std::pair<std::string, std::string> Cgi::parse_uri(std::string uri)
-{
-    int pos;
-    pos = uri.find("?");
-    if (pos == -1)
-        return make_pair(uri, std::string(""));
-    return make_pair(uri.substr(0, pos), uri.substr(pos + 1));
-}
-
 void Cgi::fileInOut(std::string in_file , std::string out_file)
 {
     std::ifstream   in;
@@ -97,9 +88,6 @@ int Cgi::execute(std::string body_file)
 
         if (!body_file.empty())
         {
-            std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
-            std::cout << "INPUT FILE" << std::endl;
-            std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
             if ((fd = open(body_file.c_str(), O_RDWR)) == -1)
                 error("can't open body file for cgi.");
             dup2(fd, STDIN_FILENO);
@@ -161,25 +149,13 @@ std::string Cgi::GET(std::string uri, int write_socket, std::string root)
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", "GET", true);
     _file = (root + parsed_uri.first).c_str();
-
-    // setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
-    // setenv("REDIRECT_STATUS", "404", true);
-    // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@ START ENV VARS @@@@@@@@@@@@@@" << std::endl;
-    // std::cout << "QUERY_STRING = " << getenv("QUERY_STRING") << std::endl;
-    // std::cout << "REQUEST_METHOD = " << getenv("REQUEST_METHOD") << std::endl;
-    // std::cout << "SCRIPT_FILENAME = " << getenv("SCRIPT_FILENAME") << std::endl;
-    // std::cout << "REDIRECT_STATUS = " << getenv("REDIRECT_STATUS") << std::endl;
-    // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@ END ENV VARS @@@@@@@@@@@@@@" << std::endl;
-
-        execute("");
-        int cgi_code = cgi_status_code();
-        if (cgi_code == 0) // no status by cgi.
-            generate_response(200);
-        else
-            generate_response(cgi_code);
-    // send_response(write_socket);
+    execute("");
+    int cgi_code = cgi_status_code();
+    if (cgi_code == 0) // no status by cgi.
+        generate_response(200);
+    else
+        generate_response(cgi_code);
     return fileToStr(_response_file);
-    // return 0;
 }
 
 std::string Cgi::POST(std::string uri, int write_socket, std::string body_file, std::string root)
@@ -189,16 +165,13 @@ std::string Cgi::POST(std::string uri, int write_socket, std::string body_file, 
     setenv("REQUEST_METHOD", "POST", true);
     setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
     _file = (root + parsed_uri.first).c_str();
-    std::cout << "REQUESTED FILE = " << _file << std::endl;
     execute(body_file);
     int cgi_code = cgi_status_code();
     if (cgi_code == 0) // no status by cgi.
         generate_response(201);
     else
         generate_response(cgi_code);
-    // send_response(write_socket);
     return fileToStr(_response_file);
-    // return 0;
 }
 
 std::string Cgi::fileToStr(std::string &fileName)

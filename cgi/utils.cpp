@@ -4,7 +4,14 @@
 #include <string>
 
 #include "utils.hpp"
-
+std::pair<std::string, std::string> parse_uri(std::string uri)
+{
+    int pos;
+    pos = uri.find("?");
+    if (pos == -1)
+        return make_pair(uri, std::string(""));
+    return make_pair(uri.substr(0, pos), uri.substr(pos + 1));
+}
 std::string status_line(int code)
 {
     static const StatusCode s;
