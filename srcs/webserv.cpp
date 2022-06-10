@@ -20,16 +20,25 @@ int main(int argc, char **argv)
             // std::cout << RED << "\n######## connection has occurred ########" << RESET << std::endl;
 
             // std::cout << sock.request() << std::endl;
-			request = sock.request();
+			for (; 1;)
+			{
+				request = sock.request();
+				if (request != "NON")
+					std::cerr << request << std::endl;
+				request.clear();
+			}
 			if (request != "NON")
+			{
+				std::cerr << request << std::endl;
 				sock.response("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!");
+			}
 			request.clear();
         }
     }
     else
-    {
-        std::cout << "No file found : ./webserv [configfile]\n";
-        return 1;
+	{
+		std::cout << "No file found : ./webserv [configfile]\n";
+ 		return 1;
     }
     return 0;
 }
