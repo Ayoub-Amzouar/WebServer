@@ -164,6 +164,11 @@ std::string Cgi::POST(std::string uri, int write_socket, std::string body_file, 
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", "POST", true);
     setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
+    setenv("REDIRECT_STATUS", "CGI", true);
+    setenv("CONTENT_LENGTH", 1024, true);
+    setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", true);
+    /*
+    */
     _file = (root + parsed_uri.first).c_str();
     execute(body_file);
     int cgi_code = cgi_status_code();
