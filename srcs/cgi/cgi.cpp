@@ -10,27 +10,34 @@
 #include <vector>
 #include <cstdlib>
 #include <utility>
+#include <sstream>
 
-Cgi::Cgi(std::string path, char *env[])
-: _path(path)
-, _env(env)
+Cgi::Cgi(std::string &cgi_name, char *env[])
+// : _path(path)
+: _env(env)
 , _cgi_out_file(std::tmpnam(NULL))
 , _response_file(std::tmpnam(NULL))
 , _error(false)
-{}
+{
+    std::string s(getenv("PATH"));
+    if (!s.empty()) // ERROR
+    {
+        std::string del(":");
+        std::vector<std::string> paths = parse_line(s, del);
+        for (std::vector<std::string>::iterator it= paths.begin(); it != paths.end(); it++)
+            if (doesFileExist(*it + "/" + cgi_name))
+            {
+                _path = *it + "/" + cgi_name;
+                break;
+            }
+    }
+    // ERROR:  PATH var empty;
+    // ERROR:  _path private var empty;
+}
 
 void Cgi::error(std::string e)
 {
     std::cerr << "CGI: " << e << std::endl;
-}
-
-std::pair<std::string, std::string> Cgi::parse_uri(std::string uri)
-{
-    int pos;
-    pos = uri.find("?");
-    if (pos == -1)
-        return make_pair(uri, std::string(""));
-    return make_pair(uri.substr(0, pos), uri.substr(pos + 1));
 }
 
 void Cgi::fileInOut(std::string in_file , std::string out_file)
@@ -71,25 +78,24 @@ std::map<std::string, std::string> Cgi::parse_cgi_output(void)
     return data;
 }
 
-int Cgi::execute(std::string cgi_file, std::string body_file)
+int Cgi::execute(std::string body_file)
 {
     if (fork() == 0)
     {
         int output_fd, fd;
-        if ((output_fd = open(_cgi_out_file.c_str(), O_RDWR | O_TRUNC | O_CREAT, 0666) == -1))
+        if ((output_fd = open(_cgi_out_file.c_str(), O_RDWR | O_TRUNC | O_CREAT, 0666)) == -1)
             error("can't open output_file for cgi.");
 
         if (!body_file.empty())
         {
-            // int fd;
             if ((fd = open(body_file.c_str(), O_RDWR)) == -1)
                 error("can't open body file for cgi.");
             dup2(fd, STDIN_FILENO);
         }
-        dup2(fd, STDOUT_FILENO);
+        dup2(output_fd, STDOUT_FILENO);
         char *args[3];
         args[0] = (char *)_path.c_str();
-        args[1] = (char *)cgi_file.c_str();
+        args[1] = (char *)_file.c_str();
         args[2] = NULL;
         execve(_path.c_str(), args, _env);
         error("path to cgi executable not correct.");
@@ -109,7 +115,9 @@ int Cgi::cgi_status_code(void)
         return std::stoi(line.substr(0, line.find(" ")));
     }
     else // default
+    {
         return 0;
+    }
 }
 
 void Cgi::generate_response(int code)
@@ -134,38 +142,49 @@ void Cgi::send_response(int fd)
     in.close();
 }
 
-int Cgi::GET(int fd)
+std::string Cgi::GET(std::string uri, int write_socket, std::string root)
 {
     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
 
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", "GET", true);
-    execute((parsed_uri.first).c_str(), body_file);
+    _file = (root + parsed_uri.first).c_str();
+    execute("");
     int cgi_code = cgi_status_code();
     if (cgi_code == 0) // no status by cgi.
-        generate_response(0);
+        generate_response(200);
     else
         generate_response(cgi_code);
-    send_response(write_socket);
-    return 0;
+    return fileToStr(_response_file);
 }
 
-int Cgi::POST(std::string uri, int write_socket, std::string body_file)
+std::string Cgi::POST(std::string uri, int write_socket, std::string body_file, std::string root)
 {
     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
-
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", "POST", true);
-    std::cout << parsed_uri.first << std::endl;
-    std::cout << parsed_uri.second << std::endl;
-    // execute((parsed_uri.first).c_str(), body_file);
+    setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
+    setenv("REDIRECT_STATUS", "CGI", true);
+    setenv("CONTENT_LENGTH", 1024, true);
+    setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", true);
+    /*
+    */
+    _file = (root + parsed_uri.first).c_str();
+    execute(body_file);
     int cgi_code = cgi_status_code();
     if (cgi_code == 0) // no status by cgi.
-        generate_response(0);
+        generate_response(201);
     else
         generate_response(cgi_code);
-    send_response(write_socket);
-    return 0;
+    return fileToStr(_response_file);
 }
 
+std::string Cgi::fileToStr(std::string &fileName)
+{
+    std::ifstream   in;
 
+    in.open(fileName);
+    std::ostringstream sstr;
+    sstr << in.rdbuf();
+    return sstr.str();
+}
