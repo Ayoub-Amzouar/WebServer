@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 10:54:28 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/09 15:52:08 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/10 20:18:06 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void parse_request_line(std::map<std::string, std::string> &pair, std::string li
 void parse_request_body(std::map<std::string, std::string> pair, std::string line, std::stringstream &ss)
 {
     std::string line;
-    if (!pair["transfer-encoding"].compare("chunked"))
+    if (!pair["Transfer-Encoding"].compare("chunked"))
     {
     }
     else
@@ -48,7 +48,6 @@ std::map<std::string, std::string> Request::parse_request(std::string str)
     std::map<std::string, std::string> pair;
     std::string line;
     bool entered = true;
-    // pair = extract_key_value(str, ": ");
     while (getline(ss, line))
     {
         if (entered)
