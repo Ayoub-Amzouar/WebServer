@@ -1,12 +1,7 @@
 #ifndef _RESPONSE_HPP_
 #define _RESPONSE_HPP_
 
-#include <string>
-#include <unistd.h>
-#include <fcntl.h>
-#include <fstream>
-#include <map>
-#include <utility>
+#include "webserv.hpp"
 
 struct Response
 {

@@ -1,16 +1,4 @@
-#include "cgi.hpp"
-#include <string>
-#include <unistd.h>
-#include <fcntl.h>
-#include <fstream>
-#include <iostream>
-#include <map>
-#include "utils.hpp"
-#include <map>
-#include <vector>
-#include <cstdlib>
-#include <utility>
-#include <sstream>
+#include "../../headers/webserv.hpp"
 
 Cgi::Cgi(std::string &cgi_name, char *env[])
 // : _path(path)
@@ -142,7 +130,7 @@ void Cgi::send_response(int fd)
     in.close();
 }
 
-std::string Cgi::GET(std::string uri, int write_socket, std::string root)
+std::string Cgi::GET(std::string uri, std::string root)
 {
     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
 
@@ -158,14 +146,14 @@ std::string Cgi::GET(std::string uri, int write_socket, std::string root)
     return fileToStr(_response_file);
 }
 
-std::string Cgi::POST(std::string uri, int write_socket, std::string body_file, std::string root)
+std::string Cgi::POST(std::string uri, std::string body_file, std::string root)
 {
     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", "POST", true);
     setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
     setenv("REDIRECT_STATUS", "CGI", true);
-    setenv("CONTENT_LENGTH", 1024, true);
+    setenv("CONTENT_LENGTH", "1024", true);
     setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", true);
     /*
     */

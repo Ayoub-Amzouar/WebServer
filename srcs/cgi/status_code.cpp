@@ -1,9 +1,4 @@
-#include <string>
-#include <unistd.h>
-#include <fcntl.h>
-#include <fstream>
-#include <map>
-#include "status_code.hpp"
+#include "../../headers/webserv.hpp"
 
 StatusCode::StatusCode()
 {
