@@ -19,7 +19,7 @@ DIR_SRCS = ./srcs/
 
 HEADERS = ./headers/webserv.hpp
 SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp cgi/cgi.cpp cgi/status_code.cpp \
-		cgi/utils.cpp
+		cgi/utils.cpp socket/socket.cpp response/response.cpp
 
 SRCS =			$(addprefix $(DIR_SRCS), $(SRC))
 

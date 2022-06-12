@@ -23,16 +23,17 @@
 #include <string>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 #include <fcntl.h>
 #include <string>
 #include <sstream>
 
 #include "parsing.hpp"
 #include "socket.hpp"
+
 #include "response.hpp"
 #include "cgi.hpp"
 #include "utils.hpp"
-#include "status_code.hpp"
 
 
 #define RED "\033[1;31m"

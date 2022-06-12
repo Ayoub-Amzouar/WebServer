@@ -49,10 +49,15 @@ std::vector<std::string> parse_line(std::string str, std::string &delim)
     std::string token;
     while ((pos = str.find(delim)) != std::string::npos)
     {
-        token = str.substr(0, pos);
-        strings.push_back(token);
+        if (pos != 0)
+        {
+            token = str.substr(0, pos);
+            strings.push_back(token);
+        }
         str.erase(0, pos + delim.length());
     }
+    if(!str.empty())
+        strings.push_back(str);
     return strings;
 }
 

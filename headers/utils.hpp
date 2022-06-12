@@ -1,5 +1,4 @@
-#ifndef _UTILS_HPP_
-#define _UTILS_HPP_
+#pragma once
 
 #include "webserv.hpp"
 
@@ -9,13 +8,13 @@ bool doesFileExist (const std::string&);
 std::vector<std::string> parse_line(std::string str, std::string &delim);
 std::pair<std::string, std::string> parse_uri(std::string uri);
 
-// class StatusCode
-// {
-//     std::map<int, std::string> _code;
-// public:
-//     StatusCode();
-//     std::string get_message(int code) const;
-// };
+class StatusCode
+{
+    std::map<int, std::string> _code;
+public:
+    StatusCode();
+    std::string get_message(int code) const;
+};
 
 class ContentType
 {
@@ -24,5 +23,3 @@ public:
     ContentType();
     std::string get_mime(std::string extension) const;
 };
-
-#endif
