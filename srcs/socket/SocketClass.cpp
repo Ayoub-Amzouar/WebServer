@@ -59,7 +59,10 @@ void		ft_socket::response( const std::string& val )
 
 std::string	ft_socket::request( void )
 {
-	char		buffer[1024];
+	char		buffer[3000];
+
+	bzero(buffer, 3000);
+
 	std::string	res;
 	size_t		i = 0;
 
@@ -69,9 +72,10 @@ std::string	ft_socket::request( void )
 			if (ufds[i].revents == POLLIN)
 			{
 				ready_fd = ufds[i].fd;
-				while (recv(ready_fd, buffer, 1024, 0) > 0)
-					res += buffer;
-				return (res);
+				int ret = recv(ready_fd, buffer, 3000, 0);
+				if (ret == -1 || ret  == 0)
+					return "";
+				return (std::string(buffer, ret));
 			}
 			i++;
 		}
