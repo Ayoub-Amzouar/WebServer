@@ -13,6 +13,7 @@ private:
 private:
     std::string find_header(const std::map<std::string, std::string> &,const std::string&);
 	int check_req_validity(const std::map<std::string, std::string> &header);
+    Server &getServer(Http &http, std::map<std::string, std::string> &);
 
 public:
     Response(Http &http, char *env[]);
