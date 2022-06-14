@@ -5,46 +5,12 @@ int Http::http_count = 0;
 int Server::server_count = 0;
 int Location::location_count = 0;
 
-void	get_request( int accept_fd )
-{
-	static std::vector<struct pollfd>	ufds;
-	char								buffer[3000];
-	std::string							res;
-	int									ready_fd;
-
-	if (accept_fd > 0)
-	{
-		struct pollfd	ufd;
-
-		ufd.fd = accept_fd;
-		ufd.events = POLLIN;
-		ufd.revents = 0;
-		ufds.push_back(ufd);
-	}
-
-	if (!ufds.empty()) {
-
-		bzero(buffer, 3000);
-		poll(&ufds[0], ufds.size(), -1);
-
-		for (size_t i = 0; i < ufds.size(); i++) {
-			if (ufds[i].revents == POLLIN)
-			{
-				ready_fd = ufds[i].fd;
-				int ret = recv(ready_fd, buffer, 3000, 0);
-				if (ret != -1 || ret  != 0) {}
-					// fill in the request
-			}
-			i++;
-		}
-	}
-}
-
 int		main(int argc, char **argv)
 {
     if (argc > 1)
     {
         Http http = parsing(argv[1]);
+		Request		req;
         // std::cout << http.servers[0].locations[0].attributes["path"] << std::endl;
         ft_socket	*sock = new ft_socket[http.servers.size()];
 		int			index = 0;
@@ -54,7 +20,7 @@ int		main(int argc, char **argv)
 
         while (1)
         {
-			get_request(sock[index].accept_connections());
+			req.get_request(sock[index].accept_connections());
             // std::cout << RED << "\n######## connection has occurred ########" << RESET << std::endl;
 
 			// request = request(sock[index]);

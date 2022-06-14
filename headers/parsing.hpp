@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:14:09 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/08 11:49:29 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/14 11:49:15 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,22 @@ class  Http
         std::map<std::string, std::string> attributes;
 };
 
+class Request_Data
+{
+public:
+	std::map<std::string, std::string> attributes;
+	std::string body;
+	bool is_finished;
+};
+
 class Request
 {
+		std::map<int, Request_Data>	request_table;
+		std::vector<struct pollfd>	ufds;
     public :
-        std::map<std::string, std::string> attributes;
-        std::map<std::string, std::string> parse_request(std::string str);
+        Request();
+        std::map<std::string, std::string> parse_request(std::string str, Request_Data &request);
+		void	get_request( int accept_fd );
         
 };
 
