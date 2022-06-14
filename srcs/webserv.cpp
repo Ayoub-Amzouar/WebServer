@@ -32,7 +32,7 @@ void	get_request( int accept_fd )
 			{
 				ready_fd = ufds[i].fd;
 				int ret = recv(ready_fd, buffer, 3000, 0);
-				if (ret != -1 || ret  != 0)
+				if (ret != -1 || ret  != 0) {}
 					// fill in the request
 			}
 			i++;
