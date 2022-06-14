@@ -42,9 +42,9 @@ class  Http
 class Request_Data
 {
 public:
-	std::map<std::string, std::string> attributes;
-	std::string body;
-	bool is_finished;
+	std::map<std::string, std::string>	attributes;
+	std::string							body;
+	bool								is_finished;
 };
 
 class Request
@@ -52,9 +52,9 @@ class Request
 		std::map<int, Request_Data>	request_table;
 		std::vector<struct pollfd>	ufds;
     public :
-        Request();
-        std::map<std::string, std::string> parse_request(std::string str, Request_Data &request);
-		void	get_request( int accept_fd );
+        Request (void);
+        std::map<std::string, std::string>	parse_request(std::string str, Request_Data &request);
+		void								get_request( int accept_fd );
         
 };
 
