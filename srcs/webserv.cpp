@@ -12,19 +12,28 @@ int main(int argc, char **argv)
         Http http = parsing(argv[1]);
         Request request;
         ft_socket sock(std::stoi(http.servers[0].attributes["listen"]), INADDR_ANY);
+		std::string req;
+
         while (1)
         {
             sock.accept_connections();
-            std::cout << RESET << "\n######## connection established ########" << RESET << std::endl;
-            // std::cout << sock.request() <<std::endl;
-            request.parse_request(sock.request(), request);
-            sock.response("");
-        }
+            // std::cout << RED << "\n######## connection has occurred ########" << RESET << std::endl;
+
+            // std::cout << sock.request() << std::endl;
+			req = sock.request();
+			if (req != "NON")
+			{
+				std::cerr << req;
+				// sock.response("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!");
+				// break ;
+			}
+			req.clear();
+		}
     }
     else
-    {
-        std::cout << "No file found : ./webserv [configfile]\n";
-        return 1;
+	{
+		std::cout << "No file found : ./webserv [configfile]\n";
+ 		return 1;
     }
     return 0;
 }
