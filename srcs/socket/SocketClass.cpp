@@ -1,8 +1,9 @@
 #include "../../headers/webserv.hpp"
 #include <fcntl.h>
 
+ft_socket::ft_socket( void ) {}
 
-ft_socket::ft_socket(in_port_t port, in_addr_t ip) : ready_fd()
+ft_socket::ft_socket(in_port_t port, in_addr_t ip)
 {
 	sock_fd = socket(PF_INET, SOCK_STREAM, 0);
 
@@ -29,58 +30,62 @@ ft_socket::ft_socket(in_port_t port, in_addr_t ip) : ready_fd()
 	}
 }
 
-ft_socket::~ft_socket( void )
+ft_socket::ft_socket( const ft_socket& val )
 {
-	close(sock_fd);
-	for (std::vector<struct pollfd>::iterator b = ufds.begin(); b != ufds.end(); b++)
-		close(b->fd);
+	*this = val;
 }
 
-void	ft_socket::accept_connections( void )
+ft_socket&	ft_socket::operator=( const ft_socket& rop )
 {
-	int		accept_fd;
 
-	accept_fd = accept(sock_fd, (struct sockaddr *)&client_addr, (socklen_t*)&addrlen);
-	if (accept_fd != -1) {
-		struct pollfd	ufd;
+	sock_fd = rop.sock_fd;
+	server_addr = rop.server_addr;
+	client_addr = rop.client_addr;
+	addrlen = rop.addrlen;
 
-		ufd.fd = accept_fd;
-		ufd.events = POLLIN;
-		ufd.revents = 0;
-		ufds.push_back(ufd);
-	}
+	return (*this);
+}
+
+ft_socket::~ft_socket( void )
+{
+	// close(sock_fd);
+	// for (std::vector<struct pollfd>::iterator b = ufds.begin(); b != ufds.end(); b++)
+	// 	close(b->fd);
+}
+
+int		ft_socket::accept_connections( void )
+{
+	return (accept(sock_fd, (struct sockaddr *)&client_addr, (socklen_t*)&addrlen));
 }
 
 void		ft_socket::response( const std::string& val )
 {
-	if (ready_fd)
-		send(ready_fd, val.c_str(), val.length(), 0);
+		// send(ready_fd, val.c_str(), val.length(), 0);
 }
 
 std::string	ft_socket::request( void )
 {
-	char		buffer[3000];
+	// char		buffer[3000];
 
-	bzero(buffer, 3000);
+	// bzero(buffer, 3000);
+	// std::string	res;
+	// size_t		i = 0;
 
-	std::string	res;
-	size_t		i = 0;
-
-	if (!ufds.empty()) {
-		poll(&ufds[0], ufds.size(), -1);
-		while (i < ufds.size()) {
-			if (ufds[i].revents == POLLIN)
-			{
-				ready_fd = ufds[i].fd;
-				int ret = recv(ready_fd, buffer, 3000, 0);
-				if (ret == -1 || ret  == 0)
-					return "";
-				return (std::string(buffer, ret));
-			}
-			i++;
-		}
-	}
-	return ("NON");
+	// if (!ufds.empty()) {
+	// 	poll(&ufds[0], ufds.size(), -1);
+	// 	while (i < ufds.size()) {
+	// 		if (ufds[i].revents == POLLIN)
+	// 		{
+	// 			ready_fd = ufds[i].fd;
+	// 			int ret = recv(ready_fd, buffer, 3000, 0);
+	// 			if (ret == -1 || ret  == 0)
+	// 				return "";
+	// 			return (std::string(buffer, ret));
+	// 		}
+	// 		i++;
+	// 	}
+	// }
+	// return ("NON");
 }
 
 int					ft_socket::getSockFd( void ) const { return (sock_fd); }
