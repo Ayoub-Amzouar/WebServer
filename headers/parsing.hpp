@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:14:09 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/14 11:49:15 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/14 19:52:11 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ class Request
 		std::vector<struct pollfd>	ufds;
     public :
         Request (void);
-        std::map<std::string, std::string>	parse_request(std::string str, Request_Data &request);
-		void								get_request( int accept_fd );
+        void	 parse_request(std::string str, Request_Data &request);
+		void	 get_request( int accept_fd );
         
 };
 

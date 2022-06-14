@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 10:54:28 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/14 12:16:32 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/14 19:51:42 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,41 +41,41 @@ void parse_request_body(std::map<std::string, std::string> pair, std::string lin
     // }
 }
 
-std::map<std::string, std::string> Request::parse_request(std::string str, Request_Data &request)
+void Request::parse_request(std::string str, Request_Data &request)
 {
-    // std::stringstream ss(str);
-    // std::map<std::string, std::string> tmp;
-    // std::map<std::string, std::string> pair;
-    // std::string line;
-    // bool entered = true;
-    // while (getline(ss, line))
-    // {
-    //     if (entered)
-    //     {
-    //         parse_request_line(pair, line);
-    //         entered = false;
-    //     }
-    //     else
-    //     {
-    //         if (line.find('\r') == 0)
-    //         {
-    //             continue;
-    //         }
-    //         line.erase(line.length() - 1);
-    //         tmp = extract_key_value(line, ": ");
-    //         pair.insert(std::pair<std::string, std::string>(tmp.begin()->first, tmp.begin()->second));
-    //     }
-    // }
-    //    std::cout << "******************************************************************************" << std::endl;
+    std::stringstream ss(str);
+    std::map<std::string, std::string> tmp;
+    std::map<std::string, std::string> pair;
+    std::string line;
+    bool entered = true;
+    while (getline(ss, line))
+    {
+        if (entered)
+        {
+            parse_request_line(pair, line);
+            entered = false;
+        }
+        else
+        {
+            if (line.find('\r') == 0)
+            {
+                continue;
+            }
+            line.erase(line.length() - 1);
+            tmp = extract_key_value(line, ": ");
+            pair.insert(std::pair<std::string, std::string>(tmp.begin()->first, tmp.begin()->second));
+        }
+    }
+       std::cout << "******************************************************************************" << std::endl;
 
-    //     for (std::map<std::string, std::string>::iterator it = pair.begin(); it != pair.end(); it++)
-    //     {
-    //         std::cout << it->first << "=" << it->second << std::endl;
-    //     }
+        for (std::map<std::string, std::string>::iterator it = pair.begin(); it != pair.end(); it++)
+        {
+            std::cout << it->first << "=" << it->second << std::endl;
+        }
 
-    //     std::cout << "******************************************************************************" << std::endl;
+        std::cout << "******************************************************************************" << std::endl;
 
-    // return pair;
+    return pair;
 }
 
 void	Request::get_request( int accept_fd )
