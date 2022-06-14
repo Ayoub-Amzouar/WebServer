@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 10:54:28 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/14 19:51:42 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/14 20:10:23 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void Request::parse_request(std::string str, Request_Data &request)
 
         std::cout << "******************************************************************************" << std::endl;
 
-    return pair;
+    request.attributes = pair;
 }
 
 void	Request::get_request( int accept_fd )
