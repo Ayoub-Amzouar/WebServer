@@ -5,7 +5,7 @@
 std::string status_line(int code);
 std::string content_type(std::string exten);
 bool doesFileExist (const std::string&);
-std::vector<std::string> parse_line(std::string str, std::string &delim);
+std::vector<std::string> parse_line(std::string str, std::string delim);
 std::pair<std::string, std::string> parse_uri(std::string uri);
 
 class StatusCode

@@ -3,51 +3,68 @@
 Response::Response(Http &http, char *env[]) : _http(http), _env(env)
 {}
 
-std::string Response::run(std::map<std::string, std::string> &header, std::string &body_string)
+std::string Response::run(std::map<std::string, std::string> &request, std::string &body_string)
 {
-    int a = check_req_validity(header);
-    if (a)
+    int error = check_req_validity(request);
+    if (error)
         return std::string("return response with a as status code");
-    // Server server& = getServer(_http);
+    Server &server = getServer(_http, request);
+    error = maxBodySize(server, request);
     
     return std::string("default");
 }
 
-Server& Response::getServer(Http &http, std::map<std::string, std::string> &header)
+int Response::maxBodySize(Server &server, std::map<std::string, std::string> &request)
 {
-    std::string host = find_header(header, "Host");
-    std::string del(":");
-    std::vector<std::string> field = parse_line(host, del);
-    std::string ip("80");
-    std::string serverName = field[0];
-    if (!field[1].empty())
-        ip = field[1];
+    std::string method = find_header(request, "method");
+    std::string content_length = find_header(request, "Content-Length");
+    // TODO get max body size 
+    return 0;
+}
+
+Server& Response::getServer(Http &http, std::map<std::string, std::string> &request)
+{
+    std::vector<std::string> field = parse_line(request["Host"], ":");
+    std::string reqHost = field[0];
+    std::string reqPort = field[1].empty() ? "80" : field[1]; // 80 is the default port if the host header doesn't have one.
+
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        if (ip == (*it).attributes["listen"] && serverName == (*it).attributes["server-name"])
+        std::string port =        (*it).attributes["listen"];
+        std::string host =          (*it).attributes["host"];
+        std::string server_name =    (*it).attributes["server-name"];
+        if ((reqHost == server_name || reqHost == host) && reqPort == port)
             return *it;
     }
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        if(ip == (*it).attributes["listen"])
+        std::string port = (*it).attributes["listen"];
+        if (reqPort == port)
             return *it;
     }
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        if(ip == (*it).attributes["server-name"])
+        std::string host = (*it).attributes["host"];
+        if (reqHost == host)
+            return *it;
+    }
+    for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
+    {
+        std::string server_name = (*it).attributes["server-name"];
+        if (reqHost == server_name)
             return *it;
     }
     return http.servers[0];
 }
 
-int Response::check_req_validity(const std::map<std::string, std::string> &header)
+int Response::check_req_validity(const std::map<std::string, std::string> &request)
 {
-    std::string content_length = find_header(header, "Content-Length");
-    std::string content_type = find_header(header, "Content-Type");
-    std::string transfer_encoding = find_header(header, "Transfer-Encoding");
-    std::string method = find_header(header, "method");
-    std::string uri = find_header(header, "location");
-    std::string host = find_header(header, "Host");
+    std::string content_length = find_header(request, "Content-Length");
+    std::string content_type = find_header(request, "Content-Type");
+    std::string transfer_encoding = find_header(request, "Transfer-Encoding");
+    std::string method = find_header(request, "method");
+    std::string uri = find_header(request, "location");
+    std::string host = find_header(request, "Host");
     {                                                                       // URI
         if (uri.find_first_not_of(ALLOWED_CHARACTERS) != std::string::npos) // 400
             return 400;
@@ -63,7 +80,7 @@ int Response::check_req_validity(const std::map<std::string, std::string> &heade
                 return 501;
         }
     }
-    {// Host header empty => error
+    {// Host request empty => error
         if (host.empty())
             return 400;
     }

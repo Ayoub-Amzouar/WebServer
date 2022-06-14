@@ -42,7 +42,7 @@ bool doesFileExist(const std::string &name)
     return f.good();
 }
 
-std::vector<std::string> parse_line(std::string str, std::string &delim)
+std::vector<std::string> parse_line(std::string str, std::string delim)
 {
     std::vector<std::string> strings;
     size_t pos = 0;
