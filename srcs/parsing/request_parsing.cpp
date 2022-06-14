@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 10:54:28 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/10 20:18:06 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/14 11:48:52 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void parse_request_body(std::map<std::string, std::string> pair, std::string lin
     }
 }
 
-std::map<std::string, std::string> Request::parse_request(std::string str)
+std::map<std::string, std::string> Request::parse_request(std::string str, Request request)
 {
     std::stringstream ss(str);
     std::map<std::string, std::string> tmp;

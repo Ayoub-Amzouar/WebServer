@@ -17,7 +17,7 @@ int main(int argc, char **argv)
             sock.accept_connections();
             std::cout << RESET << "\n######## connection established ########" << RESET << std::endl;
             // std::cout << sock.request() <<std::endl;
-            request.parse_request(sock.request());
+            request.parse_request(sock.request(), request);
             sock.response("");
         }
     }

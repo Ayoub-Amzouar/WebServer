@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:14:09 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/08 11:49:29 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/14 11:49:15 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,12 @@ class  Http
 
 class Request
 {
-    public :
         std::map<std::string, std::string> attributes;
-        std::map<std::string, std::string> parse_request(std::string str);
+        std::string body;
+        bool is_finished;
+    public :
+        Request();
+        std::map<std::string, std::string> parse_request(std::string str, Request request);
         
 };
 
