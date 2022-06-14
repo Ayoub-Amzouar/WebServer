@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:14:09 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/07 15:33:20 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/08 11:49:29 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,20 @@ class  Http
         std::map<std::string, std::string> attributes;
 };
 
+class Request
+{
+    public :
+        std::map<std::string, std::string> attributes;
+        std::map<std::string, std::string> parse_request(std::string str);
+        
+};
+
 
 Http  parsing(char *str);
 void check_file(std::ifstream &fin);
 void syntax_error();
 void check_file_syntax();
-std::map<std::string, std::string> extract_key_value(std::string line);
+std::map<std::string, std::string> extract_key_value(std::string line, std::string delm);
 void check_map(std::pair<std::map<std::string, std::string>::iterator,bool> ret);
 
 #endif

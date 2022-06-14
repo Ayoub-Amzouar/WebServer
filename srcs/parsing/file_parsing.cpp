@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.cpp                                        :+:      :+:    :+:   */
+/*   file_parsing.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:13:03 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/07 15:33:15 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/08 11:43:02 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/webserv.hpp"
-using namespace std;
+
 
 std::string skip_spaces(std::string str)
 {
@@ -29,7 +29,7 @@ std::string skip_spaces(std::string str)
 void add_location_attributes(Location &location, std::string line)
 {
     std::map<std::string, std::string> pair;
-    pair = extract_key_value(line);
+    pair = extract_key_value(line, "=");
     check_map(location.attributes.insert(std::pair<std::string, std::string>(pair.begin()->first, pair.begin()->second)));
 }
 
@@ -59,7 +59,7 @@ void add_server_attributes(Server &server, std::string line,  std::ifstream &fin
     }
     else
     {
-        pair = extract_key_value(line);
+        pair = extract_key_value(line, "=");
         // std::cout << "|" << pair.begin()->first << "|" << std::endl;
         check_map(server.attributes.insert(std::pair<std::string, std::string>(pair.begin()->first, pair.begin()->second)));
        
@@ -94,15 +94,15 @@ void add_http_attributes(Http &http, std::string line, std::ifstream &fin)
     }
     else
     {
-        pair = extract_key_value(line);
+        pair = extract_key_value(line, "=");
        check_map(http.attributes.insert(std::pair<std::string, std::string>(pair.begin()->first, pair.begin()->second)));
     }
 }
 
 Http parsing(char *str)
 {
-    string line;
-    ifstream fin;
+    std::string line;
+    std::ifstream fin;
     Http http;
     
     fin.open(str);
