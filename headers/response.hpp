@@ -13,8 +13,9 @@ private:
 private:
     std::string		find_header(const std::map<std::string, std::string> &, const std::string &);
     int				check_req_validity(const std::map<std::string, std::string> &);
-    Server			&getServer(Http &, std::map<std::string, std::string> &);
+    Server&			getServer(Http &, std::map<std::string, std::string> &);
     int				maxBodySize(Server &, std::map<std::string, std::string> &);
+    Location&		getLocation(Server &server, std::map<std::string, std::string> &request);
 
 public:
     Response(Http &http, char *env[]);

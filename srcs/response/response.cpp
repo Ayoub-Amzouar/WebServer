@@ -10,15 +10,28 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
         return std::string("return response with a as status code");
     Server &server = getServer(_http, request);
     error = maxBodySize(server, request);
-    
+    if (error)
+        return std::string("return response with a as status code");
+    Location &location = getLocation(server, request);
+
     return std::string("default");
+}
+
+Location &Response::getLocation(Server &server, std::map<std::string, std::string> &request)
+{
+    std::string location = find_header(request, "location");
+    std::pair<std::string, std::string> uri_pair = parse_uri(location);
+    std::string uri = uri_pair.first;
+    for (std::vector<Location>::iterator it = server.begin(); it != servers.end(); it++)
 }
 
 int Response::maxBodySize(Server &server, std::map<std::string, std::string> &request)
 {
     std::string method = find_header(request, "method");
     std::string content_length = find_header(request, "Content-Length");
-    // TODO get max body size 
+    std::string max_body_size = find_header(server, "max-body-size");
+    if (method == "POST" && !max_body_size.empty() && std::stol(max_body_size) < std::stol(content_length))
+        return 413;
     return 0;
 }
 
