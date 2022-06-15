@@ -23,6 +23,9 @@ Location &Response::getLocation(Server &server, std::map<std::string, std::strin
     std::pair<std::string, std::string> uri_pair = parse_uri(location);
     std::string uri = uri_pair.first;
     for (std::vector<Location>::iterator it = server.begin(); it != servers.end(); it++)
+    {
+        std::string path = (*it).attributes["path"];
+    }
 }
 
 int Response::maxBodySize(Server &server, std::map<std::string, std::string> &request)
@@ -43,27 +46,27 @@ Server& Response::getServer(Http &http, std::map<std::string, std::string> &requ
 
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        std::string port =        (*it).attributes["listen"];
-        std::string host =          (*it).attributes["host"];
-        std::string server_name =    (*it).attributes["server-name"];
+        std::string port = find_header((*it).attributes, "listen");
+        std::string host = find_header((*it).attributes, "host");
+        std::string server_name = find_header((*it).attributes, "server-name");
         if ((reqHost == server_name || reqHost == host) && reqPort == port)
             return *it;
     }
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        std::string port = (*it).attributes["listen"];
+        std::string port = find_header((*it).attributes, "listen");
         if (reqPort == port)
             return *it;
     }
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        std::string host = (*it).attributes["host"];
+        std::string host = find_header((*it).attributes, "host");
         if (reqHost == host)
             return *it;
     }
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        std::string server_name = (*it).attributes["server-name"];
+        std::string server_name = find_header((*it).attributes, "server-name");
         if (reqHost == server_name)
             return *it;
     }
