@@ -11,7 +11,7 @@ int main(int argc, char **argv, char **env)
     {
         Http http = parsing(argv[1]);
         // std::cout << http.servers[0].locations[1].attributes["method2"] << std::endl;
-        std::cout << http.servers[0].attributes["listen"] << std::endl;
+        std::cout << http.servers[0].locations[1].attributes["methods"] << std::endl;
         // ft_socket sock(std::stoi(http.servers[0].attributes["listen"]), INADDR_ANY);
 
         // Response response(http, env);

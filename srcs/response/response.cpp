@@ -26,13 +26,14 @@ Location &Response::getLocation(Server &server, std::map<std::string, std::strin
     {
         std::string path = (*it).attributes["path"];
     }
+    return server.locations[0];
 }
 
 int Response::maxBodySize(Server &server, std::map<std::string, std::string> &request)
 {
     std::string method = find_header(request, "method");
     std::string content_length = find_header(request, "Content-Length");
-    std::string max_body_size = find_header(server, "max-body-size");
+    std::string max_body_size = find_header(server.attributes, "max-body-size");
     if (method == "POST" && !max_body_size.empty() && std::stol(max_body_size) < std::stol(content_length))
         return 413;
     return 0;
