@@ -6,6 +6,7 @@ ft_socket::ft_socket( void ) {}
 ft_socket::ft_socket(in_port_t port, in_addr_t ip)
 {
 	sock_fd = socket(PF_INET, SOCK_STREAM, 0);
+	int var = 1;
 
 	if (fcntl(sock_fd, F_SETFL, O_NONBLOCK) < 0)
 	{
@@ -17,6 +18,7 @@ ft_socket::ft_socket(in_port_t port, in_addr_t ip)
 	server_addr.sin_port = htons(port);
 	server_addr.sin_addr.s_addr = htons(ip);
 
+	setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &var, sizeof(int));
 	if (bind(sock_fd, (const struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
 	{
 		std::cerr << "error: bind failed\n"; 
