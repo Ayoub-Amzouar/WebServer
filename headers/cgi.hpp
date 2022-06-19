@@ -21,7 +21,6 @@ private:
     void    send_response(int);
     std::string get_file(std::string);
     std::map<std::string, std::string>  parse_cgi_output(void);
-    std::string fileToStr(std::string&);
 
 public:
     Cgi(std::string &cgi_name, char *env[]);

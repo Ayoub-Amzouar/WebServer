@@ -167,12 +167,4 @@ std::string Cgi::POST(std::string uri, std::string body_file, std::string root)
     return fileToStr(_response_file);
 }
 
-std::string Cgi::fileToStr(std::string &fileName)
-{
-    std::ifstream   in;
 
-    in.open(fileName);
-    std::ostringstream sstr;
-    sstr << in.rdbuf();
-    return sstr.str();
-}

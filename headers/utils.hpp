@@ -4,10 +4,15 @@
 
 std::string status_line(int code);
 std::string content_type(std::string exten);
+std::string error_page(int code);
 bool doesFileExist (const std::string&);
 std::vector<std::string> parse_line(std::string str, std::string delim);
 std::pair<std::string, std::string> parse_uri(std::string uri);
 std::string cut_uri(std::string uri);
+std::string erasePathFromUri(std::string &uri, std::string &location_path);
+std::string defaultErrPage(int code);
+std::string fileToStr(std::string &);
+std::string content_length(size_t);
 
 class StatusCode
 {
@@ -28,9 +33,18 @@ class ErrorPage
 {
     std::map<int, std::string> _code;
 public:
-    ErrorPage(std::string &);
+    ErrorPage(std::string);
     std::string get_page(int code) const;
 };
+
+// class DefaultErrPage
+// {
+//     std::map<int, std::string> _code;
+// public:
+//     DefaultErrPage();
+//     std::string get_body(int code) const;
+// };
+
 #define FT_FILE 0
 #define FT_DIR  1
 
@@ -42,3 +56,5 @@ struct file_stats
 
     file_stats () : perm(), exist(), type() {}
 };
+
+file_stats get_file_stats(std::string filename);

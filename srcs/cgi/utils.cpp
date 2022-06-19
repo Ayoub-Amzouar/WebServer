@@ -1,5 +1,11 @@
 #include "../../headers/webserv.hpp"
 
+std::string erasePathFromUri(std::string &uri, std::string &location_path)
+{
+    uri.erase(0, location_path.length());
+    return uri;
+}
+
 std::pair<std::string, std::string> parse_uri(std::string uri)
 {
     int pos;
@@ -8,7 +14,13 @@ std::pair<std::string, std::string> parse_uri(std::string uri)
         return make_pair(uri, std::string(""));
     return make_pair(uri.substr(0, pos), uri.substr(pos + 1));
 }
-std::string cut_uri(std::string uri)
+
+std::string content_length(size_t size)
+{
+    std::string c("Content-Length: ");
+    return c + std::to_string(size);
+}
+    std::string cut_uri(std::string uri)
 {
     if (uri.empty())
         return std::string("");
@@ -123,7 +135,11 @@ std::string content_type(std::string exten)
     static const ContentType s;
     std::string exist = s.get_mime(exten);
     if (!exist.empty())
-        return exist;
+    {
+        std::string cntnt_type("Content-Type: ");
+        cntnt_type.append(exist);
+        return cntnt_type;
+    }
     else
         return std::string();
 }
@@ -138,6 +154,7 @@ std::string ContentType::get_mime(std::string extension) const
     else
         return std::string();
 }
+
 ContentType::ContentType()
 {
     _code["txt"]  = "text/plain";
@@ -184,42 +201,62 @@ ContentType::ContentType()
 
 // @@@ ERROR PAGES
 // TODO:
-std::string error_page(int code)
+std::string defaultErrPage(int code)
 {
-    static const ErrorPage s;
-    std::string exist = s.get_page(code);
+    static const StatusCode s;
+    std::string exist = s.get_message(code);
     if (!exist.empty())
-        return exist;
+    {
+        std::string status;
+        status.append(std::to_string(code));
+        status.append(" ");
+        status.append(exist);
+        return "<html><head><title>" + status + "</title></head><body><center><h1>" + status + "</h1></center><hr><center>WebServ</center></body></html>";
+    }
     else
         return std::string();
 }
 
-ErrorPage::ErrorPage(std::string &erro_page_path)
+// std::string error_page(int code)
+// {
+//     static const ErrorPage s;
+//     std::string exist = s.get_page(code);
+//     if (!exist.empty())
+//         return exist;
+//     else
+//         return std::string();
+// }
+std::string fileToStr(std::string &fileName)
 {
-    _code[400] = "Bad Request";
-    _code[401] = "Unauthorized";
-    _code[402] = "Payment Required";
-    _code[403] = "Forbidden";
-    _code[404] = "Not Found";
-    _code[405] = "Method Not Allowed";
-    _code[406] = "Not Acceptable";
-    _code[407] = "Proxy Authentication Required";
-    _code[408] = "Request Time-out";
-    _code[409] = "Conflict";
-    _code[410] = "Gone";
-    _code[411] = "Length Required";
-    _code[412] = "Precondition Failed";
-    _code[413] = "Request Entity Too Large";
-    _code[414] = "Request-URI Too Large";
-    _code[415] = "Unsupported Media Type";
-    _code[416] = "Requested range not satisfiable";
-    _code[417] = "Expectation Failed";
-    _code[500] = "Internal Server Error";
-    _code[501] = "Not Implemented";
-    _code[502] = "Bad Gateway";
-    _code[503] = "Service Unavailable";
-    _code[504] = "Gateway Time-out";
-    _code[505] = "HTTP Version not supported";
+    std::ifstream   in;
+
+    in.open(fileName);
+    std::ostringstream sstr;
+    sstr << in.rdbuf();
+    return sstr.str();
+}
+ErrorPage::ErrorPage(std::string error_page_path)
+{
+    file_stats dir = get_file_stats(error_page_path);
+    int errors[] = {400, 403, 404, 405, 409, 413, 414, 500};
+    std::vector<int> err(errors, errors + sizeof(errors) / sizeof(int));
+    for(std::vector<int>::iterator it = err.begin(); it != err.end(); it++)
+    {
+        std::string file_str(error_page_path + "/" + std::to_string(*it) + ".html");
+        file_stats file = get_file_stats(file_str);
+        std::string response;
+        std::string body;
+        response.append(status_line(*it));
+        response.append("\n");
+        response.append(content_type("html"));
+        response.append("\n");
+        body = (dir.exist && file.exist && file.perm >= 4) ? fileToStr(file_str) : defaultErrPage(*it);
+        response.append(content_length(body.size()));
+        response.append("\n");
+        response.append("\n");
+        response.append(body);
+        _code[*it] = response;
+    }
 }
 
 std::string ErrorPage::get_page(int code) const
