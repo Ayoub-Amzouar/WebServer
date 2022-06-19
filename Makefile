@@ -6,7 +6,7 @@
 #    By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/04 13:00:30 by mel-hadj          #+#    #+#              #
-#    Updated: 2022/06/14 11:53:45 by mel-hadj         ###   ########.fr        #
+#    Updated: 2022/06/18 19:37:43 by mel-hadj         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ RM = rm -rf
 DIR_SRCS = ./srcs/
 
 HEADERS = ./headers/webserv.hpp
-SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp socket/SocketClass.cpp parsing/request_parsing.cpp
+SRC = parsing/file_parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp socket/SocketClass.cpp parsing/request_parsing.cpp
 
 SRCS =			$(addprefix $(DIR_SRCS), $(SRC))
 
@@ -26,7 +26,7 @@ all : $(NAME)
 
 $(NAME) : $(SRCS)  $(HEADERS)
 			@echo "compiling.."
-			@$(CC) $(FLAGS) $(SRCS) -o $(NAME)
+			@$(CC)  -fsanitize=address -g $(FLAGS) $(SRCS) -o $(NAME)
 			@echo "Done."
 
 clean :

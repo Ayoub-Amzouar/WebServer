@@ -15,8 +15,8 @@ int		main(int argc, char **argv)
         ft_socket	*sock = new ft_socket[http.servers.size()];
 		int			index = 0;
 
-		for (int i = 0; i < http.servers.size(); i++)
-			sock[i] = ft_socket(std::stoi(http.servers[0].attributes["listen"]), INADDR_ANY);
+		for (size_t i = 0; i < http.servers.size(); i++)
+			sock[i] = ft_socket(std::stoi(http.servers[i].attributes["listen"]), INADDR_ANY);
 
         while (1)
         {
