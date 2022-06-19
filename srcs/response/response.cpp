@@ -3,30 +3,70 @@
 Response::Response(Http &http, char *env[]) : _http(http), _env(env)
 {}
 
-std::string Response::run(std::map<std::string, std::string> &request, std::string &body_string)
+std::string Response::run(std::map<std::string, std::string> &request, std::string &body_file)
 {
-    int error = check_req_validity(request);
-    if (error)
-        return std::string("return response with a as status code");
-    Server &server = getServer(_http, request);
-    error = maxBodySize(server, request);
-    if (error)
-        return std::string("return response with a as status code");
-    Location &location = getLocation(server, request);
+    // is_req_well_formed
+        int error = check_req_validity(request);
+        if (error)
+            return std::string("return response with a as status code");
+    // chouse server from config file
+        Server &server = getServer(_http, request);
+
+    //  check body size for post method
+        error = maxBodySize(server, request);
+        if (error)
+            return std::string("return response with a as status code");
+
+    // get_matched_location_for_request_uri
+        int location_num = getLocation(server, request);
+        if (location_num == -1)
+            return std::string("return response with a as status 404");
+    // choose location from server from config file
+        Location &location = server.locations[location_num];
+    // if location have redirection
+    std::string redirect = find_header(location.attributes, "return");
+    if (!redirect.empty())
+        std::string("return redirection with " + redirect + " variable + you have to split the variable with red_code:locaiton");
+    // allowded methods in location
+    std::string methods = find_header(location.attributes, "methods");
+    std::string reqMethod = find_header(request, "method");
+    if (!methods.empty() && !reqMethod.empty())
+    {
+        std::vector<std::string> method = parse_line(methods, ",");
+        std::vector<std::string>::iterator end = std::find(method.begin(), method.end(), reqMethod);
+        if (end == method.end())
+            return std::string("return response with 405");
+    }
+
+    if (reqMethod == "GET")
+        return get_method(location, request);
+    else if (reqMethod == "POST")
+        return post_method(location, request, body_file);
+    else if (reqMethod == "DELETE")
+        return delete_method(location, request);
 
     return std::string("default");
 }
 
-Location &Response::getLocation(Server &server, std::map<std::string, std::string> &request)
+int Response::getLocation(Server &server, std::map<std::string, std::string> &request)
 {
     std::string location = find_header(request, "location");
     std::pair<std::string, std::string> uri_pair = parse_uri(location);
     std::string uri = uri_pair.first;
-    for (std::vector<Location>::iterator it = server.begin(); it != servers.end(); it++)
+    int i;
+    while(!uri.empty())
     {
-        std::string path = (*it).attributes["path"];
+        i = 0;
+        for (std::vector<Location>::iterator it = server.locations.begin(); it != server.locations.end(); it++)
+        {
+            std::string path = (*it).attributes["path"];
+            if (uri == path)
+                return i;
+            i++;
+        }
+        uri = cut_uri(uri);
     }
-    return server.locations[0];
+    return -1;
 }
 
 int Response::maxBodySize(Server &server, std::map<std::string, std::string> &request)

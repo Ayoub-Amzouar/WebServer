@@ -27,6 +27,9 @@
 #include <fcntl.h>
 #include <string>
 #include <sstream>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <algorithm>
 
 #include "parsing.hpp"
 #include "socket.hpp"
