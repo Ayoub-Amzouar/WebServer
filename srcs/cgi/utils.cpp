@@ -183,6 +183,7 @@ ContentType::ContentType()
 }
 
 // @@@ ERROR PAGES
+// TODO:
 std::string error_page(int code)
 {
     static const ErrorPage s;
@@ -193,7 +194,7 @@ std::string error_page(int code)
         return std::string();
 }
 
-ErrorPage::ErrorPage()
+ErrorPage::ErrorPage(std::string &erro_page_path)
 {
     _code[400] = "Bad Request";
     _code[401] = "Unauthorized";

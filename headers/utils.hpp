@@ -28,7 +28,7 @@ class ErrorPage
 {
     std::map<int, std::string> _code;
 public:
-    ErrorPage();
+    ErrorPage(std::string &);
     std::string get_page(int code) const;
 };
 #define FT_FILE 0
