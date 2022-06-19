@@ -5,7 +5,7 @@ int Http::http_count = 0;
 int Server::server_count = 0;
 int Location::location_count = 0;
 
-int		main(int argc, char **argv)
+int main(int argc, char **argv, char **env)
 {
     if (argc > 1)
     {

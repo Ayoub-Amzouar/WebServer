@@ -12,13 +12,14 @@
 
 NAME = webserv
 CC = c++ -std=c++98
-FLAGS = -Wall -Wextra -Werror
+# FLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 
 DIR_SRCS = ./srcs/
 
 HEADERS = ./headers/webserv.hpp
-SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp socket/SocketClass.cpp parsing/request_parsing.cpp
+SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp cgi/cgi.cpp cgi/status_code.cpp \
+		cgi/utils.cpp socket/socket.cpp response/response.cpp socket/SocketClass.cpp
 
 SRCS =			$(addprefix $(DIR_SRCS), $(SRC))
 
