@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 10:54:28 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/19 01:12:46 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/19 17:16:37 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,44 @@ void parse_request_line(std::map<std::string, std::string> &pair, std::string li
     pair.insert(std::pair<std::string, std::string>("location", value2));
 }
 
-// void parse_request_body(std::map<std::string, std::string> pair, std::string line, std::stringstream &ss)
-// {
-//     // std::string line;
-//     // if (!pair["Transfer-Encoding"].compare("chunked"))
-//     // {
-//     // }
-//     // else
-//     // {
-//     //     while (getline(ss, line))
-//     //     {
-//     //     }
-//     // }
-// }
+void parse_request_body(Request_Data &request, std::string str)
+{
+    std::stringstream ss(str);
+    std::string line;
+    if (request.file_name.empty())
+    {
+        std::string file_name;
+        file_name = get_file_name_by_time();
+        std::ofstream myfile(file_name);
+        if (!myfile.is_open())
+        {
+            std::cout << "Unable to open file!\n";
+            exit(1);
+        }
+        else
+        {
+            request.file_name = file_name;
+            myfile << str;
+            if ()
+            while (getline(ss, line))
+            {
+                std::cout << line + "\n";
+            }
+            /* code */
+        }
+    }
+    else
+    {
+        std::ofstream myfile;
+        myfile.open(request.file_name, std::ios::app);
+        if (!myfile.is_open())
+        {
+            std::cout << "Unable to open file!\n";
+            exit(1);
+        }
+        myfile << str;
+    }
+}
 
 void Request::parse_request(std::string str, Request_Data &request)
 {
@@ -61,14 +86,15 @@ void Request::parse_request(std::string str, Request_Data &request)
                 if (line.find('\r') == 0)
                     break;
                 line.erase(line.length() - 1);
-                std::cout << "{" + line+ "}" << std::endl;
+                std::cout << "{" + line + "}" << std::endl;
                 tmp = extract_key_value(line, ": ");
                 request.attributes.insert(std::pair<std::string, std::string>(tmp.begin()->first, tmp.begin()->second));
             }
         }
         else
-        { 
-            std::cout << "|" + line + "|" << std::endl;
+        {
+            std::cout << "here\n";
+            parse_request_body(request, line);
         }
     }
     std::cout << "******************************************************************************" << std::endl;
