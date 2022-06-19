@@ -24,7 +24,13 @@ public:
     ContentType();
     std::string get_mime(std::string extension) const;
 };
-
+class ErrorPage
+{
+    std::map<int, std::string> _code;
+public:
+    ErrorPage();
+    std::string get_page(int code) const;
+};
 #define FT_FILE 0
 #define FT_DIR  1
 

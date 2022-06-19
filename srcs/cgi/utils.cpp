@@ -21,39 +21,6 @@ std::string cut_uri(std::string uri)
         uri.erase(found + 1, uri.length() - 1);
     return uri;
 }
-std::string status_line(int code)
-{
-    static const StatusCode s;
-    std::string exist = s.get_message(code);
-    if (!exist.empty())
-    {
-        std::string status("HTTP1.1 ");
-        status.append(std::to_string(code));
-        status.append(" ");
-        status.append(exist);
-        return status;
-    }
-    else
-        return std::string();
-}
-
-std::string content_type(std::string exten)
-{
-    static const ContentType s;
-    std::string exist = s.get_mime(exten);
-    if (!exist.empty())
-    {
-        return exist;
-    }
-    else
-        return std::string();
-}
-
-bool doesFileExist(const std::string &name)
-{
-    std::ifstream f(name.c_str());
-    return f.good();
-}
 
 std::vector<std::string> parse_line(std::string str, std::string delim)
 {
@@ -72,6 +39,28 @@ std::vector<std::string> parse_line(std::string str, std::string delim)
     if(!str.empty())
         strings.push_back(str);
     return strings;
+}
+
+bool doesFileExist(const std::string &name)
+{
+    std::ifstream f(name.c_str());
+    return f.good();
+}
+
+std::string status_line(int code)
+{
+    static const StatusCode s;
+    std::string exist = s.get_message(code);
+    if (!exist.empty())
+    {
+        std::string status("HTTP1.1 ");
+        status.append(std::to_string(code));
+        status.append(" ");
+        status.append(exist);
+        return status;
+    }
+    else
+        return std::string();
 }
 
 StatusCode::StatusCode()
@@ -128,6 +117,17 @@ std::string StatusCode::get_message(int code) const
     else
         return std::string();
 }
+
+std::string content_type(std::string exten)
+{
+    static const ContentType s;
+    std::string exist = s.get_mime(exten);
+    if (!exist.empty())
+        return exist;
+    else
+        return std::string();
+}
+
 std::string ContentType::get_mime(std::string extension) const
 {
     std::map<std::string, std::string>::const_iterator end = _code.end();
@@ -181,6 +181,58 @@ ContentType::ContentType()
     _code["odt"]  = "application/vnd.oasis.opendocument.text";
     _code["ods"]  = "application/vnd.oasis.opendocument.spreadsheet";
 }
+
+// @@@ ERROR PAGES
+std::string error_page(int code)
+{
+    static const ErrorPage s;
+    std::string exist = s.get_page(code);
+    if (!exist.empty())
+        return exist;
+    else
+        return std::string();
+}
+
+ErrorPage::ErrorPage()
+{
+    _code[400] = "Bad Request";
+    _code[401] = "Unauthorized";
+    _code[402] = "Payment Required";
+    _code[403] = "Forbidden";
+    _code[404] = "Not Found";
+    _code[405] = "Method Not Allowed";
+    _code[406] = "Not Acceptable";
+    _code[407] = "Proxy Authentication Required";
+    _code[408] = "Request Time-out";
+    _code[409] = "Conflict";
+    _code[410] = "Gone";
+    _code[411] = "Length Required";
+    _code[412] = "Precondition Failed";
+    _code[413] = "Request Entity Too Large";
+    _code[414] = "Request-URI Too Large";
+    _code[415] = "Unsupported Media Type";
+    _code[416] = "Requested range not satisfiable";
+    _code[417] = "Expectation Failed";
+    _code[500] = "Internal Server Error";
+    _code[501] = "Not Implemented";
+    _code[502] = "Bad Gateway";
+    _code[503] = "Service Unavailable";
+    _code[504] = "Gateway Time-out";
+    _code[505] = "HTTP Version not supported";
+}
+
+std::string ErrorPage::get_page(int code) const
+{
+    std::map<int, std::string>::const_iterator end = _code.end();
+    std::map<int, std::string>::const_iterator exist;
+    exist = _code.find(code);
+    if (exist != end)
+        return exist->second;
+    else
+        return std::string();
+}
+
+// @@@@ FILE PERMISSION
 
 file_stats    get_file_stats ( std::string filename )
 {
