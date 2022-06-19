@@ -60,36 +60,6 @@ int		ft_socket::accept_connections( void )
 	return (accept(sock_fd, (struct sockaddr *)&client_addr, (socklen_t*)&addrlen));
 }
 
-void		ft_socket::response( const std::string& val )
-{
-		// send(ready_fd, val.c_str(), val.length(), 0);
-}
-
-std::string	ft_socket::request( void )
-{
-	// char		buffer[3000];
-
-	// bzero(buffer, 3000);
-	// std::string	res;
-	// size_t		i = 0;
-
-	// if (!ufds.empty()) {
-	// 	poll(&ufds[0], ufds.size(), -1);
-	// 	while (i < ufds.size()) {
-	// 		if (ufds[i].revents == POLLIN)
-	// 		{
-	// 			ready_fd = ufds[i].fd;
-	// 			int ret = recv(ready_fd, buffer, 3000, 0);
-	// 			if (ret == -1 || ret  == 0)
-	// 				return "";
-	// 			return (std::string(buffer, ret));
-	// 		}
-	// 		i++;
-	// 	}
-	// }
-	// return ("NON");
-}
-
 int					ft_socket::getSockFd( void ) const { return (sock_fd); }
 
 struct sockaddr_in	ft_socket::getServerAddr( void ) const { return (server_addr); }

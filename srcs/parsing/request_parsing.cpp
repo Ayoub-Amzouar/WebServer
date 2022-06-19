@@ -82,7 +82,6 @@ void	Request::get_request( int accept_fd )
 {
 	Request_Data	req;
 	char			buffer[3000];
-	std::string		res;
 	int				ready_fd;
 
 	if (accept_fd > 0)
@@ -118,7 +117,6 @@ void	Request::get_request( int accept_fd )
 					}
 				}
 			}
-			i++;
 		}
 	}
 }
