@@ -1,10 +1,11 @@
 #include "../../headers/webserv.hpp"
 
-Response::Response(Http &http, char *env[]) : _http(http), _env(env)
+// Response::Response(Http &http, char *env[]) : _http(http), _env(env)
+Response::Response(Http &http) : _http(http)
 {
     for (std::vector<Server>::iterator it = _http.servers.begin(); it != _http.servers.end(); it++)
     {
-        _serversErrors.push_back(err(find_header((*it).attributes, "error-pages")));
+        _serversErrors.push_back(ErrorPage(find_header((*it).attributes, "error-pages")));
     }
 }
 
@@ -13,9 +14,9 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
     // is_req_well_formed
     {
         ErrorPage err("");
-        int error = check_req_validity(request);
-        if (error)
-            return err.get_page(error);
+        int reqValdity = check_req_validity(request);
+        if (reqValdity)
+            return err.get_page(reqValdity);
     }
     // chouse server from config file
     int server_num = getServer(_http, request);
@@ -23,11 +24,9 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
     {
         ErrorPage &err = _serversErrors[server_num];
         //  check body size for post method
-        int error;
-        error = maxBodySize(server, request);
-        if (error)
-            return err.get_page(error);
-
+        int max_body_size = maxBodySize(server, request);
+        if (max_body_size)
+            return err.get_page(max_body_size);
         // get_matched_location_for_request_uri
         int location_num = getLocation(server, request);
         if (location_num == -1)
@@ -48,13 +47,13 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
             if (end == method.end())
                 return err.get_page(405);
         }
-
-        if (reqMethod == "GET")
-            return get_method(location, request);
-        else if (reqMethod == "POST")
-            return post_method(location, request, body_file);
-        else if (reqMethod == "DELETE")
-            return delete_method(location, request);
+        // if (reqMethod == "GET")
+        //     return get_method(location, request);
+        // else if (reqMethod == "POST")
+        //     return post_method(location, request, body_file);
+        // else if (reqMethod == "DELETE")
+        //     return delete_method(location, request);
+    return err.get_page(404);
     }
 }
 
@@ -102,7 +101,7 @@ int Response::getServer(Http &http, std::map<std::string, std::string> &request)
         std::string host = find_header((*it).attributes, "host");
         std::string server_name = find_header((*it).attributes, "server-name");
         if ((reqHost == server_name || reqHost == host) && reqPort == port)
-            i;
+            return i;
         i++;
     }
     i = 0;
@@ -110,7 +109,7 @@ int Response::getServer(Http &http, std::map<std::string, std::string> &request)
     {
         std::string port = find_header((*it).attributes, "listen");
         if (reqPort == port)
-            i;
+           return  i;
         i++;
     }
     i = 0;
@@ -118,7 +117,7 @@ int Response::getServer(Http &http, std::map<std::string, std::string> &request)
     {
         std::string host = find_header((*it).attributes, "host");
         if (reqHost == host)
-            i;
+           return  i;
         i++;
     }
     i = 0;
@@ -126,8 +125,7 @@ int Response::getServer(Http &http, std::map<std::string, std::string> &request)
     {
         std::string server_name = find_header((*it).attributes, "server-name");
         if (reqHost == server_name)
-            return *it;
-            i;
+            return i;
         i++;
     }
     return 0;

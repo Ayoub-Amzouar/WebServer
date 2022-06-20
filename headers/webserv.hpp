@@ -34,9 +34,9 @@
 #include "parsing.hpp"
 #include "socket.hpp"
 
-#include "response.hpp"
 #include "cgi.hpp"
 #include "utils.hpp"
+#include "response.hpp"
 
 
 #define RED "\033[1;31m"

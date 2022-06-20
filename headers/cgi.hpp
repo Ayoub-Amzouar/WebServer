@@ -6,7 +6,7 @@ struct Cgi
 {
 private:
     std::string     _path;
-    char**          _env;
+    // char**          _env;
     std::string     _cgi_out_file;
     std::string     _response_file;
     bool            _error;
@@ -23,7 +23,8 @@ private:
     std::map<std::string, std::string>  parse_cgi_output(void);
 
 public:
-    Cgi(std::string &cgi_name, char *env[]);
+    Cgi(std::string &cgi_name);
+    // Cgi(std::string &cgi_name, char *env[]);
     std::string POST(std::string uri, std::string body_file, std::string root);
     std::string GET(std::string uri, std::string root);
     // std::string DELETE();

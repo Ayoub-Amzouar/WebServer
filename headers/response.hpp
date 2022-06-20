@@ -7,7 +7,7 @@
 struct Response
 {
 private:
-    char** _env;
+    // char**  _env;
     Http    &_http;
     std::vector<ErrorPage> _serversErrors;
 
@@ -19,7 +19,7 @@ private:
     int             getLocation(Server &server, std::map<std::string, std::string> &request);
 
 public:
-    Response(Http &http, char *env[]);
+    // Response(Http &http, char *env[]);
+    Response(Http &http);
     std::string run(std::map<std::string, std::string> &headers, std::string &body_string);
 };
-
