@@ -22,11 +22,8 @@
 #include <netinet/in.h>
 #include <string>
 #include <unistd.h>
-<<<<<<< HEAD
 #include <stdio.h>
-#include <fcntl.h>
 #include <poll.h>
-=======
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
@@ -35,7 +32,6 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <algorithm>
->>>>>>> main
 
 #include "parsing.hpp"
 #include "SocketClass.hpp"
