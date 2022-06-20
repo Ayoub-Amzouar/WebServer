@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:13:59 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/19 11:11:49 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/19 17:22:50 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,17 @@
 #include <netinet/in.h>
 #include <string>
 #include <unistd.h>
-#include <stdio.h>
+#include <stdlib.h>
 #include <fcntl.h>
-#include <poll.h>
+#include <string>
 #include <sstream>
-#include <sys/time.h>
-
 
 #include "parsing.hpp"
-#include "SocketClass.hpp"
+#include "socket.hpp"
+#include "response.hpp"
+#include "cgi.hpp"
+#include "utils.hpp"
+#include "status_code.hpp"
 
 
 #define RED "\033[1;31m"
