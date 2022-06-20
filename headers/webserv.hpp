@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:13:59 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/07 15:40:36 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/19 11:11:49 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,15 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <algorithm>
+#include <stdio.h>
+#include <fcntl.h>
+#include <poll.h>
+#include <sstream>
+#include <sys/time.h>
+
 
 #include "parsing.hpp"
-#include "socket.hpp"
+#include "SocketClass.hpp"
 
 #include "cgi.hpp"
 #include "utils.hpp"

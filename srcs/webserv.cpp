@@ -10,9 +10,13 @@ int main(int argc, char **argv, char **env)
     if (argc > 1)
     {
         Http http = parsing(argv[1]);
-        // std::cout << http.servers[0].locations[1].attributes["method2"] << std::endl;
-        std::cout << http.servers[0].locations[1].attributes["methods"] << std::endl;
-        // ft_socket sock(std::stoi(http.servers[0].attributes["listen"]), INADDR_ANY);
+		Request		req;
+        // std::cout << http.servers[0].locations[0].attributes["path"] << std::endl;
+        ft_socket	*sock = new ft_socket[http.servers.size()];
+		int			index = 0;
+
+		for (size_t i = 0; i < http.servers.size(); i++)
+			sock[i] = ft_socket(std::stoi(http.servers[i].attributes["listen"]), INADDR_ANY);
 
         Response response(http);
         while (1)
@@ -26,9 +30,9 @@ int main(int argc, char **argv, char **env)
         }
     }
     else
-    {
-        std::cout << "No file found : ./webserv [configfile]\n";
-        return 1;
+	{
+		std::cout << "No file found : ./webserv [configfile]\n";
+ 		return 1;
     }
     return 0;
 }

@@ -14,6 +14,13 @@ void check_file(std::ifstream &fin)
         exit(1);
     }
 }
+// void check_file_data(Http http)
+// {
+//     // if (http.servers)
+//     // {
+        
+//     // }
+// }
 
 void syntax_error()
 {
