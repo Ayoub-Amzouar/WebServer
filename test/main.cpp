@@ -137,12 +137,8 @@ int main(int ac, char **av)
     // ErrorPage err("/Users/ynoam/Desktop/WebServer/srcs/response//");
 
     // std::cout << err.get_page(404) << std::endl;
-    Http http = parsing(av[1]);
-    std::map<std::string, std::string> headers;
-    headers["location"] = "/";
-    headers["method"] = "GET";
-    headers["method"] = "GET";
-    std::string file("lkjlkjlk");
-    Response res(http);
-    std::cout << res.run(headers, file) << std::endl;
+    std::string name("php-cgi");
+    Cgi cgi(name);
+
+    std::cout << cgi.run("POST", "/index.php","/Users/ynoam/Desktop/WebServer/file","/Users/ynoam/wordpress") << std::endl;
 }
