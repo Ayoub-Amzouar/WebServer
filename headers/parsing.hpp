@@ -10,11 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSING_H
-#define PARSING_H
-
-#include "webserv.hpp"
-
+#pragma once 
 
 class Location
 {
@@ -47,6 +43,8 @@ public:
 	bool								is_finished;
 };
 
+struct Response;
+
 class Request
 {
 		std::map<int, Request_Data>	request_table;
@@ -54,8 +52,7 @@ class Request
     public :
         Request (void);
         void	 parse_request(std::string str, Request_Data &request);
-		void	 get_request( int accept_fd );
-        
+        void    get_request(int accept_fd, Response& response);
 };
 
 
@@ -66,5 +63,3 @@ void check_file_syntax();
 std::map<std::string, std::string> extract_key_value(std::string line, std::string delm);
 void check_map(std::pair<std::map<std::string, std::string>::iterator,bool> ret);
 std::string get_file_name_by_time();
-
-#endif

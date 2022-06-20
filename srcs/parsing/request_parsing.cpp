@@ -49,11 +49,11 @@ void parse_request_body(Request_Data &request, std::string str)
         {
             request.file_name = file_name;
             myfile << str;
-            if ()
-            while (getline(ss, line))
-            {
-                std::cout << line + "\n";
-            }
+            // if ()
+            // while (getline(ss, line))
+            // {
+            //     std::cout << line + "\n";
+            // }
             /* code */
         }
     }
@@ -107,7 +107,7 @@ void Request::parse_request(std::string str, Request_Data &request)
     // std::cout << "******************************************************************************" << std::endl;
 }
 
-void Request::get_request(int accept_fd)
+void Request::get_request(int accept_fd, Response &response)
 {
     Request_Data req;
     char buffer[3000];
@@ -147,9 +147,9 @@ void Request::get_request(int accept_fd)
                     {
                         parse_request(buffer, request_table[ready_fd]);
                     }
-                    else
+                    if (request_table[ready_fd].is_finished)
                     {
-                        // response(request_table[ready_fd]);
+                        std::string str = response.run(request_table[ready_fd].attributes, request_table[ready_fd].file_name);
                     }
                 }
             }

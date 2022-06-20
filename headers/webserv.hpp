@@ -10,9 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_H
-#define WEBSERV_H
+// #ifndef WEBSERV_H
+// #define WEBSERV_H
 
+#pragma once
 #include <fstream>
 #include <iostream>
 #include <iterator>
@@ -37,11 +38,12 @@
 #include <sys/time.h>
 
 
-#include "parsing.hpp"
+
 #include "SocketClass.hpp"
 
 #include "cgi.hpp"
 #include "utils.hpp"
+#include "parsing.hpp"
 #include "response.hpp"
 
 
@@ -51,4 +53,4 @@
 
 
 
-#endif
+// #endif

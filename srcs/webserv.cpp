@@ -21,13 +21,20 @@ int main(int argc, char **argv, char **env)
         Response response(http);
         while (1)
         {
-            sock.accept_connections();
-            std::cout << RED << "\n######## connection has occurred ########" << RESET << std::endl;
+            req.get_request(sock[index].accept_connections(), response);
 
-            std::cout << sock.request() << std::endl;
             // response.run(;
-            sock.response("HTTP/1.1 200 OK\r\nContent-Length: 0\r\n");
-        }
+			// request = request(sock[index]);
+			// if (request != "NON")
+			// {
+			// 	std::cerr << request;
+			// 	sock.response("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\n" + request);
+			// 	break ;
+			// }
+			// request.clear();
+
+			index = (index + 1) % http.servers.size();
+		}
     }
     else
 	{

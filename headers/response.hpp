@@ -1,6 +1,9 @@
 #pragma once
 
-#include "webserv.hpp"
+//  #include "webserv.hpp"
+//  #include "utils.hpp"
+//  #include "parsing.hpp"
+class Http;
 
 #define ALLOWED_CHARACTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%"
 
