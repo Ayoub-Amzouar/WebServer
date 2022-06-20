@@ -1,9 +1,9 @@
 #include "../../headers/webserv.hpp"
 
-Cgi::Cgi(std::string &cgi_name, char *env[])
+Cgi::Cgi(std::string &cgi_name)
 // : _path(path)
-: _env(env)
-, _cgi_out_file(std::tmpnam(NULL))
+// : _env(env)
+: _cgi_out_file(std::tmpnam(NULL))
 , _response_file(std::tmpnam(NULL))
 , _error(false)
 {
@@ -85,7 +85,7 @@ int Cgi::execute(std::string body_file)
         args[0] = (char *)_path.c_str();
         args[1] = (char *)_file.c_str();
         args[2] = NULL;
-        execve(_path.c_str(), args, _env);
+        execv(_path.c_str(), args);
         error("path to cgi executable not correct.");
         exit(1);
     }
@@ -167,12 +167,4 @@ std::string Cgi::POST(std::string uri, std::string body_file, std::string root)
     return fileToStr(_response_file);
 }
 
-std::string Cgi::fileToStr(std::string &fileName)
-{
-    std::ifstream   in;
 
-    in.open(fileName);
-    std::ostringstream sstr;
-    sstr << in.rdbuf();
-    return sstr.str();
-}
