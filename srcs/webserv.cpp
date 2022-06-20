@@ -18,11 +18,12 @@ int main(int argc, char **argv, char **env)
 		for (int i = 0; i < http.servers.size(); i++)
 			sock[i] = ft_socket(std::stoi(http.servers[i].attributes["listen"]), INADDR_ANY);
 
+        Response response(http);
         while (1)
         {
-			req.get_request(sock[index].accept_connections());
-            // std::cout << RED << "\n######## connection has occurred ########" << RESET << std::endl;
+            req.get_request(sock[index].accept_connections(), response);
 
+            // response.run(;
 			// request = request(sock[index]);
 			// if (request != "NON")
 			// {

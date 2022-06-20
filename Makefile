@@ -18,8 +18,16 @@ RM = rm -rf
 DIR_SRCS = ./srcs/
 
 HEADERS = ./headers/webserv.hpp
-SRC = parsing/file_parsing.cpp webserv.cpp parsing/request_parsing.cpp  parsing/utils.cpp   \
-		 socket/SocketClass.cpp
+# <<<<<<< HEAD
+# <<<<<<< HEAD
+# SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp cgi/cgi.cpp cgi/status_code.cpp \
+# 		cgi/utils.cpp socket/socket.cpp response/response.cpp
+# =======
+SRC = parsing/request_parsing.cpp parsing/file_parsing.cpp webserv.cpp  parsing/utils.cpp socket/SocketClass.cpp response/response.cpp cgi/utils.cpp cgi/cgi.cpp
+# >>>>>>> origin/mohamed/parsing
+# =======
+# SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp cgi/cgi.cpp cgi/status_code.cpp \
+# 		cgi/utils.cpp socket/socket.cpp response/response.cpp socket/SocketClass.cpp
 
 SRCS =			$(addprefix $(DIR_SRCS), $(SRC))
 

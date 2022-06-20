@@ -100,9 +100,49 @@
 // // 	return 0;
 // // }
 
-int main(void)
+#include <iostream>
+#include <string>
+#include <sstream>
+#include "../headers/webserv.hpp"
+using namespace std;
+
+// int main() {
+//   string str = "/test/youssef/noam";
+
+//   // replace "come" of "Welcome" with "abcd".
+//   // starting position = 3, length = 4, 
+//   // replacement string = "abcd"
+//   int found = str.find("/test")
+//   str.replace(3,4,"abcd");
+//   cout << str << endl;
+
+//   return 0;
+// }
+std::string get_msg(int cod)
 {
-    std::string str("");
-    if (str.empty())
-        std::cout << "empty" << std::endl;
+    std::string status;
+    status.append(std::to_string(cod));
+    status.append(" ");
+    status.append(std::to_string(cod));
+    return status + "test";
+}
+int main(int ac, char **av)
+{
+    // std::ifstream t("file.txt");
+    // std::stringstream buffer;
+    // buffer << t.rdbuf();
+    // std::cout << buffer.str() << std::endl;
+    // std::cout << defaultErrPage(400) << std::endl;
+    // std::cout << content_length(10) << std::endl;
+    // ErrorPage err("/Users/ynoam/Desktop/WebServer/srcs/response//");
+
+    // std::cout << err.get_page(404) << std::endl;
+    Http http = parsing(av[1]);
+    std::map<std::string, std::string> headers;
+    headers["location"] = "/";
+    headers["method"] = "GET";
+    headers["method"] = "GET";
+    std::string file("lkjlkjlk");
+    Response res(http);
+    std::cout << res.run(headers, file) << std::endl;
 }

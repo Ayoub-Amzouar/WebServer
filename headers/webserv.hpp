@@ -10,9 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_H
-#define WEBSERV_H
+// #ifndef WEBSERV_H
+// #define WEBSERV_H
 
+#pragma once
 #include <fstream>
 #include <iostream>
 #include <iterator>
@@ -22,26 +23,22 @@
 #include <netinet/in.h>
 #include <string>
 #include <unistd.h>
-
 #include <stdio.h>
 #include <fcntl.h>
 #include <poll.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fcntl.h>
-#include <string>
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <dirent.h>
 #include <algorithm>
 
-#include "parsing.hpp"
 #include "SocketClass.hpp"
-
-#include "response.hpp"
 #include "cgi.hpp"
 #include "utils.hpp"
+#include "parsing.hpp"
+#include "response.hpp"
 
 
 #define RED "\033[1;31m"
@@ -50,4 +47,4 @@
 
 
 
-#endif
+// #endif

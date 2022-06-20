@@ -1,57 +1,68 @@
 #include "../../headers/webserv.hpp"
 
-Response::Response(Http &http, char *env[]) : _http(http), _env(env)
-{}
+// Response::Response(Http &http, char *env[]) : _http(http), _env(env)
+Response::Response(Http &http) : _http(http)
+{
+    for (std::vector<Server>::iterator it = _http.servers.begin(); it != _http.servers.end(); it++)
+    {
+        _serversErrors.push_back(ErrorPage( Utils::find_in_map((*it).attributes, "error-pages")));
+    }
+}
 
 std::string Response::run(std::map<std::string, std::string> &request, std::string &body_file)
 {
     // is_req_well_formed
-        int error = check_req_validity(request);
-        if (error)
-            return std::string("return response with a as status code");
+    {
+    // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+        ErrorPage err("");
+        int reqValdity = check_req_validity(request);
+        std::cout << "REQUEST VALID"<<reqValdity << std::endl;
+        if (reqValdity)
+            return err.get_page(reqValdity);
+    }
     // chouse server from config file
-        Server &server = getServer(_http, request);
-
-    //  check body size for post method
-        error = maxBodySize(server, request);
-        if (error)
-            return std::string("return response with a as status code");
-
-    // get_matched_location_for_request_uri
+    int server_num = getServer(_http, request);
+    Server &server = _http.servers[server_num];
+    {
+        ErrorPage &err = _serversErrors[server_num];
+        //  check body size for post method
+        int max_body_size = maxBodySize(server, request);
+        if (max_body_size)
+            return err.get_page(max_body_size);
+        // get_matched_location_for_request_uri
         int location_num = getLocation(server, request);
         if (location_num == -1)
-            return std::string("return response with a as status 404");
-    // choose location from server from config file
+            return err.get_page(404);
+        // choose location from server from config file
         Location &location = server.locations[location_num];
-    // if location have redirection
-    std::string redirect = find_header(location.attributes, "return");
-    if (!redirect.empty())
-        std::string("return redirection with " + redirect + " variable + you have to split the variable with red_code:locaiton");
-    // allowded methods in location
-    std::string methods = find_header(location.attributes, "methods");
-    std::string reqMethod = find_header(request, "method");
-    if (!methods.empty() && !reqMethod.empty())
-    {
-        std::vector<std::string> method = parse_line(methods, ",");
-        std::vector<std::string>::iterator end = std::find(method.begin(), method.end(), reqMethod);
-        if (end == method.end())
-            return std::string("return response with 405");
+        // if location have redirection
+        std::string redirect =  Utils::find_in_map(location.attributes, "return");
+        if (!redirect.empty())
+            std::string("return redirection with " + redirect + " variable + you have to split the variable with red_code:locaiton");
+        // allowded methods in location
+        std::string methods =  Utils::find_in_map(location.attributes, "methods");
+        std::string reqMethod =  Utils::find_in_map(request, "method");
+        if (!methods.empty() && !reqMethod.empty())
+        {
+            std::vector<std::string> method =  Utils::parse_line(methods, ",");
+            std::vector<std::string>::iterator end = std::find(method.begin(), method.end(), reqMethod);
+            if (end == method.end())
+                return err.get_page(405);
+        }
+        // if (reqMethod == "GET")
+        //     return get_method(err, location, request, body_file);
+        // else if (reqMethod == "POST")
+        //     return post_method(err, location, request, body_file);
+        // else if (reqMethod == "DELETE")
+        //     return delete_method(err, location, request, body_file);
+    return err.get_page(404);
     }
-
-    if (reqMethod == "GET")
-        return get_method(location, request);
-    else if (reqMethod == "POST")
-        return post_method(location, request, body_file);
-    else if (reqMethod == "DELETE")
-        return delete_method(location, request);
-
-    return std::string("default");
 }
 
 int Response::getLocation(Server &server, std::map<std::string, std::string> &request)
 {
-    std::string location = find_header(request, "location");
-    std::pair<std::string, std::string> uri_pair = parse_uri(location);
+    std::string location =  Utils::find_in_map(request, "location");
+    std::pair<std::string, std::string> uri_pair =  Utils::parse_uri(location);
     std::string uri = uri_pair.first;
     int i;
     while(!uri.empty())
@@ -64,64 +75,80 @@ int Response::getLocation(Server &server, std::map<std::string, std::string> &re
                 return i;
             i++;
         }
-        uri = cut_uri(uri);
+        uri =  Utils::cut_uri(uri);
     }
     return -1;
 }
 
 int Response::maxBodySize(Server &server, std::map<std::string, std::string> &request)
 {
-    std::string method = find_header(request, "method");
-    std::string content_length = find_header(request, "Content-Length");
-    std::string max_body_size = find_header(server.attributes, "max-body-size");
+    std::string method =  Utils::find_in_map(request, "method");
+    std::string content_length =  Utils::find_in_map(request, "Content-Length");
+    std::string max_body_size =  Utils::find_in_map(server.attributes, "max-body-size");
     if (method == "POST" && !max_body_size.empty() && std::stol(max_body_size) < std::stol(content_length))
         return 413;
     return 0;
 }
 
-Server& Response::getServer(Http &http, std::map<std::string, std::string> &request)
+int Response::getServer(Http &http, std::map<std::string, std::string> &request)
 {
-    std::vector<std::string> field = parse_line(request["Host"], ":");
+    std::vector<std::string> field =  Utils::parse_line(request["Host"], ":");
     std::string reqHost = field[0];
     std::string reqPort = field[1].empty() ? "80" : field[1]; // 80 is the default port if the host header doesn't have one.
 
+    int i = 0;
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        std::string port = find_header((*it).attributes, "listen");
-        std::string host = find_header((*it).attributes, "host");
-        std::string server_name = find_header((*it).attributes, "server-name");
+        std::string port =  Utils::find_in_map((*it).attributes, "listen");
+        std::string host =  Utils::find_in_map((*it).attributes, "host");
+        std::string server_name =  Utils::find_in_map((*it).attributes, "server-name");
         if ((reqHost == server_name || reqHost == host) && reqPort == port)
-            return *it;
+            return i;
+        i++;
     }
+    i = 0;
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        std::string port = find_header((*it).attributes, "listen");
+        std::string port =  Utils::find_in_map((*it).attributes, "listen");
         if (reqPort == port)
-            return *it;
+           return  i;
+        i++;
     }
+    i = 0;
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        std::string host = find_header((*it).attributes, "host");
+        std::string host =  Utils::find_in_map((*it).attributes, "host");
         if (reqHost == host)
-            return *it;
+           return  i;
+        i++;
     }
+    i = 0;
     for (std::vector<Server>::iterator it = (http.servers).begin(); it != (http.servers).end(); it++)
     {
-        std::string server_name = find_header((*it).attributes, "server-name");
+        std::string server_name =  Utils::find_in_map((*it).attributes, "server-name");
         if (reqHost == server_name)
-            return *it;
+            return i;
+        i++;
     }
-    return http.servers[0];
+    return 0;
 }
 
 int Response::check_req_validity(const std::map<std::string, std::string> &request)
 {
-    std::string content_length = find_header(request, "Content-Length");
-    std::string content_type = find_header(request, "Content-Type");
-    std::string transfer_encoding = find_header(request, "Transfer-Encoding");
-    std::string method = find_header(request, "method");
-    std::string uri = find_header(request, "location");
-    std::string host = find_header(request, "Host");
+    std::string content_length =  Utils::find_in_map(request, "Content-Length");
+    std::string content_type =  Utils::find_in_map(request, "Content-Type");
+    std::string transfer_encoding =  Utils::find_in_map(request, "Transfer-Encoding");
+    std::string method =  Utils::find_in_map(request, "method");
+    std::string uri =  Utils::find_in_map(request, "location");
+    std::string host =  Utils::find_in_map(request, "Host");
+    std::cout << "******************************" << std::endl;
+    std::cout << content_length << std::endl;
+    std::cout << content_type << std::endl;
+    std::cout << transfer_encoding << std::endl;
+    std::cout << method << std::endl;
+    std::cout << uri << std::endl;
+    std::cout << host << std::endl;
+    std::cout << "******************************" << std::endl;
     {                                                                       // URI
         if (uri.find_first_not_of(ALLOWED_CHARACTERS) != std::string::npos) // 400
             return 400;
@@ -144,12 +171,12 @@ int Response::check_req_validity(const std::map<std::string, std::string> &reque
     return 0;
 }
 
-std::string Response::find_header(const std::map<std::string, std::string> &header, const std::string &str)
-{
-    std::map<std::string, std::string>::const_iterator end = header.end();
-    std::map<std::string, std::string>::const_iterator it = header.find(str);
-    if (it != end)
-        return std::string("");
-    return it->second;
-}
+// std::string Response:: Utils::find_in_map(const std::map<std::string, std::string> &header, const std::string &str)
+// {
+//     std::map<std::string, std::string>::const_iterator end = header.end();
+//     std::map<std::string, std::string>::const_iterator it = header.find(str);
+//     if (it != end)
+//         return std::string("");
+//     return it->second;
+// }
 

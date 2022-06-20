@@ -13,8 +13,6 @@
 #include "../../headers/webserv.hpp"
 
 
-
-
 void add_location_attributes(Location &location, std::string line)
 {
     std::map<std::string, std::string> pair;

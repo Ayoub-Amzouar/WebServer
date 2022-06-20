@@ -1,19 +1,19 @@
 #include "../../headers/webserv.hpp"
 
-Cgi::Cgi(std::string &cgi_name, char *env[])
+Cgi::Cgi(std::string &cgi_name)
 // : _path(path)
-: _env(env)
-, _cgi_out_file(std::tmpnam(NULL))
-, _response_file(std::tmpnam(NULL))
+// : _env(env)
+: _cgi_out_file(Utils::get_file_name_by_time())
+, _response_file(Utils::get_file_name_by_time())
 , _error(false)
 {
     std::string s(getenv("PATH"));
     if (!s.empty()) // ERROR
     {
         std::string del(":");
-        std::vector<std::string> paths = parse_line(s, del);
+        std::vector<std::string> paths =  Utils::parse_line(s, del);
         for (std::vector<std::string>::iterator it= paths.begin(); it != paths.end(); it++)
-            if (doesFileExist(*it + "/" + cgi_name))
+            if ( Utils::doesFileExist(*it + "/" + cgi_name))
             {
                 _path = *it + "/" + cgi_name;
                 break;
@@ -85,7 +85,7 @@ int Cgi::execute(std::string body_file)
         args[0] = (char *)_path.c_str();
         args[1] = (char *)_file.c_str();
         args[2] = NULL;
-        execve(_path.c_str(), args, _env);
+        execv(_path.c_str(), args);
         error("path to cgi executable not correct.");
         exit(1);
     }
@@ -112,7 +112,7 @@ void Cgi::generate_response(int code)
 {
     std::ofstream out;
     out.open(_response_file, std::ios::trunc);
-    out << status_line(code) << std::endl;
+    out <<  Utils::status_line(code) << std::endl;
     out.close();
     fileInOut(_cgi_out_file, _response_file);
 }
@@ -130,25 +130,47 @@ void Cgi::send_response(int fd)
     in.close();
 }
 
-std::string Cgi::GET(std::string uri, std::string root)
-{
-    std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
+// std::string Cgi::GET(std::string uri, std::string root)
+// {
+//     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
 
-    setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
-    setenv("REQUEST_METHOD", "GET", true);
-    _file = (root + parsed_uri.first).c_str();
-    execute("");
-    int cgi_code = cgi_status_code();
-    if (cgi_code == 0) // no status by cgi.
-        generate_response(200);
-    else
-        generate_response(cgi_code);
-    return fileToStr(_response_file);
-}
+//     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
+//     setenv("REQUEST_METHOD", "GET", true);
+//     _file = (root + parsed_uri.first).c_str();
+//     execute("");
+//     int cgi_code = cgi_status_code();
+//     if (cgi_code == 0) // no status by cgi.
+//         generate_response(200);
+//     else
+//         generate_response(cgi_code);
+//     return fileToStr(_response_file);
+// }
 
-std::string Cgi::POST(std::string uri, std::string body_file, std::string root)
+// std::string Cgi::POST(std::string uri, std::string body_file, std::string root)
+// {
+//     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
+//     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
+//     setenv("REQUEST_METHOD", "POST", true);
+//     setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
+//     setenv("REDIRECT_STATUS", "CGI", true);
+//     setenv("CONTENT_LENGTH", "1024", true);
+//     setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", true);
+//     /*
+//     */
+//     _file = (root + parsed_uri.first).c_str();
+//     execute(body_file);
+//     int cgi_code = cgi_status_code();
+//     if (cgi_code == 0) // no status by cgi.
+//         generate_response(201);
+//     else
+//         generate_response(cgi_code);
+//     return fileToStr(_response_file);
+// }
+
+// TODO:
+std::string Cgi::run(std::string method,std::string uri, std::string body_file, std::string root)
 {
-    std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
+    std::pair<std::string, std::string> parsed_uri =  Utils::parse_uri(uri);
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", "POST", true);
     setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
@@ -164,15 +186,6 @@ std::string Cgi::POST(std::string uri, std::string body_file, std::string root)
         generate_response(201);
     else
         generate_response(cgi_code);
-    return fileToStr(_response_file);
+    return  Utils::fileToStr(_response_file);
 }
 
-std::string Cgi::fileToStr(std::string &fileName)
-{
-    std::ifstream   in;
-
-    in.open(fileName);
-    std::ostringstream sstr;
-    sstr << in.rdbuf();
-    return sstr.str();
-}
