@@ -60,11 +60,11 @@ class Request
 
 
 Http  parsing(char *str);
-void check_file(std::ifstream &fin);
-void syntax_error();
-void check_file_syntax();
-std::map<std::string, std::string> extract_key_value(std::string line, std::string delm);
-void check_map(std::pair<std::map<std::string, std::string>::iterator,bool> ret);
-std::string get_file_name_by_time();
+// void check_file(std::ifstream &fin);
+// void syntax_error();
+// void check_file_syntax();
+// std::map<std::string, std::string> extract_key_value(std::string line, std::string delm);
+// void check_map(std::pair<std::map<std::string, std::string>::iterator,bool> ret);
+// std::string get_file_name_by_time();
 
 #endif

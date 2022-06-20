@@ -23,7 +23,7 @@ void parse_request_line(std::map<std::string, std::string> &pair, std::string li
     std::string value2;
     size_t pos;
 
-    tmp = extract_key_value(line, " ");
+    tmp =  utils.extract_key_value(line, " ");
     value1 = tmp.begin()->first;
     pos = tmp.begin()->second.find(" ");
     value2 = tmp.begin()->second.substr(0, pos);
@@ -38,7 +38,7 @@ void parse_request_body(Request_Data &request, std::string str)
     if (request.file_name.empty())
     {
         std::string file_name;
-        file_name = get_file_name_by_time();
+        file_name =  utils.get_file_name_by_time();
         std::ofstream myfile(file_name);
         if (!myfile.is_open())
         {
@@ -49,7 +49,6 @@ void parse_request_body(Request_Data &request, std::string str)
         {
             request.file_name = file_name;
             myfile << str;
-            if ()
             while (getline(ss, line))
             {
                 std::cout << line + "\n";
@@ -87,7 +86,7 @@ void Request::parse_request(std::string str, Request_Data &request)
                     break;
                 line.erase(line.length() - 1);
                 std::cout << "{" + line + "}" << std::endl;
-                tmp = extract_key_value(line, ": ");
+                tmp =  utils.extract_key_value(line, ": ");
                 request.attributes.insert(std::pair<std::string, std::string>(tmp.begin()->first, tmp.begin()->second));
             }
         }
@@ -147,7 +146,7 @@ void Request::get_request(int accept_fd)
                     {
                         parse_request(buffer, request_table[ready_fd]);
                     }
-                    else
+                    if (request_table[ready_fd].is_finished)
                     {
                         // response(request_table[ready_fd]);
                     }

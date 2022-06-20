@@ -13,23 +13,12 @@
 #include "../../headers/webserv.hpp"
 
 
-std::string skip_spaces(std::string str)
-{
-    int i = 0;
-    while (str[i])
-    {
-        while (str[i] == ' ' || str[i] == '\t')
-            str.erase(i, 1);
-        i++;
-    }
 
-    return str;
-}
 
 void add_location_attributes(Location &location, std::string line)
 {
     std::map<std::string, std::string> pair;
-    pair = extract_key_value(line, "=");
+    pair = utils.extract_key_value(line, "=");
     check_map(location.attributes.insert(std::pair<std::string, std::string>(pair.begin()->first, pair.begin()->second)));
 }
 
@@ -43,7 +32,7 @@ void add_server_attributes(Server &server, std::string line,  std::ifstream &fin
         location.location_count++;
         while (getline(fin, line))
         {
-            line = skip_spaces(line);
+            line =  utils.skip_spaces(line);
             if (line[0] == '#' || line.empty())
                 continue;
             if (!line.compare("<location>"))
@@ -54,12 +43,12 @@ void add_server_attributes(Server &server, std::string line,  std::ifstream &fin
             add_location_attributes(location, line);
         }
         if (!fin)
-            syntax_error();
+             utils.syntax_error();
         server.locations.push_back(location);
     }
     else
     {
-        pair = extract_key_value(line, "=");
+        pair =  utils.extract_key_value(line, "=");
         // std::cout << "|" << pair.begin()->first << "|" << std::endl;
         check_map(server.attributes.insert(std::pair<std::string, std::string>(pair.begin()->first, pair.begin()->second)));
        
@@ -78,7 +67,7 @@ void add_http_attributes(Http &http, std::string line, std::ifstream &fin)
         server.server_count++;
         while (getline(fin, line))
         {
-            line = skip_spaces(line);
+            line =  utils.skip_spaces(line);
              if (line[0] == '#' || line.empty())
                 continue;
             if (!line.compare("<server>"))
@@ -89,13 +78,13 @@ void add_http_attributes(Http &http, std::string line, std::ifstream &fin)
             add_server_attributes(server, line, fin);
         }
         if (!fin)
-            syntax_error();
+             utils.syntax_error();
         http.servers.push_back(server);
     }
     else
     {
-        pair = extract_key_value(line, "=");
-       check_map(http.attributes.insert(std::pair<std::string, std::string>(pair.begin()->first, pair.begin()->second)));
+        pair =  utils.extract_key_value(line, "=");
+        utils.check_map(http.attributes.insert(std::pair<std::string, std::string>(pair.begin()->first, pair.begin()->second)));
     }
 }
 
@@ -106,11 +95,11 @@ Http parsing(char *str)
     Http http;
     
     fin.open(str);
-    check_file(fin);
+    utils.check_file(fin);
     while (fin)
     {
         getline(fin, line);
-        line = skip_spaces(line);
+        line =  utils.skip_spaces(line);
         if (line[0] == '#' || line.empty())
             continue;
         if (!line.compare("<HTTP>") || http.http_count)
@@ -127,6 +116,6 @@ Http parsing(char *str)
         }
     }
     fin.close();
-    check_file_syntax();
+    utils.check_file_syntax();
     return http;
 }
