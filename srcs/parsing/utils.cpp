@@ -1,6 +1,6 @@
-#include "../../maps/parsing.hpp"
+#include "../../headers/parsing.hpp"
 
-std::map<std::string, std::string> utils::extract_key_value(std::string line, std::string delm)
+std::map<std::string, std::string> Utils::extract_key_value(std::string line, std::string delm)
 {
   std::string key;
   std::string value;
@@ -17,7 +17,7 @@ std::map<std::string, std::string> utils::extract_key_value(std::string line, st
   return pair;
 }
 
-std::string utils::get_file_name_by_time()
+std::string Utils::get_file_name_by_time()
 {
     struct timeval time_now;
     std::stringstream stream;  
@@ -32,7 +32,7 @@ std::string utils::get_file_name_by_time()
 }
 
 
-std::string utils::Response::find_in_map(const std::map<std::string, std::string> &map, const std::string &str)
+std::string Utils::find_in_map(const std::map<std::string, std::string> &map, const std::string &str)
 {
     std::map<std::string, std::string>::const_iterator end = map.end();
     std::map<std::string, std::string>::const_iterator it = map.find(str);
@@ -41,7 +41,7 @@ std::string utils::Response::find_in_map(const std::map<std::string, std::string
     return it->second;
 }
 
-void utils::check_file(std::ifstream &fin)
+void Utils::check_file(std::ifstream &fin)
 {
     if (!fin.is_open())
     {
@@ -62,12 +62,12 @@ void utils::check_file(std::ifstream &fin)
 //     // }
 // }
 
-void utils::syntax_error()
+void Utils::syntax_error()
 {
     std::cout << "Syntax Error!\n";
     exit(1);
 }
-void utils::check_file_syntax()
+void Utils::check_file_syntax()
 {
     Http http;
     Server server;
@@ -77,13 +77,13 @@ void utils::check_file_syntax()
         syntax_error();
 }
 
-void utils::check_map(std::pair<std::map<std::string, std::string>::iterator,bool> ret)
+void Utils::check_map(std::pair<std::map<std::string, std::string>::iterator,bool> ret)
 {
     if (ret.second==false)
         syntax_error();
 }
 
-std::string utils::skip_spaces(std::string str)
+std::string Utils::skip_spaces(std::string str)
 {
     int i = 0;
     while (str[i])

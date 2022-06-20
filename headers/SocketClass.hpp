@@ -2,12 +2,6 @@
 
 #include "webserv.hpp"
 
-/*
-	1) write both send and receive functions
-	2) make a structure for content-types
-	3) maybe constructor parameters can have a default value instead of always specify them
-*/
-
 class 	ft_socket
 {
 	int							sock_fd;
@@ -24,9 +18,6 @@ public:
 
 	int		accept_connections( void );
 	
-	void		response( const std::string& );
-	std::string request( void );
-
 	int					getSockFd( void ) const;
 	struct sockaddr_in	getServerAddr( void ) const;
 	struct sockaddr_in	getClientAddr( void ) const;

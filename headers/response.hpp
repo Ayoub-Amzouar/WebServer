@@ -1,19 +1,24 @@
-#ifndef _RESPONSE_HPP_
-#define _RESPONSE_HPP_
+// #pragma once
 
-#include "webserv.hpp"
+// #include "webserv.hpp"
 
-struct Response
-{
-private:
-    char** _env;
+// #define ALLOWED_CHARACTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%"
 
-private:
+// struct Response
+// {
+// private:
+//     char** _env;
+//     Http    &_http;
 
+// private:
+//     std::string		find_header(const std::map<std::string, std::string> &, const std::string &);
+//     int				check_req_validity(const std::map<std::string, std::string> &);
+//     Server&			getServer(Http &, std::map<std::string, std::string> &);
+//     int				maxBodySize(Server &, std::map<std::string, std::string> &);
+//     int             getLocation(Server &server, std::map<std::string, std::string> &request);
 
-public:
-    Response(char *env[]);
-    std::string run(std::string cgiExnt, std::string cgiName, std::string root, std::string method, std::string uri, std::string reqBody);
-};
+// public:
+//     Response(Http &http, char *env[]);
+//     std::string run(std::map<std::string, std::string> &headers, std::string &body_string);
+// };
 
-#endif

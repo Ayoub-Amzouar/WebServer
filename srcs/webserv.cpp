@@ -5,7 +5,7 @@ int Http::http_count = 0;
 int Server::server_count = 0;
 int Location::location_count = 0;
 
-int		main(int argc, char **argv)
+int main(int argc, char **argv, char **env)
 {
     if (argc > 1)
     {
@@ -15,7 +15,7 @@ int		main(int argc, char **argv)
         ft_socket	*sock = new ft_socket[http.servers.size()];
 		int			index = 0;
 
-		for (size_t i = 0; i < http.servers.size(); i++)
+		for (int i = 0; i < http.servers.size(); i++)
 			sock[i] = ft_socket(std::stoi(http.servers[i].attributes["listen"]), INADDR_ANY);
 
         while (1)

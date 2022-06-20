@@ -1,5 +1,4 @@
-#ifndef _CGI_HPP_
-#define _CGI_HPP_
+#pragma once
 
 #include "webserv.hpp"
 
@@ -30,5 +29,3 @@ public:
     std::string GET(std::string uri, std::string root);
     // std::string DELETE();
 };
-
-#endif

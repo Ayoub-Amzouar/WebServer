@@ -23,7 +23,7 @@ void parse_request_line(std::map<std::string, std::string> &pair, std::string li
     std::string value2;
     size_t pos;
 
-    tmp =  utils.extract_key_value(line, " ");
+    tmp =  Utils::extract_key_value(line, " ");
     value1 = tmp.begin()->first;
     pos = tmp.begin()->second.find(" ");
     value2 = tmp.begin()->second.substr(0, pos);
@@ -38,7 +38,7 @@ void parse_request_body(Request_Data &request, std::string str)
     if (request.file_name.empty())
     {
         std::string file_name;
-        file_name =  utils.get_file_name_by_time();
+        file_name =  Utils::get_file_name_by_time();
         std::ofstream myfile(file_name);
         if (!myfile.is_open())
         {
@@ -86,7 +86,7 @@ void Request::parse_request(std::string str, Request_Data &request)
                     break;
                 line.erase(line.length() - 1);
                 std::cout << "{" + line + "}" << std::endl;
-                tmp =  utils.extract_key_value(line, ": ");
+                tmp =  Utils::extract_key_value(line, ": ");
                 request.attributes.insert(std::pair<std::string, std::string>(tmp.begin()->first, tmp.begin()->second));
             }
         }
@@ -108,9 +108,9 @@ void Request::parse_request(std::string str, Request_Data &request)
 
 void Request::get_request(int accept_fd)
 {
-    Request_Data req;
-    char buffer[3000];
-    int ready_fd;
+	Request_Data	req;
+	char			buffer[3000];
+	int				ready_fd;
 
     if (accept_fd > 0)
     {
@@ -136,6 +136,7 @@ void Request::get_request(int accept_fd)
                 int ret = recv(ready_fd, buffer, 3000, 0);
                 if (ret > 0)
                 {
+                    std::cout << "**"<< + buffer << std::endl;
                     if (!request_table.count(ready_fd))
                     {
                         request_table.insert(std::make_pair(ready_fd, req));
