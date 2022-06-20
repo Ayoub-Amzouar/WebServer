@@ -1,6 +1,7 @@
 
 **/wordpress/*
 /tmp
+/test
 a.out*
 server
 .vscode

@@ -130,23 +130,45 @@ void Cgi::send_response(int fd)
     in.close();
 }
 
-std::string Cgi::GET(std::string uri, std::string root)
-{
-    std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
+// std::string Cgi::GET(std::string uri, std::string root)
+// {
+//     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
 
-    setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
-    setenv("REQUEST_METHOD", "GET", true);
-    _file = (root + parsed_uri.first).c_str();
-    execute("");
-    int cgi_code = cgi_status_code();
-    if (cgi_code == 0) // no status by cgi.
-        generate_response(200);
-    else
-        generate_response(cgi_code);
-    return fileToStr(_response_file);
-}
+//     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
+//     setenv("REQUEST_METHOD", "GET", true);
+//     _file = (root + parsed_uri.first).c_str();
+//     execute("");
+//     int cgi_code = cgi_status_code();
+//     if (cgi_code == 0) // no status by cgi.
+//         generate_response(200);
+//     else
+//         generate_response(cgi_code);
+//     return fileToStr(_response_file);
+// }
 
-std::string Cgi::POST(std::string uri, std::string body_file, std::string root)
+// std::string Cgi::POST(std::string uri, std::string body_file, std::string root)
+// {
+//     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
+//     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
+//     setenv("REQUEST_METHOD", "POST", true);
+//     setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
+//     setenv("REDIRECT_STATUS", "CGI", true);
+//     setenv("CONTENT_LENGTH", "1024", true);
+//     setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", true);
+//     /*
+//     */
+//     _file = (root + parsed_uri.first).c_str();
+//     execute(body_file);
+//     int cgi_code = cgi_status_code();
+//     if (cgi_code == 0) // no status by cgi.
+//         generate_response(201);
+//     else
+//         generate_response(cgi_code);
+//     return fileToStr(_response_file);
+// }
+
+// TODO:
+std::string Cgi::run(std::string method,std::string uri, std::string body_file, std::string root)
 {
     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
@@ -166,5 +188,4 @@ std::string Cgi::POST(std::string uri, std::string body_file, std::string root)
         generate_response(cgi_code);
     return fileToStr(_response_file);
 }
-
 

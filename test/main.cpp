@@ -126,7 +126,7 @@ std::string get_msg(int cod)
     status.append(std::to_string(cod));
     return status + "test";
 }
-int main()
+int main(int ac, char **av)
 {
     // std::ifstream t("file.txt");
     // std::stringstream buffer;
@@ -134,7 +134,15 @@ int main()
     // std::cout << buffer.str() << std::endl;
     // std::cout << defaultErrPage(400) << std::endl;
     // std::cout << content_length(10) << std::endl;
-    ErrorPage err("/Users/ynoam/Desktop/WebServer/srcs/response//");
+    // ErrorPage err("/Users/ynoam/Desktop/WebServer/srcs/response//");
 
-    std::cout << err.get_page(404) << std::endl;
+    // std::cout << err.get_page(404) << std::endl;
+    Http http = parsing(av[1]);
+    std::map<std::string, std::string> headers;
+    headers["location"] = "/";
+    headers["method"] = "GET";
+    headers["method"] = "GET";
+    std::string file("lkjlkjlk");
+    Response res(http);
+    std::cout << res.run(headers, file) << std::endl;
 }

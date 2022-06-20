@@ -125,10 +125,8 @@ void Request::get_request(int accept_fd, Response &response)
 
     if (!ufds.empty())
     {
-
         bzero(buffer, 3000);
         poll(&ufds[0], ufds.size(), -1);
-
         for (size_t i = 0; i < ufds.size(); i++)
         {
             if (ufds[i].revents == POLLIN)
@@ -147,9 +145,11 @@ void Request::get_request(int accept_fd, Response &response)
                     {
                         parse_request(buffer, request_table[ready_fd]);
                     }
+                    request_table[ready_fd].is_finished = true;
                     if (request_table[ready_fd].is_finished)
                     {
                         std::string str = response.run(request_table[ready_fd].attributes, request_table[ready_fd].file_name);
+                        std::cout << str << std::endl;
                     }
                 }
             }

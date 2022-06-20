@@ -4,15 +4,16 @@
 
 std::string status_line(int code);
 std::string content_type(std::string exten);
+std::string content_length(size_t);
 std::string error_page(int code);
+std::string erasePathFromUri(std::string &uri, std::string &location_path);
+
 bool doesFileExist (const std::string&);
 std::vector<std::string> parse_line(std::string str, std::string delim);
 std::pair<std::string, std::string> parse_uri(std::string uri);
 std::string cut_uri(std::string uri);
-std::string erasePathFromUri(std::string &uri, std::string &location_path);
 std::string defaultErrPage(int code);
 std::string fileToStr(std::string &);
-std::string content_length(size_t);
 
 class StatusCode
 {

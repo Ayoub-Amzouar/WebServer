@@ -200,7 +200,6 @@ ContentType::ContentType()
 }
 
 // @@@ ERROR PAGES
-// TODO:
 std::string defaultErrPage(int code)
 {
     static const StatusCode s;

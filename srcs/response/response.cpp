@@ -13,8 +13,10 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
 {
     // is_req_well_formed
     {
+    // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
         ErrorPage err("");
         int reqValdity = check_req_validity(request);
+        std::cout << "REQUEST VALID"<<reqValdity << std::endl;
         if (reqValdity)
             return err.get_page(reqValdity);
     }
@@ -47,12 +49,12 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
             if (end == method.end())
                 return err.get_page(405);
         }
-        // if (reqMethod == "GET")
-        //     return get_method(location, request);
-        // else if (reqMethod == "POST")
-        //     return post_method(location, request, body_file);
-        // else if (reqMethod == "DELETE")
-        //     return delete_method(location, request);
+        if (reqMethod == "GET")
+            return get_method(err, location, request);
+        else if (reqMethod == "POST")
+            return post_method(err, location, request, body_file);
+        else if (reqMethod == "DELETE")
+            return delete_method(err, location, request);
     return err.get_page(404);
     }
 }
@@ -139,6 +141,14 @@ int Response::check_req_validity(const std::map<std::string, std::string> &reque
     std::string method = find_header(request, "method");
     std::string uri = find_header(request, "location");
     std::string host = find_header(request, "Host");
+    std::cout << "******************************" << std::endl;
+    std::cout << content_length << std::endl;
+    std::cout << content_type << std::endl;
+    std::cout << transfer_encoding << std::endl;
+    std::cout << method << std::endl;
+    std::cout << uri << std::endl;
+    std::cout << host << std::endl;
+    std::cout << "******************************" << std::endl;
     {                                                                       // URI
         if (uri.find_first_not_of(ALLOWED_CHARACTERS) != std::string::npos) // 400
             return 400;
