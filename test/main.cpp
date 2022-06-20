@@ -140,5 +140,5 @@ int main(int ac, char **av)
     std::string name("php-cgi");
     Cgi cgi(name);
 
-    std::cout << cgi.run("POST", "/index.php","/Users/ynoam/Desktop/WebServer/file","/Users/ynoam/wordpress") << std::endl;
+    std::cout << cgi.run("POST", "/index.php", "/Users/ynoam/Desktop/WebServer/file", "/Users/ynoam/wordpress") << std::endl;
 }
