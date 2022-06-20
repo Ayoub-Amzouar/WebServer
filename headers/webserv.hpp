@@ -6,7 +6,7 @@
 /*   By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:13:59 by mel-hadj          #+#    #+#             */
-/*   Updated: 2022/06/19 11:11:49 by mel-hadj         ###   ########.fr       */
+/*   Updated: 2022/06/19 17:22:50 by mel-hadj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,18 @@
 #include <netinet/in.h>
 #include <string>
 #include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <string>
-#include <sstream>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <algorithm>
 #include <stdio.h>
 #include <fcntl.h>
 #include <poll.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sstream>
+#include <sys/stat.h>
 #include <sys/time.h>
-
-
+#include <dirent.h>
+#include <algorithm>
 
 #include "SocketClass.hpp"
-
 #include "cgi.hpp"
 #include "utils.hpp"
 #include "parsing.hpp"
