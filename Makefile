@@ -35,7 +35,7 @@ all : $(NAME)
 
 $(NAME) : $(SRCS)  $(HEADERS)
 			@echo "compiling.."
-			@$(CC)  -fsanitize=address -g $(FLAGS) $(SRCS) -o $(NAME)
+			@$(CC) $(FLAGS) $(SRCS) -o $(NAME)
 			@echo "Done."
 
 clean :

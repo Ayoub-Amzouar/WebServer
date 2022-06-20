@@ -5,7 +5,7 @@ Response::Response(Http &http) : _http(http)
 {
     for (std::vector<Server>::iterator it = _http.servers.begin(); it != _http.servers.end(); it++)
     {
-        _serversErrors.push_back(ErrorPage( Utils::find_in_map((*it).attributes, "error-pages")));
+        _serversErrors.push_back(ErrorPage(Utils::find_in_map((*it).attributes, "error-pages")));
     }
 }
 
@@ -16,7 +16,7 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
     // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
         ErrorPage err("");
         int reqValdity = check_req_validity(request);
-        std::cout << "REQUEST VALID"<<reqValdity << std::endl;
+        // std::cout << "REQUEST VALID"<<reqValdity << std::endl;
         if (reqValdity)
             return err.get_page(reqValdity);
     }
@@ -75,7 +75,7 @@ int Response::getLocation(Server &server, std::map<std::string, std::string> &re
                 return i;
             i++;
         }
-        uri =  Utils::cut_uri(uri);
+        uri = Utils::cut_uri(uri);
     }
     return -1;
 }
@@ -170,13 +170,3 @@ int Response::check_req_validity(const std::map<std::string, std::string> &reque
     }
     return 0;
 }
-
-// std::string Response:: Utils::find_in_map(const std::map<std::string, std::string> &header, const std::string &str)
-// {
-//     std::map<std::string, std::string>::const_iterator end = header.end();
-//     std::map<std::string, std::string>::const_iterator it = header.find(str);
-//     if (it != end)
-//         return std::string("");
-//     return it->second;
-// }
-

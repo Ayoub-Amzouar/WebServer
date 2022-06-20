@@ -86,14 +86,14 @@ void Request::parse_request(std::string str, Request_Data &request)
                 if (line.find('\r') == 0)
                     break;
                 line.erase(line.length() - 1);
-                std::cout << "{" + line + "}" << std::endl;
+                // std::cout << "{" + line + "}" << std::endl;
                 tmp =  Utils::extract_key_value(line, ": ");
                 request.attributes.insert(std::pair<std::string, std::string>(tmp.begin()->first, tmp.begin()->second));
             }
         }
         else
         {
-            std::cout << "here\n";
+            // std::cout << "here\n";
             parse_request_body(request, line);
         }
     }
@@ -132,22 +132,26 @@ void Request::get_request(int accept_fd, Response &response)
             if (ufds[i].revents == POLLIN)
             {
                 ready_fd = ufds[i].fd;
+                std::cout << "fd = " << ready_fd << std::endl;                  
                 int ret = recv(ready_fd, buffer, 3000, 0);
                 if (ret > 0)
                 {
-                    std::cout << "**"<< + buffer << std::endl;
                     if (!request_table.count(ready_fd))
                     {
                         request_table.insert(std::make_pair(ready_fd, req));
                         parse_request(buffer, request_table[ready_fd]);
-                        // std::cout << request_table[ready_fd].attributes["method"] << std::endl;
+                        // std::cout << "------" << request_table[ready_fd].attributes["location"] << std::endl;
                     }
                     else if (!request_table[ready_fd].is_finished)
                     {
                         parse_request(buffer, request_table[ready_fd]);
+                        // std::cout << "------" << request_table[ready_fd].attributes["location"] << std::endl;
+
+                        request_table[ready_fd].is_finished = true;
                     }
                     if (request_table[ready_fd].is_finished)
                     {
+                          std::cout << "------" << request_table[ready_fd].attributes["location"] << std::endl;
                         std::string str = response.run(request_table[ready_fd].attributes, request_table[ready_fd].file_name);
                         std::cout << str << std::endl;
                     }

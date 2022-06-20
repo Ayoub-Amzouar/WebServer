@@ -178,7 +178,7 @@ std::string Utils::find_in_map(const std::map<std::string, std::string> &map, co
 {
     std::map<std::string, std::string>::const_iterator end = map.end();
     std::map<std::string, std::string>::const_iterator it = map.find(str);
-    if (it != end)
+    if (it == end)
         return std::string("");
     return it->second;
 }
