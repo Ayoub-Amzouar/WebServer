@@ -9,10 +9,17 @@ bool		is_slash_at_end( std::string uri )
 	return (false);
 }
 
+bool		is_location_has_cgi( Location location )
+{
+
+}
+
 std::string	resource_type_is_directory( std::string uri, Location location)
 {
 	if (is_slash_at_end(uri)) {
-		if ()
+		if (is_location_has_cgi(location)) {
+
+		}
 	} else {
 		// 409 Conflict
 	}

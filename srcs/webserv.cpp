@@ -16,6 +16,7 @@ int main(int argc, char **argv, char **env)
 		int			index = 0;
 
 		for (size_t i = 0; i < http.servers.size(); i++)
+			// instead of INADDR_ANY make sure you take the host as string and convert it into decimal
 			sock[i] = ft_socket(std::stoi(http.servers[i].attributes["listen"]), INADDR_ANY);
 
         Response response(http);
