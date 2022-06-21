@@ -4,7 +4,7 @@
 /test
 a.out*
 server
-.vscode
+/.vscode
 webserv
 ToDo
 .DS_Store
