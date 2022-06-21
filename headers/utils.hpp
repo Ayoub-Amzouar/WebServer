@@ -41,9 +41,12 @@ public:
 
 struct file_stats
 {
-    short        perm;
-    bool        exist;
-    short        type;
+    bool		w_perm;
+    bool		r_perm;
+    bool		x_perm;
+    bool		exist;
+    short		type;
+
     file_stats () : perm(), exist(), type() {}
 };
 
