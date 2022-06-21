@@ -141,7 +141,7 @@ ErrorPage::ErrorPage(std::string error_page_path)
         response.append("\n");
         response.append(content_type("html"));
         response.append("\n");
-        body = (dir.exist && file.exist && file.perm >= 4) ?  Utils::fileToStr(file_str) :  Utils::defaultErrPage(*it);
+        body = (dir.exist && file.exist && file.r_perm >= 4) ?  Utils::fileToStr(file_str) :  Utils::defaultErrPage(*it);
         response.append( Utils::content_length(body.size()));
         response.append("\n");
         response.append("\n");
