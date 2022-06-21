@@ -38,20 +38,6 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
         // choose location from server from config file
         Location &location = server.locations[location_num];
         // if location have redirection
-
-        // TODO: location have redirection like: return 301 /home/index.html
-        // Syntax:	return code [text];
-        //          return code URL;
-        //          return URL;
-        // Default:	—
-        // Context:	server, location, if
-
-        // return       301 https://example.com$request_uri;
-        // return       301 $scheme://www.new-name.com$request_uri;
-        // return (301 | 302 | 303 | 307) url;
-        // return 401 "Access denied because token is expired or invalid";
-
-
         std::string redirect =  Utils::find_in_map(location.attributes, "return");
         if (!redirect.empty())
         {
