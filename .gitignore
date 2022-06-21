@@ -1,6 +1,7 @@
 
 **/wordpress/*
 /tmp
+/test
 a.out*
 server
 .vscode
@@ -11,3 +12,4 @@ test.cpp
 server.c
 client.c
 *.py
+*.dSYM

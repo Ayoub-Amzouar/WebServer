@@ -1,9 +1,9 @@
-#pragma once
+// #pragma once
 
-//  #include "webserv.hpp"
-//  #include "utils.hpp"
-//  #include "parsing.hpp"
-class Http;
+ #include "webserv.hpp"
+ #include "utils.hpp"
+ #include "parsing.hpp"
+// class Http;
 
 #define ALLOWED_CHARACTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%"
 
@@ -15,11 +15,15 @@ private:
     std::vector<ErrorPage> _serversErrors;
 
 private:
-    std::string		find_header(const std::map<std::string, std::string> &, const std::string &);
+    // std::string		 Utils::find_in_map(const std::map<std::string, std::string> &, const std::string &);
     int				check_req_validity(const std::map<std::string, std::string> &);
     int             getServer(Http &, std::map<std::string, std::string> &);
     int				maxBodySize(Server &, std::map<std::string, std::string> &);
     int             getLocation(Server &server, std::map<std::string, std::string> &request);
+    std::string		get_method(const ErrorPage&, const Location&, const std::map<std::string, std::string> &, const std::string &);
+	std::string		post_method(const ErrorPage&, const Location &, const std::map<std::string, std::string> &, const std::string &);
+	std::string		delete_method(const ErrorPage&, const Location &, const std::map<std::string, std::string> &, const std::string &);
+    std::string		redirection(std::string &);
 
 public:
     // Response(Http &http, char *env[]);
