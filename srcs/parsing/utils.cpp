@@ -143,9 +143,9 @@ file_stats     Utils::get_file_stats ( std::string filename )
 
     res.exist = 1;
 
-    res.w_perm = (fs.st_mode & S_IRUSR) ? 1 : 0;
-    res.r_perm = (fs.st_mode & S_IWUSR) ? 1 : 0;
-    res.x_perm = (fs.st_mode & S_IXUSR) ? 1 : 0;
+    res.w_perm = (fs.st_mode & S_IRUSR) ? true : false;
+    res.r_perm = (fs.st_mode & S_IWUSR) ? true : false;
+    res.x_perm = (fs.st_mode & S_IXUSR) ? true : false;
 
     if (S_ISDIR(fs.st_mode))
         res.type = FT_DIR;
