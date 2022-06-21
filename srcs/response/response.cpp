@@ -3,10 +3,12 @@
 // Response::Response(Http &http, char *env[]) : _http(http), _env(env)
 Response::Response(Http &http) : _http(http)
 {
+    std::vector<ErrorPage> errors;
     for (std::vector<Server>::iterator it = _http.servers.begin(); it != _http.servers.end(); it++)
     {
-        _serversErrors.push_back(ErrorPage(Utils::find_in_map((*it).attributes, "error-pages")));
+        errors.push_back(ErrorPage(Utils::find_in_map((*it).attributes, "error-pages")));
     }
+    _serversErrors = errors;
 }
 
 std::string Response::run(std::map<std::string, std::string> &request, std::string &body_file)
@@ -36,10 +38,28 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
         // choose location from server from config file
         Location &location = server.locations[location_num];
         // if location have redirection
+
+        // TODO: location have redirection like: return 301 /home/index.html
+        // Syntax:	return code [text];
+        //          return code URL;
+        //          return URL;
+        // Default:	—
+        // Context:	server, location, if
+
+        // return       301 https://example.com$request_uri;
+        // return       301 $scheme://www.new-name.com$request_uri;
+        // return (301 | 302 | 303 | 307) url;
+        // return 401 "Access denied because token is expired or invalid";
+
+
         std::string redirect =  Utils::find_in_map(location.attributes, "return");
         if (!redirect.empty())
-            std::string("return redirection with " + redirect + " variable + you have to split the variable with red_code:locaiton");
-        // allowded methods in location
+        {
+            std::string redirect_ret = redirection(redirect);
+            if (!redirect_ret.empty())
+                return redirect_ret;
+        }
+		// allowded methods in location
         std::string methods =  Utils::find_in_map(location.attributes, "methods");
         std::string reqMethod =  Utils::find_in_map(request, "method");
         if (!methods.empty() && !reqMethod.empty())
@@ -131,6 +151,26 @@ int Response::getServer(Http &http, std::map<std::string, std::string> &request)
         i++;
     }
     return 0;
+}
+std::string Response::redirection(std::string &redirect_str)
+{
+    int array[] = {301, 302, 303, 307};
+    std::vector<int> redirect_codes(array, array + sizeof(array) / sizeof(int));
+
+    std::vector<std::string> parse = Utils::parse_line(redirect_str, "|");
+    if ((parse[0]).empty() || (parse[1]).empty())
+        return std::string();
+
+    int int_code = std::stoi(parse[0]);
+    std::string status_line = Utils::status_line(int_code);
+    std::string location_line = Utils::location(parse[1]);
+
+    for(std::vector<int>::iterator it = redirect_codes.begin(); it != redirect_codes.end(); it++)
+    {
+        if (int_code == *it)
+            return status_line + "\n" + location_line + "\n\n";
+    }
+    return std::string();
 }
 
 int Response::check_req_validity(const std::map<std::string, std::string> &request)

@@ -180,7 +180,7 @@ std::string Cgi::run(std::string method,std::string uri, std::string body_file, 
     _file = (root + parsed_uri.first).c_str();
     execute(body_file);
     int cgi_code = cgi_status_code();
-    if (cgi_code == 0) // no status by cgi.
+    if (cgi_code == 0 && method == "POST") // no status by cgi.
         generate_response(201);
     else
         generate_response(cgi_code);

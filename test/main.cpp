@@ -1,17 +1,10 @@
-#include <iostream>
-#include <dirent.h>
-#include <sys/types.h>
 
-#include <iostream>
-#include <ctime>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <cerrno>
-#include <cstring>
-#include <string>
-#include <vector>
 #include "../headers/webserv.hpp"
 
+
+int Http::http_count = 0;
+int Server::server_count = 0;
+int Location::location_count = 0;
 // using namespace std;
 // std::vector<std::string> parse_line(std::string str, std::string delim)
 // {
@@ -137,8 +130,33 @@ int main(int ac, char **av)
     // ErrorPage err("/Users/ynoam/Desktop/WebServer/srcs/response//");
 
     // std::cout << err.get_page(404) << std::endl;
-    std::string name("php-cgi");
-    Cgi cgi(name);
+    // std::string name("php-cgi");
+    // Cgi cgi(name);
 
-    std::cout << cgi.run("POST", "/index.php", "/Users/ynoam/Desktop/WebServer/file", "/Users/ynoam/wordpress") << std::endl;
+    // std::cout << cgi.run("POST", "/index.php", "/Users/ynoam/Desktop/WebServer/file", "/Users/ynoam/wordpress") << std::endl;
+
+    std::string redirect_str = "304|htt://lkjlkjjlkj";
+    static int array[] = {301, 302, 303, 307};
+    static std::vector<int> redirect_codes(array, array + sizeof(array) / sizeof(int));
+
+    std::vector<std::string> parse = Utils::parse_line(redirect_str, "|");
+    if ((parse[0]).empty() || (parse[1]).empty())
+    {
+        std::cout << "empty" << std::endl;
+        return 0;
+    }
+
+    int int_code = std::stoi(parse[0]);
+    std::string status_line = Utils::status_line(int_code);
+    std::string location_line = Utils::location(parse[1]);
+
+    for(std::vector<int>::iterator it = redirect_codes.begin(); it != redirect_codes.end(); it++)
+    {
+        if (int_code == *it)
+        {
+            std::cout << status_line + "\n" + location_line + "\n" << std::endl;
+            return 0;
+        }
+    }
+        std::cout << "empty" << std::endl;
 }

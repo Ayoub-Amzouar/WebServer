@@ -129,9 +129,9 @@ ContentType::ContentType()
 ErrorPage::ErrorPage(std::string error_page_path)
 {
     file_stats dir =  Utils::get_file_stats(error_page_path);
-    int errors[] = {400, 403, 404, 405, 409, 413, 414, 500};
-    std::vector<int> err(errors, errors + sizeof(errors) / sizeof(int));
-    for(std::vector<int>::iterator it = err.begin(); it != err.end(); it++)
+    const static int errors[] = {400, 403, 404, 405, 409, 413, 414, 500};
+    const static std::vector<int> err(errors, errors + sizeof(errors) / sizeof(int));
+    for(std::vector<int>::const_iterator it = err.begin(); it != err.end(); it++)
     {
         std::string file_str(error_page_path + "/" + std::to_string(*it) + ".html");
         file_stats file =  Utils::get_file_stats(file_str);

@@ -54,21 +54,23 @@ public:
     Utils();
     ~Utils();
     void static check_file(std::ifstream &fin);
-    void static syntax_error();
-    void static check_file_syntax();
+    void static syntax_error(void);
+    void static check_file_syntax(void);
     std::map<std::string, std::string> static extract_key_value(std::string line, std::string delm);
     void static check_map(std::pair<std::map<std::string, std::string>::iterator, bool> ret);
     std::string static find_in_map(const std::map<std::string, std::string> &map, const std::string &str);
-    std::string static get_file_name_by_time();
+    std::string static get_file_name_by_time(void);
     std::string static skip_spaces(std::string str);
     std::string static erasePathFromUri(std::string &uri, std::string &location_path);
     std::pair<std::string, std::string> static parse_uri(std::string uri);
     std::string static content_length(size_t size);
+    std::string static location(std::string &);
     std::string static cut_uri(std::string uri);
     std::vector<std::string> static parse_line(std::string str, std::string delim);
     bool static doesFileExist(const std::string &name);
     std::string static status_line(int code);
     std::string static content_type(std::string exten);
+    std::string static status_code(int code);
     // @@@ ERROR PAGES
     std::string static defaultErrPage(int code);
     std::string static fileToStr(std::string &fileName);

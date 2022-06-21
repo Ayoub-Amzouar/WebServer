@@ -23,6 +23,7 @@ private:
     std::string		get_method(const ErrorPage&, const Location&, const std::map<std::string, std::string> &, const std::string &);
 	std::string		post_method(const ErrorPage&, const Location &, const std::map<std::string, std::string> &, const std::string &);
 	std::string		delete_method(const ErrorPage&, const Location &, const std::map<std::string, std::string> &, const std::string &);
+    std::string		redirection(std::string &);
 
 public:
     // Response(Http &http, char *env[]);

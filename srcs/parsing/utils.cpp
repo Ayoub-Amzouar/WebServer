@@ -17,6 +17,10 @@ std::map<std::string, std::string> Utils::extract_key_value(std::string line, st
   return pair;
 }
 
+std::string Utils::location(std::string &redirection)
+{
+    return "Location: " + redirection;
+}
 
 std::pair<std::string, std::string> Utils::parse_uri(std::string uri)
 {
@@ -33,13 +37,13 @@ std::string Utils::content_length(size_t size)
     return c + std::to_string(size);
 }
 
-    std::string  Utils::cut_uri(std::string uri)
+std::string Utils::cut_uri(std::string uri)
 {
     if (uri.empty())
-        return std::string("");
+        return std::string();
     size_t found = uri.find_last_of("/");
     if (found == std::string::npos)
-        return std::string("");
+        return std::string();
     if (uri[found] == *(uri.end() - 1))
         uri.erase(found, 1);
     else
@@ -73,10 +77,18 @@ bool Utils::doesFileExist(const std::string &name)
     return f.good();
 }
 
-std::string Utils::status_line(int code)
+std::string Utils::status_code(int code)
 {
     static const StatusCode s;
     std::string exist = s.get_message(code);
+    if (!exist.empty())
+    return exist;
+    else
+        return std::string();
+}
+std::string Utils::status_line(int code)
+{
+    std::string exist = Utils::status_code(code);
     if (!exist.empty())
     {
         std::string status("HTTP1.1 ");
