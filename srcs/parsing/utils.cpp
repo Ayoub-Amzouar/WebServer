@@ -249,3 +249,15 @@ std::string Utils::skip_spaces(std::string str)
 
     return str;
 }
+
+
+std::string		Utils::give_me_uri( const Location &location, const std::map<std::string, std::string> &request )
+{
+	std::string							path = Utils::find_in_map(location.attributes, "path");
+	std::string							uri = Utils::find_in_map(request, "location");
+	std::pair<std::string, std::string>	split_uri = Utils::parse_uri(uri);
+
+	uri = Utils::erasePathFromUri(split_uri.first, path);
+
+	return (Utils::find_in_map(location.attributes, "root") + '/' + uri);
+}

@@ -45,9 +45,9 @@ struct file_stats
     bool		r_perm;
     bool		x_perm;
     bool		exist;
-    short		type;
+    bool		type;
 
-    file_stats () : perm(), exist(), type() {}
+    file_stats () : w_perm(), r_perm(), x_perm() ,exist(), type() {}
 };
 
 class Utils
@@ -78,7 +78,8 @@ public:
     std::string static defaultErrPage(int code);
     std::string static fileToStr(std::string &fileName);
     // @@@@ FILE PERMISSION
-    file_stats    static get_file_stats ( std::string filename );
+    file_stats	static get_file_stats ( std::string filename );
+	std::string	static give_me_uri( const Location &location, const std::map<std::string, std::string> &request );
 };
 
 // std::string status_line(int code);
