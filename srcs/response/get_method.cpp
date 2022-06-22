@@ -32,6 +32,7 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
     std::string root = Utils::find_in_map(locationMap.attributes, "root");
     std::string path = Utils::find_in_map(locationMap.attributes, "path");
     std::string cgi = Utils::find_in_map(locationMap.attributes, "cgi-name");
+    std::string cgi_extenstion = Utils::find_in_map(locationMap.attributes, "cgi-name");
     std::string autoindex = Utils::find_in_map(locationMap.attributes, "autoindex");
     //  get variables from request Map
     std::string uri = Utils::find_in_map(requestMap, "location");
@@ -40,11 +41,10 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
 
     std::string url = Utils::give_me_uri(locationMap, requestMap);
     file_stats res = Utils::get_file_stats(url);
-    file_stats res = Utils::get_file_stats(url);
     if (!(res.exist))
         errPage.get_page(404);
     // DIR
-    else if (res.type == FT_DIR)
+    if (res.type == FT_DIR)
     {
         if ((url.c_str())[url.length() - 1] != '/')
         {
@@ -52,17 +52,29 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
             return redirection(redirect);
         }
         res = Utils::get_file_stats(url + index);
-        if (!res.exist)
+        if (!index.empty() || !res.exist())
         {
-            if (autoindex != "on")
+            if (autoindex != "on" && autoindex != "")
                 errPage.get_page(403);
             std::string autoindex_res = autoindex_dir(url);
+            return autoindex_res;
         }
-        url = url + index;
+        url += index;
     }
     //  FILE 
-    if (cgi.empty())
+    res = Utils::get_file_stats(url);
+    std::string file_extension = Utils::getFileExtension(url);
+    // TODO: try to figure out which of the index file and location have a cgi
+    if (!cgi.empty())
     {
-        
     }
+    if (!res.r_perm)
+        errPage.get_page(403);
+    std::string content = Utils::fileToStr(url);
+    std::string contentType;
+    if (file_extension.empty())
+        contentType = "Content-Type: application/octet-stream";
+    else
+        contentType = Utils::content_type(file_extension);
+    return Utils::status_line(200) + "\n" + contentType + "\n" + Utils::content_length(content.length()) + "\n\n" + content;
 }

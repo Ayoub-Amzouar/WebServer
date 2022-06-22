@@ -14,14 +14,14 @@ Response::Response(Http &http) : _http(http)
 std::string Response::run(std::map<std::string, std::string> &request, std::string &body_file)
 {
     // is_req_well_formed
-    {
-    // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
-        ErrorPage err("");
-        int reqValdity = check_req_validity(request);
-        // std::cout << "REQUEST VALID"<<reqValdity << std::endl;
-        if (reqValdity)
-            return err.get_page(reqValdity);
-    }
+    // {
+    // // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+    //     ErrorPage err("");
+    //     int reqValdity = check_req_validity(request);
+    //     // std::cout << "REQUEST VALID"<<reqValdity << std::endl;
+    //     if (reqValdity)
+    //         return err.get_page(reqValdity);
+    // }
     // chouse server from config file
     int server_num = getServer(_http, request);
     Server &server = _http.servers[server_num];
@@ -167,14 +167,6 @@ int Response::check_req_validity(const std::map<std::string, std::string> &reque
     std::string method =  Utils::find_in_map(request, "method");
     std::string uri =  Utils::find_in_map(request, "location");
     std::string host =  Utils::find_in_map(request, "Host");
-    std::cout << "******************************" << std::endl;
-    std::cout << content_length << std::endl;
-    std::cout << content_type << std::endl;
-    std::cout << transfer_encoding << std::endl;
-    std::cout << method << std::endl;
-    std::cout << uri << std::endl;
-    std::cout << host << std::endl;
-    std::cout << "******************************" << std::endl;
     {                                                                       // URI
         if (uri.find_first_not_of(ALLOWED_CHARACTERS) != std::string::npos) // 400
             return 400;
@@ -184,9 +176,9 @@ int Response::check_req_validity(const std::map<std::string, std::string> &reque
     { // POST
         if (method == "POST")
         {
-            if (content_type.empty() || content_length.empty() || transfer_encoding.empty())
+            if (content_type.empty() || content_length.empty())
                 return 400;
-            else if (transfer_encoding != "chunked")
+            else if (!transfer_encoding.empty() && transfer_encoding != "chunked")
                 return 501;
         }
     }

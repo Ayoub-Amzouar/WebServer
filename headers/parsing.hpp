@@ -42,6 +42,7 @@ class Request_Data
 public:
 	std::map<std::string, std::string>	attributes;
 	std::string							file_name;
+    int                                 serverId;
 	bool								is_finished;
 };
 
@@ -54,7 +55,7 @@ class Request
     public :
         Request (void);
         void	 parse_request(std::string str, Request_Data &request);
-        void    get_request(int accept_fd, Response& response);
+        void     get_request(int accept_fd, Response& response);
 };
 
 

@@ -90,6 +90,7 @@ void Request::parse_request(std::string str, Request_Data &request)
                 tmp =  Utils::extract_key_value(line, ": ");
                 request.attributes.insert(std::pair<std::string, std::string>(tmp.begin()->first, tmp.begin()->second));
             }
+            //check reuest validity;
         }
         else
         {
