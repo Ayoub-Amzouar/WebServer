@@ -52,7 +52,7 @@ int		resource_type_is_directory( std::string uri, Location location, file_stats 
 		{
 			std::string	path_2_index = uri + location.attributes["index"];
 			file_stats	index_stats = Utils::get_file_stats(path_2_index);
-			if (index_stats.exist == 0) {
+			if (index_stats.exist == false) {
 				// 403 Forbidden
 				return (403);
 			}
@@ -81,7 +81,8 @@ int		resource_type_is_file( const std::string &uri, const Location &location )
 	{
 		// call cgi for Delete 
 	}
-	remove(uri.c_str());
+	else
+		remove(uri.c_str());
 	// 204 No Content
 	return (204);
 }
@@ -95,12 +96,11 @@ std::string		delete_method(const ErrorPage&err_page, const Location &location, c
 
 	if (stats.exist == 0)
 		// 404 Not Found
-		status_code = 404;
+		return (err_page.get_page(404));
 	else if (stats.type == FT_DIR)
 		status_code = resource_type_is_directory(uri, location, stats);
 	else
 		status_code = resource_type_is_file(uri, location);
-
 
 	if (status_code != 204)
 		return (err_page.get_page(status_code));
