@@ -64,7 +64,7 @@ public:
     std::string static find_in_map(const std::map<std::string, std::string> &map, const std::string &str);
     std::string static get_file_name_by_time(void);
     std::string static skip_spaces(std::string str);
-    std::string static erasePathFromUri(std::string &uri, std::string &location_path);
+    std::string static erasePathFromUri(std::string uri, std::string &location_path);
     std::pair<std::string, std::string> static parse_uri(std::string uri);
     std::string static content_length(size_t size);
     std::string static location(std::string &);

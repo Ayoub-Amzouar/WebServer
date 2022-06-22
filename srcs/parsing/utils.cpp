@@ -165,7 +165,7 @@ std::string Utils::fileToStr(std::string &fileName)
     sstr << in.rdbuf();
     return sstr.str();
 }
-std::string Utils::erasePathFromUri(std::string &uri, std::string &location_path)
+std::string Utils::erasePathFromUri(std::string uri, std::string &location_path)
 {
     uri.erase(0, location_path.length());
     return uri;
