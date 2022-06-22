@@ -1,5 +1,30 @@
 #include "../../headers/webserv.hpp"
 
+std::string autoindex_dir(std::string path)
+{
+    std::string content;
+    DIR *dir;
+    struct dirent *ent;
+    struct stat buf;
+    if ((dir = opendir(path.c_str())) != NULL)
+    {
+        while ((ent = readdir(dir)) != NULL)
+        {
+            std::string file = ent->d_name;
+            std::string file_path = path + "/" + file;
+            stat(file_path.c_str(), &buf);
+            content += file;
+            content += " ";
+            content += std::to_string(buf.st_size);
+            content += " ";
+            content += std::to_string(buf.st_mtime);
+            content += "\n";
+        }
+        closedir(dir);
+    }
+    return content;
+}
+
 std::string Response::get_method(const ErrorPage &errPage, const Location &locationMap, const std::map<std::string, std::string> &requestMap, const std::string &body_file)
 {
     //  get variables from location
@@ -21,29 +46,23 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
     // DIR
     else if (res.type == FT_DIR)
     {
-        // request uri doesn't have / at the end
         if ((url.c_str())[url.length() - 1] != '/')
         {
-            // return Utils::status_line(301) + "\n" + Utils::location("http:/" + (Utils::parse_uri(uri)).first + "/") + "\n" + Utils::content_length(0) + "\n" + Utils::content_type("html") + "\n\n";
             std::string redirect = std::to_string(301) + "|http:/" + (Utils::parse_uri(uri)).first + "/";
             return redirection(redirect);
         }
-        //  if dir has index files
         res = Utils::get_file_stats(url + index);
-        if (res.exist)
+        if (!res.exist)
         {
-            if (!res.r_perm)
+            if (autoindex != "on")
                 errPage.get_page(403);
+            std::string autoindex_res = autoindex_dir(url);
         }
-        //  autoindex
-        else
-        {
-            if (autoindex == "off")
-                errPage.get_page(403);
-        }
+        url = url + index;
     }
-    // FILE
-    else
+    //  FILE 
+    if (cgi.empty())
     {
+        
     }
 }
