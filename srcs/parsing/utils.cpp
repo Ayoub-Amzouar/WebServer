@@ -17,7 +17,7 @@ std::map<std::string, std::string> Utils::extract_key_value(std::string line, st
   return pair;
 }
 
-std::string Utils::location(std::string &redirection)
+std::string Utils::location(std::string redirection)
 {
     return "Location: " + redirection;
 }
@@ -143,9 +143,9 @@ file_stats     Utils::get_file_stats ( std::string filename )
 
     res.exist = 1;
 
-    res.w_perm = (fs.st_mode & S_IRUSR) ? 1 : 0;
-    res.r_perm = (fs.st_mode & S_IWUSR) ? 1 : 0;
-    res.x_perm = (fs.st_mode & S_IXUSR) ? 1 : 0;
+    res.w_perm = (fs.st_mode & S_IRUSR) ? true : false;
+    res.r_perm = (fs.st_mode & S_IWUSR) ? true : false;
+    res.x_perm = (fs.st_mode & S_IXUSR) ? true : false;
 
     if (S_ISDIR(fs.st_mode))
         res.type = FT_DIR;
@@ -248,4 +248,25 @@ std::string Utils::skip_spaces(std::string str)
     }
 
     return str;
+}
+
+
+std::string		Utils::give_me_uri( const Location &location, const std::map<std::string, std::string> &request )
+{
+	std::string							path = Utils::find_in_map(location.attributes, "path");
+	std::string							uri = Utils::find_in_map(request, "location");
+	std::pair<std::string, std::string>	split_uri = Utils::parse_uri(uri);
+
+	uri = Utils::erasePathFromUri(split_uri.first, path);
+
+	return (Utils::find_in_map(location.attributes, "root") + '/' + uri);
+}
+
+std::string Utils::getFileExtension(std::string file_name)
+{
+    size_t found = file_name.find_last_of(".");
+    if (found == std::string::npos)
+        return std::string();
+    file_name.erase(0, found + 1);
+    return file_name;
 }

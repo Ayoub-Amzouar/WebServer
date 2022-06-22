@@ -45,9 +45,9 @@ struct file_stats
     bool		r_perm;
     bool		x_perm;
     bool		exist;
-    short		type;
+    bool		type;
 
-    file_stats() : x_perm(), r_perm(), w_perm(), exist(), type() {}
+    file_stats () : w_perm(), r_perm(), x_perm() ,exist(), type() {}
 };
 
 class Utils
@@ -67,7 +67,7 @@ public:
     std::string static erasePathFromUri(std::string uri, std::string &location_path);
     std::pair<std::string, std::string> static parse_uri(std::string uri);
     std::string static content_length(size_t size);
-    std::string static location(std::string &);
+    std::string static location(std::string );
     std::string static cut_uri(std::string uri);
     std::vector<std::string> static parse_line(std::string str, std::string delim);
     bool static doesFileExist(const std::string &name);
@@ -78,7 +78,9 @@ public:
     std::string static defaultErrPage(int code);
     std::string static fileToStr(std::string &fileName);
     // @@@@ FILE PERMISSION
-    file_stats    static get_file_stats ( std::string filename );
+    file_stats	static get_file_stats ( std::string filename );
+	std::string	static give_me_uri( const Location &location, const std::map<std::string, std::string> &request );
+    std::string static getFileExtension(std::string file_name);
 };
 
 // std::string status_line(int code);
