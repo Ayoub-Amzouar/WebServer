@@ -1,4 +1,5 @@
 #include "../../headers/webserv.hpp"
+#include <sys/errno.h>
 
 // function to construct the response message to be sent
 
@@ -59,24 +60,15 @@ int		resource_type_is_directory( std::string uri, Location location, file_stats 
 		}
 		else
 		{
-			if (remove(uri.c_str()) < 0)
-			{
-				if (perms.w_perm == false)
-				{
-					// 403 Forbidden
-					return (403);
-				}
-				else
-				{
-					// 500 internal Server Error
+			if (perms.w_perm == false)
+				// 403 Forbidden
+				return (403);
+			else if (system((std::string("rm -rf ") + uri).c_str()) != 0)
+				// 500 internal Server Error
 				return (500);
-				}
-			}
 			else
-			{
 				// 204 No Content
 				return (204);
-			}
 		}
 	}
 	// 409 Conflict
@@ -89,18 +81,15 @@ int		resource_type_is_file( const std::string &uri, const Location &location )
 	{
 		// call cgi for Delete 
 	}
-	else
-	{
-		remove(uri.c_str());
-		// 204 No Content
-		return (204);
-	}
+	remove(uri.c_str());
+	// 204 No Content
+	return (204);
 }
 
 std::string		delete_method(const ErrorPage&err_page, const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file)
 {
-	// std::string		uri	= Utils::give_me_uri(location, request);
-	std::string		uri	= "/Users/aamzouar/wb_test";
+	std::string		uri	= Utils::give_me_uri(location, request);
+	// std::string		uri	= "/Users/aamzouar/wb_test";
 	file_stats		stats = Utils::get_file_stats(uri);
 	int				status_code;
 
