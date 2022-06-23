@@ -137,25 +137,24 @@ void Request::get_request(int accept_fd, Response &response)
                 int ret = recv(ready_fd, buffer, 3000, 0);
                 if (ret > 0)
                 {
+                    std::cout << ">>>>>>>>>>>>" << buffer << std::endl;
                     if (!request_table.count(ready_fd))
                     {
                         request_table.insert(std::make_pair(ready_fd, req));
                         parse_request(buffer, request_table[ready_fd]);
-                        // std::cout << "------" << request_table[ready_fd].attributes["location"] << std::endl;
                     }
                     else if (!request_table[ready_fd].is_finished)
                     {
                         parse_request(buffer, request_table[ready_fd]);
-                        // std::cout << "------" << request_table[ready_fd].attributes["location"] << std::endl;
-
                         request_table[ready_fd].is_finished = true;
                     }
                     if (request_table[ready_fd].is_finished)
                     {
-                          std::cout << "------" << request_table[ready_fd].attributes["location"] << std::endl;
                         std::string str = response.run(request_table[ready_fd].attributes, request_table[ready_fd].file_name);
-                        std::cout << str << std::endl;
+                        Utils::send_response_message(ready_fd, str);
+                        // Utils::close_connection(ready_fd, request_table[ready_fd].attributes);
                     }
+
                 }
             }
         }

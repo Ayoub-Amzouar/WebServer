@@ -27,6 +27,6 @@ public:
     // Cgi(std::string &cgi_name, char *env[]);
     // std::string POST(std::string uri, std::string body_file, std::string root);
     // std::string GET(std::string uri, std::string root);
-    std::string run(std::string method, std::string uri, std::string body_file, std::string root);
+    std::string run(const std::string method, const std::string uri, const std::string body_file, const std::string root);
     // std::string DELETE();
 };

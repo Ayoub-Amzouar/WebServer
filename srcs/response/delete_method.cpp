@@ -1,15 +1,16 @@
 #include "../../headers/webserv.hpp"
+#include <sys/errno.h>
 
 // function to construct the response message to be sent
 
-bool		is_slash_at_end( std::string uri )
+bool			is_slash_at_end( std::string uri )
 {
 	if (uri[uri.size() - 1] == '/')
 		return (true);
 	return (false);
 }
 
-bool		is_location_has_cgi( Location location, std::string uri, bool type )
+bool			is_location_has_cgi( Location location, std::string uri, bool type )
 {
 	if (type == FT_DIR)
 	{
@@ -43,7 +44,7 @@ bool		is_location_has_cgi( Location location, std::string uri, bool type )
 	return (false);
 }
 
-int		resource_type_is_directory( std::string uri, Location location, file_stats perms)
+int				resource_type_is_directory( std::string uri, Location location, file_stats perms)
 {
 	if (is_slash_at_end(uri))
 	{
@@ -51,7 +52,7 @@ int		resource_type_is_directory( std::string uri, Location location, file_stats 
 		{
 			std::string	path_2_index = uri + location.attributes["index"];
 			file_stats	index_stats = Utils::get_file_stats(path_2_index);
-			if (index_stats.exist == 0) {
+			if (index_stats.exist == false) {
 				// 403 Forbidden
 				return (403);
 			}
@@ -59,59 +60,47 @@ int		resource_type_is_directory( std::string uri, Location location, file_stats 
 		}
 		else
 		{
-			if (remove(uri.c_str()) < 0)
-			{
-				if (perms.w_perm == false)
-				{
-					// 403 Forbidden
-					return (403);
-				}
-				else
-				{
-					// 500 internal Server Error
+			if (perms.w_perm == false)
+				// 403 Forbidden
+				return (403);
+			else if (system((std::string("rm -rf ") + uri).c_str()) != 0)
+				// 500 internal Server Error
 				return (500);
-				}
-			}
 			else
-			{
 				// 204 No Content
 				return (204);
-			}
 		}
 	}
 	// 409 Conflict
 	return (409);
 }
 
-int		resource_type_is_file( const std::string &uri, const Location &location )
+int				resource_type_is_file( const std::string &uri, const Location &location )
 {
 	if (is_location_has_cgi(location, uri, FT_FILE))
 	{
 		// call cgi for Delete 
 	}
 	else
-	{
 		remove(uri.c_str());
-		// 204 No Content
-		return (204);
-	}
+	// 204 No Content
+	return (204);
 }
 
 std::string		delete_method(const ErrorPage&err_page, const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file)
 {
-	// std::string		uri	= Utils::give_me_uri(location, request);
-	std::string		uri	= "/Users/aamzouar/wb_test";
+	std::string		uri	= Utils::give_me_uri(location, request);
+	// std::string		uri	= "/Users/aamzouar/wb_test";
 	file_stats		stats = Utils::get_file_stats(uri);
 	int				status_code;
 
 	if (stats.exist == 0)
 		// 404 Not Found
-		status_code = 404;
+		return (err_page.get_page(404));
 	else if (stats.type == FT_DIR)
 		status_code = resource_type_is_directory(uri, location, stats);
 	else
 		status_code = resource_type_is_file(uri, location);
-
 
 	if (status_code != 204)
 		return (err_page.get_page(status_code));

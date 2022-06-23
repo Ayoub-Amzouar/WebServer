@@ -168,7 +168,7 @@ void Cgi::send_response(int fd)
 // }
 
 // TODO:
-std::string Cgi::run(std::string method,std::string uri, std::string body_file, std::string root)
+std::string Cgi::run(const std::string method, const std::string uri, const std::string body_file, const std::string root)
 {
     std::pair<std::string, std::string> parsed_uri =  Utils::parse_uri(uri);
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);

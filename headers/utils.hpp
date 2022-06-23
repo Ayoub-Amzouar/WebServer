@@ -81,6 +81,8 @@ public:
     file_stats	static get_file_stats ( std::string filename );
 	std::string	static give_me_uri( const Location &location, const std::map<std::string, std::string> &request );
     std::string static getFileExtension(std::string file_name);
+	void		static send_response_message( int, const std::string & );
+    std::string static autoindex_dir(const std::string path, const std::string uri);
 };
 
 // std::string status_line(int code);

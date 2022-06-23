@@ -55,12 +55,12 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
             if (end == method.end())
                 return err.get_page(405);
         }
-        if (reqMethod == "GET")
-            return get_method(err, location, request, body_file);
-        else if (reqMethod == "POST")
-            return post_method(err, location, request, body_file);
-        else if (reqMethod == "DELETE")
-            return delete_method(err, location, request, body_file);
+        // if (reqMethod == "GET")
+        //     return get_method(err, location, request, body_file);
+        // else if (reqMethod == "POST")
+        //     return post_method(err, location, request, body_file);
+        // else if (reqMethod == "DELETE")
+        //     return delete_method(err, location, request, body_file);
     return err.get_page(404);
     }
 }
