@@ -33,12 +33,12 @@ void parse_request_line(std::map<std::string, std::string> &pair, std::string li
 
 int Request::check_req_validity(const std::map<std::string, std::string> &request)
 {
-    std::string content_length =  Utils::find_in_map(request, "Content-Length");
-    std::string content_type =  Utils::find_in_map(request, "Content-Type");
-    std::string transfer_encoding =  Utils::find_in_map(request, "Transfer-Encoding");
-    std::string method =  Utils::find_in_map(request, "method");
-    std::string uri =  Utils::find_in_map(request, "location");
-    std::string host =  Utils::find_in_map(request, "Host");
+    std::string content_length = Utils::find_in_map(request, "Content-Length");
+    std::string content_type = Utils::find_in_map(request, "Content-Type");
+    std::string transfer_encoding = Utils::find_in_map(request, "Transfer-Encoding");
+    std::string method = Utils::find_in_map(request, "method");
+    std::string uri = Utils::find_in_map(request, "location");
+    std::string host = Utils::find_in_map(request, "Host");
     {                                                                       // URI
         if (uri.find_first_not_of(ALLOWED_CHARACTERS) != std::string::npos) // 400
             return 400;
@@ -54,15 +54,14 @@ int Request::check_req_validity(const std::map<std::string, std::string> &reques
                 return 501;
         }
     }
-    {// Host request empty => error
+    { // Host request empty => error
         if (host.empty())
             return 400;
     }
     return 0;
 }
 
-
-void parse_request_body(Request_Data &request, std::string str)
+void parse_request_body(Request_Data &request, std::string str, int b_size)
 {
     std::stringstream ss(str);
     std::string line;
@@ -77,37 +76,28 @@ void parse_request_body(Request_Data &request, std::string str)
             std::cout << "Unable to open file!\n";
             exit(1);
         }
-        else
-        {
-            request.file_name = file_name;
-            if (Utils::find_in_map(request.attributes, "Transfer-Encoding").compare("chunked"))
-            {
-                    
-            }
-            else
-                myfile << str;
-            // if ()
-            // while (getline(ss, line))
-            // {
-            //     std::cout << line + "\n";
-            // }
-            /* code */
-        }
+        request.file_name = file_name;
+        request.file_size = std::stoi(Utils::find_in_map(request.attributes, "Content-Length"));
+        request.reading_size = 0;
     }
-    else
+
+    std::ofstream myfile;
+    myfile.open(request.file_name, std::ios::app);
+    if (!myfile.is_open())
     {
-        std::ofstream myfile;
-        myfile.open(request.file_name, std::ios::app);
-        if (!myfile.is_open())
-        {
-            std::cout << "Unable to open file!\n";
-            exit(1);
-        }
-        myfile << str;
+        std::cout << "Unable to open file!\n";
+        exit(1);
+    }
+    if (Utils::find_in_map(request.attributes, "Transfer-Encoding").compare("chunked"))
+    {
+        int pos = str.find('\r\n');
+        std::stoi(str.substr(0, pos));
+        request.chunk_size = std::stoi(str.substr(0, pos));
+    
     }
 }
 
-void Request::parse_request(std::string str, Request_Data &request)
+void Request::parse_request(std::string str, int b_size, Request_Data &request)
 {
     std::stringstream ss(str);
     ErrorPage static const errorPage("");
@@ -129,18 +119,18 @@ void Request::parse_request(std::string str, Request_Data &request)
                 tmp = Utils::extract_key_value(line, ": ");
                 request.attributes.insert(std::pair<std::string, std::string>(tmp.begin()->first, tmp.begin()->second));
             }
-           err_number = check_req_validity(request.attributes);
-           if (err_number)
-           {
+            err_number = check_req_validity(request.attributes);
+            if (err_number)
+            {
                 std::cout << err_number << std::endl;
                 request.response = errorPage.get_page(err_number);
                 request.is_error = true;
                 break;
-           }
+            }
             // request.is_error = false;
         }
         else
-            parse_request_body(request, line);
+            parse_request_body(request, line, b_size);
     }
     std::cout << "******************************************************************************" << std::endl;
 
@@ -184,13 +174,13 @@ void Request::get_request(int accept_fd, Response &response)
                     if (!request_table.count(ready_fd))
                     {
                         request_table.insert(std::make_pair(ready_fd, req));
-                        parse_request(buffer, request_table[ready_fd]);
+                        parse_request(buffer, ret, request_table[ready_fd]);
                         if (request_table[ready_fd].is_error)
-                    std::cout << "------" << request_table[ready_fd].response << std::endl;
+                            std::cout << "------" << request_table[ready_fd].response << std::endl;
                     }
                     else if (!request_table[ready_fd].is_finished)
                     {
-                        parse_request(buffer, request_table[ready_fd]);
+                        parse_request(buffer, ret, request_table[ready_fd]);
                         // std::cout << "------" << request_table[ready_fd].attributes["location"] << std::endl;
 
                         // request_table[ready_fd].is_finished = true;

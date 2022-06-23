@@ -42,6 +42,9 @@ class Request_Data
 public:
 	std::map<std::string, std::string>	attributes;
 	std::string							file_name;
+	int         						file_size;
+    int                                 chunk_size;
+    int                                 reading_size;
 	std::string							response;
 	bool								is_finished;
 	bool								is_error;
@@ -55,7 +58,7 @@ class Request
 		std::vector<struct pollfd>	ufds;
     public :
         Request (void);
-        void	 parse_request(std::string str, Request_Data &request);
+        void	 parse_request(std::string str,int , Request_Data &request);
         void     get_request(int accept_fd, Response& response);
         int      check_req_validity(const std::map<std::string, std::string> &request);
 
