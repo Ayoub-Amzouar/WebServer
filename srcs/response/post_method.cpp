@@ -20,7 +20,7 @@ int				upload_the_file(const Location &location, const std::string &body_file)
 	}
 	else if (stats.w_perm == false)
 		return (403);
-	// create the file in this path (upload_path)
+	// upload the file to this path (upload_path variable)
 	return (201);
 }
 
