@@ -276,3 +276,13 @@ void			Utils::send_response_message( int fd, const std::string &response_message
 		}
 	}
 }
+
+void			Utils::close_connection( int fd, const std::map<std::string, std::string> &request, std::map<int, Request_Data>	&request_table)
+{
+	std::string connection_status = Utils::find_in_map(request, "connection");
+	if (connection_status != "" && connection_status == "closed")
+	{
+		close(fd);
+		request_table.erase(fd);
+	}
+}

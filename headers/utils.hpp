@@ -82,6 +82,7 @@ public:
 	std::string	static give_me_uri( const Location &location, const std::map<std::string, std::string> &request );
 
 	void		static send_response_message( int, const std::string & );
+	void		static close_connection( int, const std::map<std::string, std::string> &, std::map<int, Request_Data> &);
 };
 
 // std::string status_line(int code);
