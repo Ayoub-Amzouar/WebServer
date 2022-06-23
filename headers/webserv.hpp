@@ -34,13 +34,14 @@
 #include <algorithm>
 #include <fcntl.h>
 #include <sstream>
+#include <arpa/inet.h>
 
 
 
 #include "SocketClass.hpp"
 #include "cgi.hpp"
-#include "utils.hpp"
 #include "parsing.hpp"
+#include "utils.hpp"
 #include "response.hpp"
 
 

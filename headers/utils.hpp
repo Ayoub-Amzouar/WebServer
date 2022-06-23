@@ -80,6 +80,8 @@ public:
     // @@@@ FILE PERMISSION
     file_stats	static get_file_stats ( std::string filename );
 	std::string	static give_me_uri( const Location &location, const std::map<std::string, std::string> &request );
+
+	void		static send_response_message( int, const std::string & );
 };
 
 // std::string status_line(int code);

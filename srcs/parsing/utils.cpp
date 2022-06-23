@@ -250,7 +250,6 @@ std::string Utils::skip_spaces(std::string str)
     return str;
 }
 
-
 std::string		Utils::give_me_uri( const Location &location, const std::map<std::string, std::string> &request )
 {
 	std::string							path = Utils::find_in_map(location.attributes, "path");
@@ -260,4 +259,20 @@ std::string		Utils::give_me_uri( const Location &location, const std::map<std::s
 	uri = Utils::erasePathFromUri(split_uri.first, path);
 
 	return (Utils::find_in_map(location.attributes, "root") + '/' + uri);
+}
+
+void			Utils::send_response_message( int fd, const std::string &response_message )
+{
+	std::string	rp_msg = response_message;
+	size_t		len = rp_msg.length();
+	size_t		send_ret;
+
+	while (len > 0)
+	{
+		if ( (send_ret = send(fd, rp_msg.c_str(), len, 0)) != -1 )
+		{
+			rp_msg = rp_msg.substr(send_ret);
+			len = rp_msg.length();
+		}
+	}
 }

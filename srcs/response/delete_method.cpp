@@ -3,14 +3,14 @@
 
 // function to construct the response message to be sent
 
-bool		is_slash_at_end( std::string uri )
+bool			is_slash_at_end( std::string uri )
 {
 	if (uri[uri.size() - 1] == '/')
 		return (true);
 	return (false);
 }
 
-bool		is_location_has_cgi( Location location, std::string uri, bool type )
+bool			is_location_has_cgi( Location location, std::string uri, bool type )
 {
 	if (type == FT_DIR)
 	{
@@ -44,7 +44,7 @@ bool		is_location_has_cgi( Location location, std::string uri, bool type )
 	return (false);
 }
 
-int		resource_type_is_directory( std::string uri, Location location, file_stats perms)
+int				resource_type_is_directory( std::string uri, Location location, file_stats perms)
 {
 	if (is_slash_at_end(uri))
 	{
@@ -75,7 +75,7 @@ int		resource_type_is_directory( std::string uri, Location location, file_stats 
 	return (409);
 }
 
-int		resource_type_is_file( const std::string &uri, const Location &location )
+int				resource_type_is_file( const std::string &uri, const Location &location )
 {
 	if (is_location_has_cgi(location, uri, FT_FILE))
 	{
