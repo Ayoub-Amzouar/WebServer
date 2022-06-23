@@ -280,9 +280,50 @@ void			Utils::send_response_message( int fd, const std::string &response_message
 void			Utils::close_connection( int fd, const std::map<std::string, std::string> &request, std::map<int, Request_Data>	&request_table)
 {
 	std::string connection_status = Utils::find_in_map(request, "connection");
-	if (connection_status != "" && connection_status == "closed")
+	if (!connection_status.empty() && connection_status == "closed")
 	{
 		close(fd);
 		request_table.erase(fd);
 	}
+}
+
+bool			Utils::is_slash_at_end( std::string uri )
+{
+	if (uri[uri.size() - 1] == '/')
+		return (true);
+	return (false);
+}
+
+bool			Utils::is_location_has_cgi( Location location, std::string uri, bool type )
+{
+	if (type == FT_DIR)
+	{
+		if (!Utils::find_in_map(location.attributes, "cgi").empty())
+		{
+			if (!Utils::find_in_map(location.attributes, "cgi-ext").empty() && !Utils::find_in_map(location.attributes, "index").empty())
+			{
+				std::vector<std::string>	line_splitted = Utils::parse_line(Utils::find_in_map(location.attributes, "index"), ".");
+				std::string 				index_ext = line_splitted[line_splitted.size() - 1];
+				if (index_ext == Utils::find_in_map(location.attributes, "cgi-ext"))
+					return (true);
+			}
+		}
+	}
+	else if (type == FT_FILE)
+	{
+		if (!Utils::find_in_map(location.attributes, "cgi").empty())
+		{
+			if (!Utils::find_in_map(location.attributes, "cgi-ext").empty())
+			{
+				std::vector<std::string>	line_splitted = Utils::parse_line(uri, "/");
+				std::string 				file_ext = line_splitted[line_splitted.size() - 1];
+
+				line_splitted = Utils::parse_line(uri, ".");
+				file_ext = line_splitted[line_splitted.size() - 1];
+				if (file_ext == Utils::find_in_map(location.attributes, "cgi-ext"))
+					return (true);
+			}
+		}
+	}
+	return (false);
 }

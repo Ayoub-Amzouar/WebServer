@@ -83,6 +83,8 @@ public:
 
 	void		static send_response_message( int, const std::string & );
 	void		static close_connection( int, const std::map<std::string, std::string> &, std::map<int, Request_Data> &);
+	bool		static is_slash_at_end( std::string uri );
+	bool		static is_location_has_cgi( Location location, std::string uri, bool type );
 };
 
 // std::string status_line(int code);
