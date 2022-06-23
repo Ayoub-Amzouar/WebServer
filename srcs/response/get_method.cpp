@@ -22,7 +22,7 @@ std::string Utils::autoindex_dir(const std::string path, const std::string uri)
     struct stat buf;
     if ((dir = opendir(path.c_str())) != NULL)
     {
-        content = "<html><head><title>Index of " + uri + "</title></head><body bgcolor=\"white\"> <h1>Index of " + uri + "</h1><hr><pre>";
+        content = "<html><head><title>Index of " + uri + "</title><style>body{width:100%;}dev{padding:5px0px;float:left;}.dev_c1{width:40%;}.dev_c2{width:25%;}.dev_c3{width:27%;}</style></head><body bgcolor=\"white\"><h1>Index of " + uri + "</h1><hr><pre>";
         while ((ent = readdir(dir)) != NULL)
         {
             std::string file = ent->d_name;
@@ -30,21 +30,20 @@ std::string Utils::autoindex_dir(const std::string path, const std::string uri)
                 continue;
             std::string file_path = path + "/" + file;
             stat(file_path.c_str(), &buf);
-            content += "<a href=\"" + uri + file;
+            // content += "<dev class=\"dev_c1\"><a href=\"" + uri + "/" + file;
+            content += "<dev class=\"dev_c1\"><a href=\"" + file;
             file_stats res = Utils::get_file_stats(file_path);
-            content += (res.type == FT_DIR) ? "/" : "";
-            content += file;
-            if (res.type == FT_DIR)
-                content += "/\">" + file + "/</a>";
-            else
-                content += "\">" + file + "</a>";
+            std::string slash;
+            std::string minus("-");
+            slash = (res.type == FT_DIR) ? "/" : "";
+            content += slash + "\">" + file + slash + "</a></dev>";
             if (file != "..")
             {
-                content += autoindexFileTime(file_path);
+                content += "<dev class=\"dev_c2\">" + autoindexFileTime(file_path) + "</dev>";
                 if (res.type != FT_DIR)
-                    content += std::to_string(buf.st_size);
+                    content += "<dev class=\"dev_c3\">" + std::to_string(buf.st_size) + "</dev>";
                 else
-                    content += "-";
+                    content += "<dev class=\"dev_c3\">" + minus + "</dev>";
             }
             content += "\n";
         }
@@ -87,6 +86,8 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
             if (autoindex != "on" && !autoindex.empty())
                 errPage.get_page(403);
             std::string autoindex_res = Utils::autoindex_dir(url, uri);
+            if (autoindex_res.empty())
+                errPage.get_page(500);
             return autoindex_res;
         }
         url += index;
