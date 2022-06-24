@@ -134,44 +134,6 @@ void Cgi::send_response(int fd)
     in.close();
 }
 
-// std::string Cgi::GET(std::string uri, std::string root)
-// {
-//     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
-
-//     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
-//     setenv("REQUEST_METHOD", "GET", true);
-//     _file = (root + parsed_uri.first).c_str();
-//     execute("");
-//     int cgi_code = cgi_status_code();
-//     if (cgi_code == 0) // no status by cgi.
-//         generate_response(200);
-//     else
-//         generate_response(cgi_code);
-//     return fileToStr(_response_file);
-// }
-
-// std::string Cgi::POST(std::string uri, std::string body_file, std::string root)
-// {
-//     std::pair<std::string, std::string> parsed_uri = parse_uri(uri);
-//     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
-//     setenv("REQUEST_METHOD", "POST", true);
-//     setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
-//     setenv("REDIRECT_STATUS", "CGI", true);
-//     setenv("CONTENT_LENGTH", "1024", true);
-//     setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", true);
-//     /*
-//     */
-//     _file = (root + parsed_uri.first).c_str();
-//     execute(body_file);
-//     int cgi_code = cgi_status_code();
-//     if (cgi_code == 0) // no status by cgi.
-//         generate_response(201);
-//     else
-//         generate_response(cgi_code);
-//     return fileToStr(_response_file);
-// }
-
-// TODO:
 // std::string Cgi::run(const std::string method, const std::string uri, const std::string body_file, const std::string root)
 std::string Cgi::run(const std::map<std::string, std::string> &map)
 {
@@ -193,11 +155,11 @@ std::string Cgi::run(const std::map<std::string, std::string> &map)
     execute(body_file);
     int cgi_code = cgi_status_code();
     if (cgi_code == 0 && method == "POST") // no status by cgi.
-        generate_response(201);
-    else if (cgi_code == 0 && method == "DELETE")
-        generate_response(204);
+        generate_response((cgi_code == 0) ? 201: cgi_code);
+    else if (method == "DELETE")
+        generate_response((cgi_code == 0) ? 204: cgi_code);
     else
-        generate_response(cgi_code);
+        generate_response((cgi_code == 0) ? 200: cgi_code);
     return  Utils::fileToStr(_response_file);
 }
 
