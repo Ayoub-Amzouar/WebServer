@@ -23,6 +23,11 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
     //         return err.get_page(reqValdity);
     // }
     // chouse server from config file
+	std::cout << "^^^^^^^^^^^^^^^ REQUEST ^^^^^^^^^^^^^^" << std::endl;
+	std::cout << "METHOD = " << request["method"] << std::endl;
+	std::cout << "LOCATION = " << request["location"] << std::endl;
+	std::cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << std::endl;
+
     int server_num = getServer(_http, request);
     Server &server = _http.servers[server_num];
     {
@@ -41,6 +46,7 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
         std::string redirect =  Utils::find_in_map(location.attributes, "return");
         if (!redirect.empty())
         {
+			std::cout << "redirection detected " << redirect << std::endl;
             std::string redirect_ret = redirection(redirect);
             if (!redirect_ret.empty())
                 return redirect_ret;
@@ -154,8 +160,8 @@ std::string Response::redirection(std::string &redirect_str)
     for(std::vector<int>::iterator it = redirect_codes.begin(); it != redirect_codes.end(); it++)
     {
         if (int_code == *it)
-            return status_line + "\n" + location_line + "\n\n";
-    }
+			return status_line + "\n" + location_line + "\n" + Utils::content_type("html") + "\n" + Utils::content_length(5) + "\n\n" + "Hello";
+	}
     return std::string();
 }
 

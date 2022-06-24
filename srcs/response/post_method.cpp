@@ -42,6 +42,7 @@ static int		resource_type_is_directory( std::string uri, Location location, file
 			// 403 forbidden
 			return (403);
 	}
+	return (404);
 	// 301 moved permanently
 	// return(redirection(""));
 }
@@ -56,7 +57,7 @@ static int		resource_type_is_file( const std::string &uri, const Location &locat
 	return (403);
 }
 
-std::string		post_method(const ErrorPage&err_page, const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file)
+std::string		Response::post_method(const ErrorPage&err_page, const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file)
 {
 	std::string		uri		= Utils::give_me_uri(location, request);
 	file_stats		stats	= Utils::get_file_stats(uri);

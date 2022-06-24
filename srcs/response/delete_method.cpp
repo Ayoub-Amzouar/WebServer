@@ -37,13 +37,13 @@ static int		resource_type_is_file( const std::string &uri, const Location &locat
 	{
 		// call cgi for Delete 
 	}
-	else
-		remove(uri.c_str());
+	if (remove(uri.c_str()) < 0)
+		return (403);
 	// 204 No Content
 	return (204);
 }
 
-std::string		delete_method(const ErrorPage&err_page, const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file)
+std::string		Response::delete_method(const ErrorPage&err_page, const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file)
 {
 	std::string		uri	= Utils::give_me_uri(location, request);
 	file_stats		stats = Utils::get_file_stats(uri);

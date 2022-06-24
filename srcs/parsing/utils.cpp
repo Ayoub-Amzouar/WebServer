@@ -327,3 +327,12 @@ bool			Utils::is_location_has_cgi( Location location, std::string uri, bool type
 	}
 	return (false);
 }
+
+std::string Utils::getFileExtension(std::string file_name)
+{
+    size_t found = file_name.find_last_of(".");
+    if (found == std::string::npos)
+        return std::string();
+    file_name.erase(0, found + 1);
+    return file_name;
+}

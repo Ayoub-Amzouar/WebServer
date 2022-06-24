@@ -142,7 +142,7 @@ void Request::parse_request(std::string str, Request_Data &request)
         else
             parse_request_body(request, line);
     }
-    std::cout << "******************************************************************************" << std::endl;
+    // std::cout << "******************************************************************************" << std::endl;
 
     // for (std::map<std::string, std::string>::iterator it = pair.begin(); it != pair.end(); it++)
     // {
@@ -177,7 +177,7 @@ void Request::get_request(int accept_fd, Response &response)
             if (ufds[i].revents == POLLIN)
             {
                 ready_fd = ufds[i].fd;
-                std::cout << "fd = " << ready_fd << std::endl;
+                // std::cout << "fd = " << ready_fd << std::endl;
                 int ret = recv(ready_fd, buffer, 3000, 0);
                 if (ret > 0)
                 {
@@ -186,18 +186,24 @@ void Request::get_request(int accept_fd, Response &response)
                         request_table.insert(std::make_pair(ready_fd, req));
                         parse_request(buffer, request_table[ready_fd]);
                         if (request_table[ready_fd].is_error)
-                    std::cout << "------" << request_table[ready_fd].response << std::endl;
+						std::cout << "------" << request_table[ready_fd].response << std::endl;
+                        request_table[ready_fd].is_finished = true;
+
                     }
                     else if (!request_table[ready_fd].is_finished)
                     {
                         parse_request(buffer, request_table[ready_fd]);
                         // std::cout << "------" << request_table[ready_fd].attributes["location"] << std::endl;
 
-                        // request_table[ready_fd].is_finished = true;
+                        request_table[ready_fd].is_finished = true;
                     }
                     if (request_table[ready_fd].is_finished)
                     {
                         std::string str = response.run(request_table[ready_fd].attributes, request_table[ready_fd].file_name);
+						std::cout << "@@@@@@@@@@@@@@@ RESPONSE @@@@@@@@@@@@@@" << std::endl;
+						std::cout << str << std::endl;
+						std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+						Utils::send_response_message(ready_fd, str);
 						Utils::close_connection(ready_fd, request_table[ready_fd].attributes, request_table);
                     }
                 }
