@@ -103,9 +103,7 @@ int Cgi::cgi_status_code(void)
         return std::stoi(line.substr(0, line.find(" ")));
     }
     else // default
-    {
         return 0;
-    }
 }
 
 void Cgi::generate_response(int code)
@@ -113,6 +111,12 @@ void Cgi::generate_response(int code)
     std::ofstream out;
     out.open(_response_file, std::ios::trunc);
     out <<  Utils::status_line(code) << std::endl;
+    std::string file  = Utils::fileToStr(_cgi_out_file);
+    int found = file.find("\r\n\r\n");
+    if (found < 0)
+        out << Utils::content_length(0) << std::endl;
+    else
+        out << Utils::content_length(file.length() - found) << std::endl;
     out.close();
     fileInOut(_cgi_out_file, _response_file);
 }
@@ -168,20 +172,30 @@ void Cgi::send_response(int fd)
 // }
 
 // TODO:
-std::string Cgi::run(const std::string method, const std::string uri, const std::string body_file, const std::string root)
+// std::string Cgi::run(const std::string method, const std::string uri, const std::string body_file, const std::string root)
+std::string Cgi::run(const std::map<std::string, std::string> &map)
 {
+    std::string method = Utils::find_in_map(map, "method");
+    std::string root = Utils::find_in_map(map, "root");
+    std::string content_type = Utils::find_in_map(map, "Content-Type");
+    std::string content_length = Utils::find_in_map(map, "Content-Length");
+    std::string body_file = Utils::find_in_map(map, "body_file");
+    std::string uri = Utils::find_in_map(map, "uri");
     std::pair<std::string, std::string> parsed_uri =  Utils::parse_uri(uri);
+
     setenv("QUERY_STRING", (parsed_uri.second).c_str(), true);
     setenv("REQUEST_METHOD", method.c_str(), true);
     setenv("SCRIPT_FILENAME", (root + parsed_uri.first).c_str(), true);
     setenv("REDIRECT_STATUS", "CGI", true);
-    setenv("CONTENT_LENGTH", "1024", true);
-    setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", true);
+    setenv("CONTENT_LENGTH", content_length.c_str(), true);
+    setenv("CONTENT_TYPE", content_type.c_str(), true);
     _file = (root + parsed_uri.first).c_str();
     execute(body_file);
     int cgi_code = cgi_status_code();
     if (cgi_code == 0 && method == "POST") // no status by cgi.
         generate_response(201);
+    else if (cgi_code == 0 && method == "DELETE")
+        generate_response(204);
     else
         generate_response(cgi_code);
     return  Utils::fileToStr(_response_file);

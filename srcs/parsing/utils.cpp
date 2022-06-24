@@ -163,6 +163,7 @@ std::string Utils::fileToStr(std::string &fileName)
     in.open(fileName);
     std::ostringstream sstr;
     sstr << in.rdbuf();
+    in.close();
     return sstr.str();
 }
 std::string Utils::erasePathFromUri(std::string uri, std::string &location_path)

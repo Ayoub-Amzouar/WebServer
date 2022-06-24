@@ -144,7 +144,8 @@ std::string Response::redirection(std::string &redirect_str)
     for(std::vector<int>::iterator it = redirect_codes.begin(); it != redirect_codes.end(); it++)
     {
         if (int_code == *it)
-			return status_line + "\n" + location_line + "\n" + Utils::content_type("html") + "\n" + Utils::content_length(5) + "\n\n" + "Hello";
+			// return status_line + "\n" + location_line + "\n" + Utils::content_type("html") + "\n" + Utils::content_length(5) + "\n\n" + "Hello";
+			return status_line + "\n" + location_line + "\n\n";
 	}
     return std::string();
 }
