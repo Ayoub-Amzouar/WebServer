@@ -17,13 +17,16 @@ RM = rm -rf
 
 DIR_SRCS = ./srcs/
 
+DEBUG = -g -fsanitize=address
+
 HEADERS = ./headers/webserv.hpp
 # <<<<<<< HEAD
 # <<<<<<< HEAD
 # SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp cgi/cgi.cpp cgi/status_code.cpp \
 # 		cgi/utils.cpp socket/socket.cpp response/response.cpp
 # =======
-SRC = parsing/request_parsing.cpp parsing/file_parsing.cpp webserv.cpp  parsing/utils.cpp socket/SocketClass.cpp response/response.cpp cgi/utils.cpp cgi/cgi.cpp
+SRC = parsing/request_parsing.cpp parsing/file_parsing.cpp webserv.cpp  parsing/utils.cpp socket/SocketClass.cpp response/response.cpp cgi/utils.cpp cgi/cgi.cpp \
+	response/get_method.cpp response/delete_method.cpp response/post_method.cpp
 # >>>>>>> origin/mohamed/parsing
 # =======
 # SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp cgi/cgi.cpp cgi/status_code.cpp \
@@ -35,7 +38,7 @@ all : $(NAME)
 
 $(NAME) : $(SRCS)  $(HEADERS)
 			@echo "compiling.."
-			@$(CC) $(FLAGS) $(SRCS) -o $(NAME)
+			@$(CC) $(FLAGS) $(SRCS) $(DEBUG) -o $(NAME)
 			@echo "Done."
 
 clean :

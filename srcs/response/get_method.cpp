@@ -71,32 +71,33 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
     std::string url = Utils::give_me_uri(locationMap, requestMap);
     file_stats res = Utils::get_file_stats(url);
     if (!(res.exist))
-        errPage.get_page(404);
-    // DIR
-    if (res.type == FT_DIR)
-    {
-        if ((url.c_str())[url.length() - 1] != '/')
-        {
-            std::string redirect = std::to_string(301) + "|http:/" + (Utils::parse_uri(uri)).first + "/";
-            return redirection(redirect);
-        }
-        res = Utils::get_file_stats(url + index);
-        if (!index.empty() || !res.exist)
-        {
-            if (autoindex != "on" && !autoindex.empty())
-                errPage.get_page(403);
-            std::string autoindex_res = Utils::autoindex_dir(url, uri);
-            if (autoindex_res.empty())
-                errPage.get_page(500);
-            return autoindex_res;
-        }
-        url += index;
-    }
-    //  FILE 
-    res = Utils::get_file_stats(url);
-    std::string file_extension = Utils::getFileExtension(url);
-    if (!cgi.empty() && file_extension == cgi_extenstion)
-    {
+		errPage.get_page(404);
+	// DIR
+	if (res.type == FT_DIR)
+	{
+		if ((url.c_str())[url.length() - 1] != '/')
+		{
+			std::string redirect = std::to_string(301) + "|" + (Utils::parse_uri(uri)).first + "/";
+			return redirection(redirect);
+		}
+		res = Utils::get_file_stats(url + index);
+		if ((index.empty() || !res.exist) && Utils::get_file_stats(url).type == FT_DIR)
+		{
+            if (autoindex != "on")
+				return errPage.get_page(403);
+			std::string autoindex_res = Utils::autoindex_dir(url, uri);
+			if (autoindex_res.empty())
+				return errPage.get_page(500);
+			return Utils::status_line(200) + "\n" + Utils::content_type("html") + "\n" + Utils::content_length(autoindex_res.length()) + "\n\n" + autoindex_res;
+		}
+		url += index;
+	}
+	//  FILE
+	res = Utils::get_file_stats(url);
+	std::string file_extension = Utils::getFileExtension(url);
+	if (!cgi.empty() && file_extension == cgi_extenstion)
+	{
+        std::cout << "((((((((((((CGI)))))))))))))))" << std::endl;
         // TODO: try to find the passed args to cgi;
         // Cgi cgi("php-cgi");
         // std::string cgi_res = cgi.run("GET", uri, body_file, root);
@@ -111,6 +112,10 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
     if (file_extension.empty())
         contentType = "Content-Type: application/octet-stream";
     else
+	{
         contentType = Utils::content_type(file_extension);
+		if (contentType.empty())
+			contentType = "Content-Type: application/octet-stream";
+	}
     return Utils::status_line(200) + "\n" + contentType + "\n" + Utils::content_length(content.length()) + "\n\n" + content;
 }

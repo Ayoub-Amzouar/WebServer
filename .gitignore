@@ -13,3 +13,4 @@ server.c
 client.c
 *.py
 *.dSYM
+srcs/response/tmp

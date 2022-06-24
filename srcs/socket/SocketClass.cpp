@@ -7,7 +7,7 @@ std::string ft_socket::get_host_ip(std::map<std::string, std::string> server)
 	std::string host;
 	
 	host = Utils::find_in_map(server, "host");
-	host = (host == "") ? "127.0.0.1" : host;
+	host = host.empty() ? "127.0.0.1" : host;
 	return (host);
 }
 

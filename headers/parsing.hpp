@@ -43,7 +43,9 @@ public:
 	std::map<std::string, std::string>	attributes;
 	std::string							file_name;
     int                                 serverId;
+	std::string							response;
 	bool								is_finished;
+	bool								is_error;
 };
 
 struct Response;
@@ -56,6 +58,8 @@ class Request
         Request (void);
         void	 parse_request(std::string str, Request_Data &request);
         void     get_request(int accept_fd, Response& response);
+        int      check_req_validity(const std::map<std::string, std::string> &request);
+
 };
 
 

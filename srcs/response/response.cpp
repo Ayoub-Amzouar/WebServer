@@ -13,16 +13,6 @@ Response::Response(Http &http) : _http(http)
 
 std::string Response::run(std::map<std::string, std::string> &request, std::string &body_file)
 {
-    // is_req_well_formed
-    // {
-    // // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
-    //     ErrorPage err("");
-    //     int reqValdity = check_req_validity(request);
-    //     // std::cout << "REQUEST VALID"<<reqValdity << std::endl;
-    //     if (reqValdity)
-    //         return err.get_page(reqValdity);
-    // }
-    // chouse server from config file
     int server_num = getServer(_http, request);
     Server &server = _http.servers[server_num];
     {
@@ -55,12 +45,12 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
             if (end == method.end())
                 return err.get_page(405);
         }
-        // if (reqMethod == "GET")
-        //     return get_method(err, location, request, body_file);
-        // else if (reqMethod == "POST")
-        //     return post_method(err, location, request, body_file);
-        // else if (reqMethod == "DELETE")
-        //     return delete_method(err, location, request, body_file);
+        if (reqMethod == "GET")
+            return get_method(err, location, request, body_file);
+        else if (reqMethod == "POST")
+            return post_method(err, location, request, body_file);
+        else if (reqMethod == "DELETE")
+            return delete_method(err, location, request, body_file);
     return err.get_page(404);
     }
 }
@@ -154,37 +144,8 @@ std::string Response::redirection(std::string &redirect_str)
     for(std::vector<int>::iterator it = redirect_codes.begin(); it != redirect_codes.end(); it++)
     {
         if (int_code == *it)
-            return status_line + "\n" + location_line + "\n\n";
-    }
+			return status_line + "\n" + location_line + "\n" + Utils::content_type("html") + "\n" + Utils::content_length(5) + "\n\n" + "Hello";
+	}
     return std::string();
 }
 
-int Response::check_req_validity(const std::map<std::string, std::string> &request)
-{
-    std::string content_length =  Utils::find_in_map(request, "Content-Length");
-    std::string content_type =  Utils::find_in_map(request, "Content-Type");
-    std::string transfer_encoding =  Utils::find_in_map(request, "Transfer-Encoding");
-    std::string method =  Utils::find_in_map(request, "method");
-    std::string uri =  Utils::find_in_map(request, "location");
-    std::string host =  Utils::find_in_map(request, "Host");
-    {                                                                       // URI
-        if (uri.find_first_not_of(ALLOWED_CHARACTERS) != std::string::npos) // 400
-            return 400;
-        else if (uri.length() > 2048) // 414
-            return 414;
-    }
-    { // POST
-        if (method == "POST")
-        {
-            if (content_type.empty() || content_length.empty())
-                return 400;
-            else if (!transfer_encoding.empty() && transfer_encoding != "chunked")
-                return 501;
-        }
-    }
-    {// Host request empty => error
-        if (host.empty())
-            return 400;
-    }
-    return 0;
-}

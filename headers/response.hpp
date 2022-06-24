@@ -16,7 +16,6 @@ private:
 
 private:
     // std::string		 Utils::find_in_map(const std::map<std::string, std::string> &, const std::string &);
-    int				check_req_validity(const std::map<std::string, std::string> &);
     int             getServer(Http &, std::map<std::string, std::string> &);
     int				maxBodySize(Server &, std::map<std::string, std::string> &);
     int             getLocation(Server &server, std::map<std::string, std::string> &request);
