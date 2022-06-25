@@ -107,6 +107,7 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
         cgiMap["BODY_FILE"] = body_file;
         cgiMap["FILE"] = url;
         cgiMap["QUERY_STRING"] = Utils::parse_uri(uri).second;
+        cgiMap["Cookie"] = Utils::find_in_map(requestMap, "Cookie");
         // TODO: try to find the passed args to cgi;
         Cgi php(cgi);
         std::string cgi_res = php.run(cgiMap);
