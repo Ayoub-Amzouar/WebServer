@@ -70,8 +70,10 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
 
     std::string url = Utils::give_me_uri(locationMap, requestMap);
     file_stats res = Utils::get_file_stats(url);
-    if (!(res.exist))
-		errPage.get_page(404);
+    std::cout << "URL = " << url << std::endl;
+    std::cout << "RES = " << res.exist << std::endl;
+    if (!res.exist)
+		return errPage.get_page(404);
 	// DIR
 	if (res.type == FT_DIR)
 	{
@@ -80,12 +82,10 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
 			std::string redirect = std::to_string(301) + "|" + (Utils::parse_uri(uri)).first + "/";
 			return redirection(redirect);
 		}
-		std::cout << "AUTOINDEX = " << autoindex << std::endl;
-		std::cout << "INDEX = " << index << std::endl;
 		res = Utils::get_file_stats(url + index);
-		if ((!autoindex.empty() || !res.exist) && Utils::get_file_stats(url).type == FT_DIR)
+		if ((index.empty() || !res.exist) && Utils::get_file_stats(url).type == FT_DIR)
 		{
-			if (autoindex != "on")
+            if (autoindex != "on")
 				return errPage.get_page(403);
 			std::string autoindex_res = Utils::autoindex_dir(url, uri);
 			if (autoindex_res.empty())
@@ -94,11 +94,13 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
 		}
 		url += index;
 	}
+    std::cout << "@@@@@@@@@@@" << std::endl;
 	//  FILE
 	res = Utils::get_file_stats(url);
 	std::string file_extension = Utils::getFileExtension(url);
 	if (!cgi.empty() && file_extension == cgi_extenstion)
 	{
+        std::cout << "((((((((((((CGI)))))))))))))))" << std::endl;
         // TODO: try to find the passed args to cgi;
         // Cgi cgi("php-cgi");
         // std::string cgi_res = cgi.run("GET", uri, body_file, root);
