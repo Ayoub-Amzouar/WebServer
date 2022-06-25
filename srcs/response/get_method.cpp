@@ -97,20 +97,16 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
 	//  FILE
 	res = Utils::get_file_stats(url);
 	std::string file_extension = Utils::getFileExtension(url);
-    std::cout << "@@@@CGI@@@@" << std::endl;
-    std::cout << "CGI NAME = " << (cgi.empty() ? "not exist" : "exist") << std::endl;
-    std::cout << "CGI exten = " << (cgi.empty() ? "not exist" : "exist") << std::endl;
-    std::cout << "@@@@@@@@@@@" << std::endl;
 	if (!cgi.empty() && file_extension == cgi_extenstion)
 	{
         std::cout << "((((((((((((CGI)))))))))))))))" << std::endl;
         std::map<std::string, std::string> cgiMap;
-        cgiMap["method"] = "GET";
-        cgiMap["root"] = root;
+        cgiMap["METHOD"] = "GET";
         cgiMap["Content-Type"] = content_type;
         cgiMap["Content-Length"] = content_length;
-        cgiMap["body_file"] = body_file;
-        cgiMap["uri"] = uri;
+        cgiMap["BODY_FILE"] = body_file;
+        cgiMap["FILE"] = url;
+        cgiMap["QUERY_STRING"] = Utils::parse_uri(uri).second;
         // TODO: try to find the passed args to cgi;
         Cgi php(cgi);
         std::string cgi_res = php.run(cgiMap);
