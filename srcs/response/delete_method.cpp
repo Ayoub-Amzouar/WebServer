@@ -13,6 +13,7 @@ static int		resource_type_is_directory( std::string uri, Location location, file
 				return (403);
 			}
 			// call cgi for Delete 
+			return (-42);
 		}
 		else
 		{
@@ -34,9 +35,8 @@ static int		resource_type_is_directory( std::string uri, Location location, file
 static int		resource_type_is_file( const std::string &uri, const Location &location )
 {
 	if (Utils::is_location_has_cgi(location, uri, FT_FILE))
-	{
 		// call cgi for Delete 
-	}
+		return (-42);
 	if (remove(uri.c_str()) < 0)
 		return (403);
 	// 204 No Content
@@ -56,6 +56,9 @@ std::string		Response::delete_method(const ErrorPage&err_page, const Location &l
 		status_code = resource_type_is_directory(uri, location, stats);
 	else
 		status_code = resource_type_is_file(uri, location);
+
+	// if (status_code == -42)
+	// 	return Utils::run_cgi(location, request, body_file, uri);
 
 	if (status_code != 204)
 		return (err_page.get_page(status_code));

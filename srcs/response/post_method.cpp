@@ -36,6 +36,7 @@ static int		resource_type_is_directory( std::string uri, Location location, file
 				// 403 Forbidden
 				return (403);
 			}
+			return (-42);
 			// call cgi for Post 
 		}
 		else
@@ -51,6 +52,7 @@ static int		resource_type_is_file( const std::string &uri, const Location &locat
 {
 	if (Utils::is_location_has_cgi(location, uri, FT_FILE))
 	{
+		return (-42);
 		// call cgi for Delete 
 	}
 	// 403 Forbidden
@@ -74,6 +76,9 @@ std::string		Response::post_method(const ErrorPage&err_page, const Location &loc
 		status_code = resource_type_is_directory(uri, location, stats);
 	else
 		status_code = resource_type_is_file(uri, location);
+
+	// if (status_code == -42)
+	// 	return Utils::run_cgi(location, request, body_file, uri);
 
 	if (status_code != 201)
 		return (err_page.get_page(status_code));
