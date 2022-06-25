@@ -61,7 +61,7 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
     std::string root = Utils::find_in_map(locationMap.attributes, "root");
     std::string path = Utils::find_in_map(locationMap.attributes, "path");
     std::string cgi = Utils::find_in_map(locationMap.attributes, "cgi-name");
-    std::string cgi_extenstion = Utils::find_in_map(locationMap.attributes, "cgi-name");
+    std::string cgi_extenstion = Utils::find_in_map(locationMap.attributes, "cgi-ext");
     std::string autoindex = Utils::find_in_map(locationMap.attributes, "autoindex");
     //  get variables from request Map
     std::string uri = Utils::find_in_map(requestMap, "location");
@@ -94,19 +94,29 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
 		}
 		url += index;
 	}
-    std::cout << "@@@@@@@@@@@" << std::endl;
 	//  FILE
 	res = Utils::get_file_stats(url);
 	std::string file_extension = Utils::getFileExtension(url);
+    std::cout << "@@@@CGI@@@@" << std::endl;
+    std::cout << "CGI NAME = " << (cgi.empty() ? "not exist" : "exist") << std::endl;
+    std::cout << "CGI exten = " << (cgi.empty() ? "not exist" : "exist") << std::endl;
+    std::cout << "@@@@@@@@@@@" << std::endl;
 	if (!cgi.empty() && file_extension == cgi_extenstion)
 	{
         std::cout << "((((((((((((CGI)))))))))))))))" << std::endl;
+        std::map<std::string, std::string> cgiMap;
+        cgiMap["method"] = "GET";
+        cgiMap["root"] = root;
+        cgiMap["Content-Type"] = content_type;
+        cgiMap["Content-Length"] = content_length;
+        cgiMap["body_file"] = body_file;
+        cgiMap["uri"] = uri;
         // TODO: try to find the passed args to cgi;
-        // Cgi cgi("php-cgi");
-        // std::string cgi_res = cgi.run("GET", uri, body_file, root);
-        // if(cgi_res.empty())
+        Cgi php(cgi);
+        std::string cgi_res = php.run(cgiMap);
+        if(cgi_res.empty())
             return errPage.get_page(500);
-        // return cgi_res;
+        return cgi_res;
     }
     if (!res.r_perm)
         errPage.get_page(403);
