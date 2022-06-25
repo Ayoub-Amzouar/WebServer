@@ -37,7 +37,7 @@ ft_socket::ft_socket(in_port_t port, std::map<std::string, std::string> server)
 		exit(EXIT_FAILURE); 
 	}
 
-	if (listen(sock_fd, 10) < 0)
+	if (listen(sock_fd, 1024) < 0)
 	{
 		std::cerr << "error: listen failed\n"; 
 		exit(EXIT_FAILURE); 

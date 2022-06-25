@@ -205,6 +205,7 @@ void Request::get_request(int accept_fd, Response &response)
 						std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
 						Utils::send_response_message(ready_fd, str);
 						Utils::close_connection(ready_fd, request_table[ready_fd].attributes, request_table);
+                        request_table[ready_fd].is_finished = false;
                     }
 
                 }
