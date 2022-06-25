@@ -1,8 +1,14 @@
 #include "../../headers/webserv.hpp"
 
+static std::string random_file_name()
+{
+    char buf[] = "/tmp/temp.XXXXXXXXXXX";
+    return mktemp(buf);
+}
+
 Cgi::Cgi(std::string &cgi_name)
-: _cgi_out_file(Utils::get_file_name_by_time())
-, _response_file(Utils::get_file_name_by_time())
+: _cgi_out_file(random_file_name())
+, _response_file(random_file_name())
 , _error(false)
 {
     std::string s(getenv("PATH"));
