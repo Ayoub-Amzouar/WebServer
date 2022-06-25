@@ -47,7 +47,7 @@ struct file_stats
     file_stats () : perm(), exist(), type() {}
 };
 
-class Utils
+class   Utils
 {
 
 public:
@@ -69,6 +69,7 @@ public:
     bool static doesFileExist(const std::string &name);
     std::string static status_line(int code);
     std::string static content_type(std::string exten);
+    int static hexadecimalToDecimal(std::string hexVal);
     // @@@ ERROR PAGES
     std::string static defaultErrPage(int code);
     std::string static fileToStr(std::string &fileName);
