@@ -86,6 +86,7 @@ public:
 	bool		static is_slash_at_end( std::string uri );
 	bool		static is_location_has_cgi( Location location, std::string uri, bool type );
 	std::string static getFileExtension(std::string file_name);
+	std::string	static run_cgi(const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file, std::string uri);
 };
 
 // std::string status_line(int code);

@@ -337,3 +337,21 @@ bool			Utils::is_location_has_cgi( Location location, std::string uri, bool type
 	}
 	return (false);
 }
+
+std::string		Utils::run_cgi(const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file, std::string uri)
+{
+	std::map<std::string, std::string>	cgiMap;
+	std::string							cgiName = Utils::find_in_map(location.attributes, "cgi");
+
+	cgiMap["method"] = "GET";
+	cgiMap["root"] = Utils::find_in_map(location.attributes, "root");
+	cgiMap["Content-Type"] =  Utils::find_in_map(request, "content_type");
+	cgiMap["Content-Length"] = Utils::find_in_map(request, "content_length");
+	cgiMap["body_file"] = body_file;
+	cgiMap["uri"] = uri;
+	// TODO: try to find the passed args to cgi;
+	Cgi php(cgiName);
+	std::string cgi_res = php.run(cgiMap);
+
+	return (cgi_res);
+}
