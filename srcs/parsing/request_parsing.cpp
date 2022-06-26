@@ -227,7 +227,7 @@ void Request::get_request(int accept_fd, Response &response)
                     }
                     if (request_table[ready_fd].is_finished)
                     {
-                        exit(0);
+                        std::cout << request_table[ready_fd].file_name << "\n";
                         std::string str = response.run(request_table[ready_fd].attributes, request_table[ready_fd].file_name);
                         std::cout << str << std::endl;
                     }
