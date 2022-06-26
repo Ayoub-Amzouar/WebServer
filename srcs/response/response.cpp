@@ -40,6 +40,7 @@ std::string Response::run(std::map<std::string, std::string> &request, std::stri
         std::string reqMethod =  Utils::find_in_map(request, "method");
         if (!methods.empty() && !reqMethod.empty())
         {
+            std::transform(methods.begin(), methods.end(), methods.begin(), ::toupper);
             std::vector<std::string> method =  Utils::parse_line(methods, ",");
             std::vector<std::string>::iterator end = std::find(method.begin(), method.end(), reqMethod);
             if (end == method.end())

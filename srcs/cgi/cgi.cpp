@@ -137,11 +137,10 @@ void Cgi::send_response(int fd)
     in.close();
 }
 
-// std::string Cgi::run(const std::string method, const std::string uri, const std::string body_file, const std::string root)
 std::string Cgi::run(const std::map<std::string, std::string> &map)
 {
-    // if (_path.empty())
-    //     std::string();
+    if (_path.empty())
+        return std::string();
     std::string method = Utils::find_in_map(map, "METHOD");
     std::string file = Utils::find_in_map(map, "FILE");
     std::string content_type = Utils::find_in_map(map, "Content-Type");
