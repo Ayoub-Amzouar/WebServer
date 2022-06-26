@@ -48,11 +48,8 @@ void add_server_attributes(Server &server, std::string line,  std::ifstream &fin
     {
         pair =  Utils::extract_key_value(line, "=");
         // std::cout << "|" << pair.begin()->first << "|" << std::endl;
-        Utils::check_map(server.attributes.insert(std::pair<std::string, std::string>(pair.begin()->first, pair.begin()->second)));
-       
+        Utils::check_map(server.attributes.insert(std::pair<std::string, std::string>(pair.begin()->first, pair.begin()->second)));  
     }
-        
-     
 }
 
 void add_http_attributes(Http &http, std::string line, std::ifstream &fin)
@@ -114,6 +111,6 @@ Http parsing(char *str)
         }
     }
     fin.close();
-    Utils::check_file_syntax();
+    Utils::check_file_syntax(http);
     return http;
 }

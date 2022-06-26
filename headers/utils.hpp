@@ -66,7 +66,7 @@ public:
     ~Utils();
     void static check_file(std::ifstream &fin);
     void static syntax_error(void);
-    void static check_file_syntax(void);
+    void static check_file_syntax(Http http);
     std::map<std::string, std::string> static extract_key_value(std::string line, std::string delm);
     void static check_map(std::pair<std::map<std::string, std::string>::iterator, bool> ret);
     std::string static find_in_map(const std::map<std::string, std::string> &map, const std::string &str);
