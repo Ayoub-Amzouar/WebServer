@@ -81,8 +81,7 @@ public:
     file_stats	static get_file_stats ( std::string filename );
 	std::string	static give_me_uri( const Location &location, const std::map<std::string, std::string> &request );
 	std::string static autoindex_dir(const std::string path, const std::string uri);
-	void		static send_response_message( int, const std::string & );
-	void		static close_connection( int, const std::map<std::string, std::string> &, std::map<int, Request_Data> &);
+	void		static send_response_message( int, std::string & );
 	bool		static is_slash_at_end( std::string uri );
 	bool		static is_location_has_cgi( Location location, std::string uri, bool type );
 	std::string static getFileExtension(std::string file_name);
