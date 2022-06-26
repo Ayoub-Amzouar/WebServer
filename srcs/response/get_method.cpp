@@ -60,8 +60,8 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
     std::string index = Utils::find_in_map(locationMap.attributes, "index");
     std::string root = Utils::find_in_map(locationMap.attributes, "root");
     std::string path = Utils::find_in_map(locationMap.attributes, "path");
-    std::string cgi = Utils::find_in_map(locationMap.attributes, "cgi-name");
-    std::string cgi_extenstion = Utils::find_in_map(locationMap.attributes, "cgi-ext");
+    std::string cgi = Utils::find_in_map(locationMap.attributes, "cgi");
+    std::string cgi_extention = Utils::find_in_map(locationMap.attributes, "cgi-ext");
     std::string autoindex = Utils::find_in_map(locationMap.attributes, "autoindex");
     //  get variables from request Map
     std::string uri = Utils::find_in_map(requestMap, "location");
@@ -70,8 +70,6 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
 
     std::string url = Utils::give_me_uri(locationMap, requestMap);
     file_stats res = Utils::get_file_stats(url);
-    std::cout << "URL = " << url << std::endl;
-    std::cout << "RES = " << res.exist << std::endl;
     if (!res.exist)
 		return errPage.get_page(404);
 	// DIR
@@ -97,7 +95,7 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
 	//  FILE
 	res = Utils::get_file_stats(url);
 	std::string file_extension = Utils::getFileExtension(url);
-	if (!cgi.empty() && file_extension == cgi_extenstion)
+	if (!cgi.empty() && file_extension == cgi_extention)
 	{
         std::string cgi_res = Utils::run_cgi(locationMap, requestMap, body_file, "GET", url);
         if(cgi_res.empty())

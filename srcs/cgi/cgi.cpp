@@ -140,8 +140,8 @@ void Cgi::send_response(int fd)
 // std::string Cgi::run(const std::string method, const std::string uri, const std::string body_file, const std::string root)
 std::string Cgi::run(const std::map<std::string, std::string> &map)
 {
-    if (_path.empty())
-        std::string();
+    // if (_path.empty())
+    //     std::string();
     std::string method = Utils::find_in_map(map, "METHOD");
     std::string file = Utils::find_in_map(map, "FILE");
     std::string content_type = Utils::find_in_map(map, "Content-Type");
@@ -149,15 +149,6 @@ std::string Cgi::run(const std::map<std::string, std::string> &map)
     std::string body_file = Utils::find_in_map(map, "BODY_FILE");
     std::string query = Utils::find_in_map(map, "QUERY_STRING");
     std::string cookie = Utils::find_in_map(map, "Cookie");
-    std::cout << "----------------------" << std::endl;
-    std::cout << method<<std::endl;;
-    std::cout << file<<std::endl;;
-    std::cout << content_type<<std::endl;;
-    std::cout << content_length<<std::endl;;
-    std::cout << body_file<<std::endl;;
-    std::cout << query <<std::endl;;
-    std::cout << cookie<<std::endl;;
-    std::cout << "----------------------" << std::endl;
     setenv("QUERY_STRING", query.c_str(), true);
     setenv("REQUEST_METHOD", method.c_str(), true);
     setenv("SCRIPT_FILENAME", file.c_str(), true);
