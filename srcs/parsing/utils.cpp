@@ -209,8 +209,10 @@ int Utils::hexadecimalToDecimal(std::string hexVal)
             dec_val += (int(hexVal[i]) - 48) * base;
             base = base * 16;
         }
-        else if (hexVal[i] >= 'A' && hexVal[i] <= 'F')
+        else if ((hexVal[i] >= 'A' && hexVal[i] <= 'F') || (hexVal[i] >= 'a' && hexVal[i] <= 'f'))
         {
+            if (hexVal[i] >= 'a' && hexVal[i] <= 'f')
+                hexVal[i] = toupper( hexVal[i]);
             dec_val += (int(hexVal[i]) - 55) * base;
             base = base * 16;
         }

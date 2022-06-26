@@ -42,12 +42,14 @@ class Request_Data
 public:
 	std::map<std::string, std::string>	attributes;
 	std::string							file_name;
+	std::string							chunk_string;
 	int         						file_size;
     int                                 chunk_size;
     int                                 reading_size;
 	std::string							response;
 	bool								is_finished;
 	bool								is_error;
+	bool								first_enter;
 };
 
 struct Response;

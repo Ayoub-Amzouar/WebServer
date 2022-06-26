@@ -63,7 +63,6 @@ int Request::check_req_validity(const std::map<std::string, std::string> &reques
 
 void parse_request_body(Request_Data &request, std::string str)
 {
-    std::cout << "str = " << str.length() << "\n";
     if (request.file_name.empty())
     {
         std::string file_name;
@@ -76,9 +75,9 @@ void parse_request_body(Request_Data &request, std::string str)
         }
         request.file_name = file_name;
         request.file_size = std::stoi(Utils::find_in_map(request.attributes, "Content-Length"));
-        std::cout << "file_size = " << request.file_size << std::endl;
         request.reading_size = 0;
-        request.chunk_size = 0;
+        request.chunk_size = -1;
+        request.first_enter = true;
     }
     std::ofstream myfile;
     myfile.open(request.file_name, std::ios::app);
@@ -87,47 +86,59 @@ void parse_request_body(Request_Data &request, std::string str)
         std::cout << "Unable to open file!\n";
         exit(1);
     }
-    // std::cout << "chunk = " << request.chunk_size << std::endl;
-    // std::cout << "reading = " << request.reading_size << "\n";
-    // std::cout << "str = " << str.length() << "\n";
     if (!Utils::find_in_map(request.attributes, "Transfer-Encoding").compare("chunked"))
     {
-        int pos = 0;
-        int pos1 = 0;
-        if (request.reading_size >= request.chunk_size)
+        int pos;
+        request.chunk_string += str;
+
+        if (request.first_enter)
         {
-            pos = str.find("\r\n");
-            std::cout << "reading = " << request.reading_size << "\n";
-            std::cout << "chunk = "  << str.substr(0, pos) << std::endl;
-            //  std::cout << "str = " << str.length() << "\n";
-            request.reading_size = 0;
-            request.chunk_size = Utils::hexadecimalToDecimal(str.substr(0, pos));
-            if (request.chunk_size == 0)
+            request.first_enter = false;
+            pos = request.chunk_string.find("\r\n");
+            if (pos != std::string::npos)
             {
-                request.is_finished = true;
-                return;
+                request.chunk_size = Utils::hexadecimalToDecimal(request.chunk_string.substr(0, pos));
+                std::cout << "chunk1 = " << request.chunk_size << "\n";
+                request.chunk_string.erase(0, pos + 2);
             }
-            str = str.substr(pos + 2, str.length());
         }
-        if (request.reading_size < request.chunk_size)
+        if (request.chunk_string.length() >= request.chunk_size)
         {
-            pos1 = str.find("\r\n");
-            if (pos1 != std::string::npos)
+            std::cout << "*********************************************=\n"
+                      << request.chunk_string;
+            std::cout << "****************************************************=-------------------------\n";
+            myfile <<  request.chunk_string.substr(0, request.chunk_size);
+            std::cout << "++++++++++++++++++++++++++++++++=\n"
+                      << request.chunk_string.substr(0, request.chunk_size);
+            std::cout << "++++++++++++++++++++++++++++++++=-------------------------\n";
+            request.chunk_string.erase(0, request.chunk_size + 2);
+            // std::cout << "chunk = " << request.chunk_size << "\n";
+            // request.chunk_string = request.chunk_string.erase(0, request.chunk_size + 2);
+            pos = request.chunk_string.find("\r\n");
+            if (pos != std::string::npos)
             {
-                std::string line = str.substr(0, pos1);
-                myfile << line;
-                str = str.substr(pos1 + 2, str.length());
-                request.reading_size += line.length();
+                request.chunk_size = Utils::hexadecimalToDecimal(request.chunk_string.substr(0, pos));
+                if (request.chunk_size == 0)
+                {
+                    request.is_finished = true;
+                    std::cout << "************finished***********\n\n";
+                    return;
+                }
+                request.chunk_string.erase(0, pos + 2);
             }
-            else
-            {
-                myfile << str;
-                request.reading_size += str.length();
+            else{
+                std::cout << "CHECK 000\n";
+                request.first_enter = true;
             }
         }
     }
     else
+    {
         myfile << str;
+        request.reading_size += str.length();
+        if (request.reading_size == request.file_size)
+            request.is_finished = true;
+    }
 }
 
 void Request::parse_request(std::string str, Request_Data &request)
@@ -164,14 +175,16 @@ void Request::parse_request(std::string str, Request_Data &request)
         }
         str = str.substr(pos + 3, str.length());
     }
-    // std::cout << "|||" << str << "|||\n";
-    parse_request_body(request, str);
+    if (str.length())
+    {
+        parse_request_body(request, str);
+    }
 }
 
 void Request::get_request(int accept_fd, Response &response)
 {
     Request_Data req;
-    char buffer[3000];
+    char buffer[1024];
     int ready_fd;
 
     if (accept_fd > 0)
@@ -186,35 +199,36 @@ void Request::get_request(int accept_fd, Response &response)
 
     if (!ufds.empty())
     {
-        bzero(buffer, 3000);
+        bzero(buffer, 1024);
         poll(&ufds[0], ufds.size(), -1);
         for (size_t i = 0; i < ufds.size(); i++)
         {
             if (ufds[i].revents == POLLIN)
             {
                 ready_fd = ufds[i].fd;
-                // std::cout << "fd = " << ready_fd << std::endl;
-                int ret = recv(ready_fd, buffer, 3000, 0);
+                int ret = recv(ready_fd, buffer, 1024, 0);
+                std::string str(buffer, ret);
                 if (ret > 0)
                 {
+
                     if (!request_table.count(ready_fd))
                     {
                         request_table.insert(std::make_pair(ready_fd, req));
-                        parse_request(buffer, request_table[ready_fd]);
+                        parse_request(str, request_table[ready_fd]);
                         if (request_table[ready_fd].is_error)
                             std::cout << "------" << request_table[ready_fd].response << std::endl;
                     }
                     else if (!request_table[ready_fd].is_finished)
                     {
-                        parse_request(buffer, request_table[ready_fd]);
+                        parse_request(str, request_table[ready_fd]);
                         // std::cout << "------" << request_table[ready_fd].attributes["location"] << std::endl;
 
                         // request_table[ready_fd].is_finished = true;
                     }
                     if (request_table[ready_fd].is_finished)
                     {
-                        std::string str = response.run(request_table[ready_fd].attributes, request_table[ready_fd].file_name);
                         exit(0);
+                        std::string str = response.run(request_table[ready_fd].attributes, request_table[ready_fd].file_name);
                         std::cout << str << std::endl;
                     }
                 }
