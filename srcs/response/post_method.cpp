@@ -7,20 +7,27 @@ bool			is_location_support_upload(const Location &location)
 	return (false);
 }
 
-int				upload_the_file(const Location &location, const std::string &body_file)
+int upload_the_file(const Location &location, std::map<std::string, std::string> request, const std::string &body_file)
 {
 	std::string		root		= Utils::find_in_map(location.attributes, "root");
 	std::string		upload_path = root + '/' + Utils::find_in_map(location.attributes, "upload");
+	std::string		content_type = Utils::find_in_map(request, "Content-Type");
 	file_stats		stats		= Utils::get_file_stats(upload_path);
 
 	if (stats.exist == false)
 	{
 		if (mkdir(upload_path.c_str(), 0755) < 0)
-			return (403);
+			return (500);
 	}
 	else if (stats.w_perm == false)
 		return (403);
-	// upload the file to this path (upload_path variable)
+	const static ReverseContentType mimes;
+	std::vector<std::string> pars = Utils::parse_line(content_type, ";");
+	std::string mime = mimes.get_mime(pars[0]);
+	std::string file_name = Utils::parse_line(body_file, "/").back();
+	file_name += mime.empty() ? "" : ("." + mime);
+	if (system(("mv " + body_file + " " + upload_path + "/" + file_name + " 2>/dev/null").c_str()) != 0)
+		return (500);
 	return (201);
 }
 
@@ -45,7 +52,7 @@ static int		resource_type_is_directory( std::string uri, Location location, file
 	}
 	return (404);
 	// 301 moved permanently
-	// return(redirection(""));
+	return(301);
 }
 
 static int		resource_type_is_file( const std::string &uri, const Location &location )
@@ -67,7 +74,7 @@ std::string		Response::post_method(const ErrorPage&err_page, const Location &loc
 
 	if (is_location_support_upload(location))
 	{
-		status_code = upload_the_file(location, body_file);
+		status_code = upload_the_file(location, request,body_file);
 	}
 	else if (stats.exist == 0)
 		// 404 Not Found
@@ -77,8 +84,13 @@ std::string		Response::post_method(const ErrorPage&err_page, const Location &loc
 	else
 		status_code = resource_type_is_file(uri, location);
 
-	// if (status_code == -42)
-	// 	return Utils::run_cgi(location, request, body_file, uri);
+	if (status_code == 301)
+	{
+		std::string red = "301|" + Utils::parse_uri(Utils::find_in_map(request, "location")).first + "/";
+		return redirection(red);
+	}
+	if (status_code == -42)
+		return Utils::run_cgi(location, request, body_file, "POST", uri);
 
 	if (status_code != 201)
 		return (err_page.get_page(status_code));

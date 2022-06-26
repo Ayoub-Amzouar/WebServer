@@ -125,6 +125,60 @@ ContentType::ContentType()
     _code["ods"]  = "application/vnd.oasis.opendocument.spreadsheet";
 }
 
+std::string ReverseContentType::get_mime(std::string extension) const
+{
+    std::map<std::string, std::string>::const_iterator end = _code.end();
+    std::map<std::string, std::string>::const_iterator exist;
+    exist = _code.find(extension);
+    if (exist != end)
+        return exist->second;
+    else
+        return std::string();
+}
+
+ReverseContentType::ReverseContentType()
+{
+    _code["text/plain"]  = "txt";
+    _code["text/html"]  = "htm";
+    _code["text/html"] = "html";
+    _code["text/html"]  = "php";
+    _code["text/css"]  = "css";
+    _code["application/javascript"]   = "js";
+    _code["application/json"] = "json";
+    _code["application/xml"]  = "xml";
+    _code["application/x-shockwave-flash"]  = "swf";
+    _code["video/x-flv"]  = "flv";
+    _code["image/png"]  = "png";
+    _code["image/jpeg"]  = "jpe";
+    _code["image/jpeg"] = "jpeg";
+    _code["image/jpeg"]  = "jpg";
+    _code["image/gif"]  = "gif";
+    _code["image/bmp"]  = "bmp";
+    _code["image/vnd.microsoft.icon"]  = "ico";
+    _code["image/tiff"] = "tiff";
+    _code["image/tiff"]  = "tif";
+    _code["image/svg+xml"]  = "svg";
+    _code["image/svg+xml"] = "svgz";
+    _code["application/zip"]  = "zip";
+    _code["application/x-rar-compressed"]  = "rar";
+    _code["application/x-msdownload"]  = "exe";
+    _code["application/x-msdownload"]  = "msi";
+    _code["application/vnd.ms-cab-compressed"]  = "cab";
+    _code["audio/mpeg"]  = "mp3";
+    _code["video/quicktime"]   = "qt";
+    _code["video/quicktime"]  = "mov";
+    _code["application/pdf"]  = "pdf";
+    _code["image/vnd.adobe.photoshop"]  = "psd";
+    _code["application/postscript"]   = "ai";
+    _code["application/postscript"]  = "eps";
+    _code["application/postscript"]   = "ps";
+    _code["application/msword"]  = "doc";
+    _code["application/rtf"]  = "rtf";
+    _code["application/vnd.ms-excel"]  = "xls";
+    _code["application/vnd.ms-powerpoint"]  = "ppt";
+    _code["application/vnd.oasis.opendocument.text"]  = "odt";
+    _code["application/vnd.oasis.opendocument.spreadsheet"]  = "ods";
+}
 
 ErrorPage::ErrorPage(std::string error_page_path)
 {

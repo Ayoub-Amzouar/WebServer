@@ -20,6 +20,14 @@ public:
     std::string get_mime(std::string extension) const;
 };
 
+class ReverseContentType
+{
+    std::map<std::string, std::string> _code;
+
+public:
+    ReverseContentType();
+    std::string get_mime(std::string extension) const;
+};
 class ErrorPage
 {
     std::map<int, std::string> _code;

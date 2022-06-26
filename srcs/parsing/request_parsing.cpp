@@ -181,8 +181,8 @@ void Request::get_request(int accept_fd, Response &response)
                 int ret = recv(ready_fd, buffer, 3000, 0);
                 if (ret > 0)
                 {
-                    std::cout << ">>>>>>>>>>>>" << std::endl
-                              << buffer << std::endl;
+                    // std::cout << ">>>>>>>>>>>>" << std::endl
+                    //           << buffer << std::endl;
                     if (!request_table.count(ready_fd))
                     {
                         request_table.insert(std::make_pair(ready_fd, req));
@@ -205,6 +205,7 @@ void Request::get_request(int accept_fd, Response &response)
 						std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
 						Utils::send_response_message(ready_fd, str);
 						Utils::close_connection(ready_fd, request_table[ready_fd].attributes, request_table);
+                        ufds.erase(ufds.begin() + i);
                         request_table[ready_fd].is_finished = false;
                     }
 

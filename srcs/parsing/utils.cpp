@@ -277,24 +277,24 @@ void			Utils::send_response_message( int fd, const std::string &response_message
 	size_t		len = rp_msg.length();
 	size_t		send_ret;
 
-	while (len > 0)
-	{
+	// while (len > 0)
+	// {
 		if ( (send_ret = send(fd, rp_msg.c_str(), len, 0)) != -1 )
 		{
 			rp_msg = rp_msg.substr(send_ret);
 			len = rp_msg.length();
 		}
-	}
+	// }
 }
 
 void			Utils::close_connection( int fd, const std::map<std::string, std::string> &request, std::map<int, Request_Data>	&request_table)
 {
-	std::string connection_status = Utils::find_in_map(request, "connection");
-	if (!connection_status.empty() && connection_status == "closed")
-	{
+	// std::string connection_status = Utils::find_in_map(request, "connection");
+	// if (!connection_status.empty() && connection_status == "closed")
+	// {
 		close(fd);
 		request_table.erase(fd);
-	}
+	// }
 }
 
 bool			Utils::is_slash_at_end( std::string uri )
