@@ -46,6 +46,7 @@ public:
 	int         						file_size;
     int                                 chunk_size;
     int                                 reading_size;
+    int                                 serverId;
 	std::string							response;
 	bool								is_finished;
 	bool								is_error;
@@ -74,5 +75,6 @@ Http  parsing(char *str);
 // std::map<std::string, std::string> extract_key_value(std::string line, std::string delm);
 // void check_map(std::pair<std::map<std::string, std::string>::iterator,bool> ret);
 // std::string get_file_name_by_time();
+
 
 

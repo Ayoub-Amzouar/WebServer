@@ -17,6 +17,10 @@ std::map<std::string, std::string> Utils::extract_key_value(std::string line, st
   return pair;
 }
 
+std::string Utils::location(std::string redirection)
+{
+    return "Location: " + redirection;
+}
 
 std::pair<std::string, std::string> Utils::parse_uri(std::string uri)
 {
@@ -33,13 +37,13 @@ std::string Utils::content_length(size_t size)
     return c + std::to_string(size);
 }
 
-    std::string  Utils::cut_uri(std::string uri)
+std::string Utils::cut_uri(std::string uri)
 {
     if (uri.empty())
-        return std::string("");
+        return std::string();
     size_t found = uri.find_last_of("/");
     if (found == std::string::npos)
-        return std::string("");
+        return std::string();
     if (uri[found] == *(uri.end() - 1))
         uri.erase(found, 1);
     else
@@ -73,10 +77,18 @@ bool Utils::doesFileExist(const std::string &name)
     return f.good();
 }
 
-std::string Utils::status_line(int code)
+std::string Utils::status_code(int code)
 {
     static const StatusCode s;
     std::string exist = s.get_message(code);
+    if (!exist.empty())
+    return exist;
+    else
+        return std::string();
+}
+std::string Utils::status_line(int code)
+{
+    std::string exist = Utils::status_code(code);
     if (!exist.empty())
     {
         std::string status("HTTP1.1 ");
@@ -131,9 +143,9 @@ file_stats     Utils::get_file_stats ( std::string filename )
 
     res.exist = 1;
 
-    res.perm = (fs.st_mode & S_IRUSR) ? 4 : 0;
-    res.perm += (fs.st_mode & S_IWUSR) ? 2 : 0;
-    res.perm += (fs.st_mode & S_IXUSR) ? 1 : 0;
+    res.r_perm = (fs.st_mode & S_IRUSR) ? true : false;
+    res.w_perm = (fs.st_mode & S_IWUSR) ? true : false;
+    res.x_perm = (fs.st_mode & S_IXUSR) ? true : false;
 
     if (S_ISDIR(fs.st_mode))
         res.type = FT_DIR;
@@ -151,9 +163,10 @@ std::string Utils::fileToStr(std::string &fileName)
     in.open(fileName);
     std::ostringstream sstr;
     sstr << in.rdbuf();
+    in.close();
     return sstr.str();
 }
-std::string Utils::erasePathFromUri(std::string &uri, std::string &location_path)
+std::string Utils::erasePathFromUri(std::string uri, std::string &location_path)
 {
     uri.erase(0, location_path.length());
     return uri;
@@ -252,4 +265,109 @@ std::string Utils::skip_spaces(std::string str)
     }
 
     return str;
+}
+
+std::string		Utils::give_me_uri( const Location &location, const std::map<std::string, std::string> &request )
+{
+	std::string							path = Utils::find_in_map(location.attributes, "path");
+	std::string							uri = Utils::find_in_map(request, "location");
+	std::pair<std::string, std::string>	split_uri = Utils::parse_uri(uri);
+
+	uri = Utils::erasePathFromUri(split_uri.first, path);
+
+	return (Utils::find_in_map(location.attributes, "root") + '/' + uri);
+}
+
+std::string Utils::getFileExtension(std::string file_name)
+{
+    size_t found = file_name.find_last_of(".");
+    if (found == std::string::npos)
+        return std::string();
+    file_name.erase(0, found + 1);
+    return file_name;
+}
+
+void			Utils::send_response_message( int fd, const std::string &response_message )
+{
+	std::string	rp_msg = response_message;
+	size_t		len = rp_msg.length();
+	size_t		send_ret;
+
+	while (len > 0)
+	{
+		if ( (send_ret = send(fd, rp_msg.c_str(), len, 0)) != -1 )
+		{
+			rp_msg = rp_msg.substr(send_ret);
+			len = rp_msg.length();
+		}
+	}
+}
+
+void			Utils::close_connection( int fd, const std::map<std::string, std::string> &request, std::map<int, Request_Data>	&request_table)
+{
+	std::string connection_status = Utils::find_in_map(request, "connection");
+	if (!connection_status.empty() && connection_status == "closed")
+	{
+		close(fd);
+		request_table.erase(fd);
+	}
+}
+
+bool			Utils::is_slash_at_end( std::string uri )
+{
+	if (uri[uri.size() - 1] == '/')
+		return (true);
+	return (false);
+}
+
+bool			Utils::is_location_has_cgi( Location location, std::string uri, bool type )
+{
+	if (type == FT_DIR)
+	{
+		if (!Utils::find_in_map(location.attributes, "cgi").empty())
+		{
+			if (!Utils::find_in_map(location.attributes, "cgi-ext").empty() && !Utils::find_in_map(location.attributes, "index").empty())
+			{
+				std::vector<std::string>	line_splitted = Utils::parse_line(Utils::find_in_map(location.attributes, "index"), ".");
+				std::string 				index_ext = line_splitted[line_splitted.size() - 1];
+				if (index_ext == Utils::find_in_map(location.attributes, "cgi-ext"))
+					return (true);
+			}
+		}
+	}
+	else if (type == FT_FILE)
+	{
+		if (!Utils::find_in_map(location.attributes, "cgi").empty())
+		{
+			if (!Utils::find_in_map(location.attributes, "cgi-ext").empty())
+			{
+				std::vector<std::string>	line_splitted = Utils::parse_line(uri, "/");
+				std::string 				file_ext = line_splitted[line_splitted.size() - 1];
+
+				line_splitted = Utils::parse_line(uri, ".");
+				file_ext = line_splitted[line_splitted.size() - 1];
+				if (file_ext == Utils::find_in_map(location.attributes, "cgi-ext"))
+					return (true);
+			}
+		}
+	}
+	return (false);
+}
+
+std::string		Utils::run_cgi(const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file,std::string method, std::string url)
+{
+	std::map<std::string, std::string>	cgiMap;
+	std::string							cgiName = Utils::find_in_map(location.attributes, "cgi");
+
+    cgiMap["METHOD"]            = method;
+    cgiMap["Content-Type"]      = Utils::find_in_map(request, "Content_Type");
+    cgiMap["Content-Length"]    = Utils::find_in_map(request, "Content_Length");
+    cgiMap["Cookie"]            = Utils::find_in_map(request, "Cookie");
+    cgiMap["BODY_FILE"]         = body_file;
+    cgiMap["FILE"]              = url;
+    cgiMap["QUERY_STRING"]      = Utils::parse_uri(Utils::find_in_map(request, "location")).second;
+    Cgi php(cgiName);
+	std::string cgi_res = php.run(cgiMap);
+
+	return (cgi_res);
 }

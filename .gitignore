@@ -4,7 +4,7 @@
 /test
 a.out*
 server
-.vscode
+/.vscode
 webserv
 ToDo
 .DS_Store
@@ -13,3 +13,7 @@ server.c
 client.c
 *.py
 *.dSYM
+srcs/response/tmp
+f
+test.cpp
+ToRemember

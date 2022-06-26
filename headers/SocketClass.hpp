@@ -11,7 +11,7 @@ class 	ft_socket
 
 public:
 	ft_socket( void );
-	ft_socket(in_port_t port, in_addr_t ip);
+	ft_socket(in_port_t port, std::map<std::string, std::string> server);
 	ft_socket( const ft_socket& );
 	ft_socket&	operator=( const ft_socket& );
 	~ft_socket( void );
@@ -21,5 +21,6 @@ public:
 	int					getSockFd( void ) const;
 	struct sockaddr_in	getServerAddr( void ) const;
 	struct sockaddr_in	getClientAddr( void ) const;
+	std::string			get_host_ip( std::map<std::string, std::string> );
 
 };

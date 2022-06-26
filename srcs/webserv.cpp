@@ -15,19 +15,18 @@ int main(int argc, char **argv, char **env)
         ft_socket	*sock = new ft_socket[http.servers.size()];
 		int			index = 0;
 
-		for (int i = 0; i < http.servers.size(); i++)
-			sock[i] = ft_socket(std::stoi(http.servers[i].attributes["listen"]), INADDR_ANY);
+		for (size_t i = 0; i < http.servers.size(); i++)
+			sock[i] = ft_socket(std::stoi(http.servers[i].attributes["listen"]), http.servers[i].attributes); // change stoi it's c++ feature
 
         Response response(http);
         while (1)
         {
-            req.get_request(sock[index].accept_connections(), response);
+			req.get_request(sock[index].accept_connections(), response);
 
             // response.run(;
 			// request = request(sock[index]);
 			// if (request != "NON")
 			// {
-			// 	std::cerr << request;
 			// 	sock.response("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\n" + request);
 			// 	break ;
 			// }

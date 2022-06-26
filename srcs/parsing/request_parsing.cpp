@@ -153,7 +153,7 @@ void Request::parse_request(std::string str, Request_Data &request)
     {
         int pos = str.find("\n\r");
         str1 = str.substr(0, pos);
-        // std::cout << str << std::endl;
+        std::cout << "------------"<< str1 << std::endl;
         std::stringstream ss(str1);
         while (getline(ss, line))
         {
@@ -179,6 +179,8 @@ void Request::parse_request(std::string str, Request_Data &request)
     {
         parse_request_body(request, str);
     }
+    else
+        request.is_finished = true;
 }
 
 void Request::get_request(int accept_fd, Response &response)
@@ -213,6 +215,8 @@ void Request::get_request(int accept_fd, Response &response)
 
                     if (!request_table.count(ready_fd))
                     {
+						std::cout << "@@@@@@@@@@@@@@@ REQUEST @@@@@@@@@@@@@@" << std::endl;
+
                         request_table.insert(std::make_pair(ready_fd, req));
                         parse_request(str, request_table[ready_fd]);
                         if (request_table[ready_fd].is_error)
@@ -220,6 +224,7 @@ void Request::get_request(int accept_fd, Response &response)
                     }
                     else if (!request_table[ready_fd].is_finished)
                     {
+						std::cout << "@@@@@@@@@@@@@@@ REQUEST @@@@@@@@@@@@@@" << std::endl;
                         parse_request(str, request_table[ready_fd]);
                         // std::cout << "------" << request_table[ready_fd].attributes["location"] << std::endl;
 
@@ -227,12 +232,20 @@ void Request::get_request(int accept_fd, Response &response)
                     }
                     if (request_table[ready_fd].is_finished)
                     {
-                        std::cout << request_table[ready_fd].file_name << "\n";
+                        std::cout << request_table[ready_fd].file_name << std::endl;
+						std::cout << "@@@@@@@@@@@@@@@ RESPONSE @@@@@@@@@@@@@@" << std::endl;
                         std::string str = response.run(request_table[ready_fd].attributes, request_table[ready_fd].file_name);
-                        std::cout << str << std::endl;
+						std::cout << str << std::endl;
+						std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+						Utils::send_response_message(ready_fd, str);
+						Utils::close_connection(ready_fd, request_table[ready_fd].attributes, request_table);
+                        request_table[ready_fd].is_finished = false;
                     }
+
                 }
             }
+			else if (ufds[i].revents == POLLHUP)
+				request_table.erase(ufds[i].fd);
         }
     }
 }
