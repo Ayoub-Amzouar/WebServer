@@ -355,3 +355,10 @@ std::string		Utils::run_cgi(const Location &location, const std::map<std::string
 
 	return (cgi_res);
 }
+// std::string Utils::read_file(std::string file)
+// {
+//     std::ifstream f;
+//     std::string str;
+
+//     str.assign(std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
+// }
