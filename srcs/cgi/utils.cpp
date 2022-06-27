@@ -141,7 +141,6 @@ ReverseContentType::ReverseContentType()
     _code["text/plain"]  = "txt";
     _code["text/html"]  = "htm";
     _code["text/html"] = "html";
-    // _code["text/html"]  = "php";
     _code["text/css"]  = "css";
     _code["application/javascript"]   = "js";
     _code["application/json"] = "json";
@@ -167,6 +166,7 @@ ReverseContentType::ReverseContentType()
     _code["audio/mpeg"]  = "mp3";
     _code["video/quicktime"]   = "qt";
     _code["video/quicktime"]  = "mov";
+    _code["video/mp4"]  = "mp4";
     _code["application/pdf"]  = "pdf";
     _code["image/vnd.adobe.photoshop"]  = "psd";
     _code["application/postscript"]   = "ai";

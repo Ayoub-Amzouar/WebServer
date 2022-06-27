@@ -299,11 +299,8 @@ int    Utils::send_response_message(int fd, std::string &response_message)
     size_t		len = response_message.length();
 	int 		send_ret;
 
-	if ( (send_ret = send(fd, response_message.c_str(), len, 0)) != -1 )
-	{
+	if ( (send_ret = send(fd, response_message.c_str(), len, 0)) > 0 )
 		response_message = response_message.substr(send_ret);
-		len = response_message.length();
-	}
     return (send_ret);
 }
 
