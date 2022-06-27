@@ -259,7 +259,7 @@ void Request::get_request(int accept_fd, Response &response)
 					// std::string str = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 					response_table.insert(std::make_pair(ready_fd, str));
 				}
-				std::cout << response_table[ready_fd] << "\n----------------------------------" << std::endl;
+				// std::cout << response_table[ready_fd] << "\n----------------------------------" << std::endl;
 				int send_ret = Utils::send_response_message(ready_fd, response_table[ready_fd]);
 				if (response_table[ready_fd].empty() == true || send_ret == -1)
 				{
