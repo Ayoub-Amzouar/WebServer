@@ -124,10 +124,17 @@ void parse_request_body(Request_Data &request, std::string str)
 		}
 	}
 	else
-	{
-		myfile << str;
-		request.is_finished = true;
-	}
+    {
+        myfile << str;
+        request.reading_size += str.length();
+        if (request.reading_size == request.file_size)
+            request.is_finished = true;
+    }
+	// else
+	// {
+	// 	myfile << str;
+	// 	request.is_finished = true;
+	// }
 }
 
 void Request::parse_request(std::string str, Request_Data &request)
