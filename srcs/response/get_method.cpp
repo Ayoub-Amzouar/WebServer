@@ -92,6 +92,7 @@ std::string Response::get_method(const ErrorPage &errPage, const Location &locat
 		}
 		url += index;
 	}
+    // return "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 	//  FILE
 	res = Utils::get_file_stats(url);
 	std::string file_extension = Utils::getFileExtension(url);

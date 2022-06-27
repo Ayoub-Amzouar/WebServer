@@ -30,7 +30,7 @@ ft_socket::ft_socket(in_port_t port, std::map<std::string, std::string> server)
 		exit(EXIT_FAILURE); 
     }
 
-	setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &var, sizeof(int));
+	// setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &var, sizeof(int));
 	if (bind(sock_fd, (const struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
 	{
 		std::cerr << "error: bind failed\n"; 

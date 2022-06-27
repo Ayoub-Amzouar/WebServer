@@ -51,6 +51,7 @@ public:
 	bool								is_finished;
 	bool								is_error;
 	bool								first_enter;
+    int                                  number;
 };
 
 struct Response;

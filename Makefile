@@ -17,7 +17,7 @@ RM = rm -rf
 
 DIR_SRCS = ./srcs/
 
-# DEBUG = -g -fsanitize=address
+DEBUG = -g -fsanitize=address
 
 HEADERS = ./headers/webserv.hpp
 # <<<<<<< HEAD

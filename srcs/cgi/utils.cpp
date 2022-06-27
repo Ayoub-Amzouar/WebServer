@@ -141,7 +141,7 @@ ReverseContentType::ReverseContentType()
     _code["text/plain"]  = "txt";
     _code["text/html"]  = "htm";
     _code["text/html"] = "html";
-    _code["text/html"]  = "php";
+    // _code["text/html"]  = "php";
     _code["text/css"]  = "css";
     _code["application/javascript"]   = "js";
     _code["application/json"] = "json";

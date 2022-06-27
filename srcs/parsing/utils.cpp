@@ -56,6 +56,8 @@ std::vector<std::string> Utils::parse_line(std::string str, std::string delim)
     std::vector<std::string> strings;
     size_t pos = 0;
     std::string token;
+    if (str.empty())
+        return (strings);
     while ((pos = str.find(delim)) != std::string::npos)
     {
         if (pos != 0)
@@ -90,7 +92,7 @@ std::string Utils::status_line(int code)
     std::string exist = Utils::status_code(code);
     if (!exist.empty())
     {
-        std::string status("HTTP1.1 ");
+        std::string status("HTTP/1.1 ");
         status.append(std::to_string(code));
         status.append(" ");
         status.append(exist);

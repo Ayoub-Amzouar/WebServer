@@ -24,7 +24,9 @@ int upload_the_file(const Location &location, std::map<std::string, std::string>
 	const static ReverseContentType mimes;
 	std::vector<std::string> pars = Utils::parse_line(content_type, ";");
 	std::string mime = mimes.get_mime(pars[0]);
-	std::string file_name = Utils::parse_line(body_file, "/").back();
+	std::vector<std::string> strs = Utils::parse_line(body_file, "/");
+	std::cout << "#####################\n" <<  body_file << "\n#####################" << std::endl;
+	std::string file_name = strs.back();
 	file_name += mime.empty() ? "" : ("." + mime);
 	if (system(("mv " + body_file + " " + upload_path + "/" + file_name + " 2>/dev/null").c_str()) != 0)
 		return (500);
