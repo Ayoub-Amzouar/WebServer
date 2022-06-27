@@ -295,7 +295,7 @@ std::string Utils::getFileExtension(std::string file_name)
     return file_name;
 }
 
-void    Utils::send_response_message(int fd, std::string &response_message)
+int    Utils::send_response_message(int fd, std::string &response_message)
 {
     size_t		len = response_message.length();
 	size_t		send_ret;
@@ -305,6 +305,7 @@ void    Utils::send_response_message(int fd, std::string &response_message)
 		response_message = response_message.substr(send_ret);
 		len = response_message.length();
 	}
+    return (send_ret);
     // std::string rp_msg = response_message;
     // size_t len = rp_msg.length();
     // size_t send_ret;
@@ -317,16 +318,6 @@ void    Utils::send_response_message(int fd, std::string &response_message)
     //     len = rp_msg.length();
     // }
     // // }
-}
-
-void Utils::close_connection(int fd, const std::map<std::string, std::string> &request, std::map<int, Request_Data> &request_table)
-{
-    // std::string connection_status = Utils::find_in_map(request, "connection");
-    // if (!connection_status.empty() && connection_status == "closed")
-    // {
-    close(fd);
-    request_table.erase(fd);
-    // }
 }
 
 bool Utils::is_slash_at_end(std::string uri)

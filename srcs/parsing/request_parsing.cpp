@@ -121,7 +121,6 @@ void parse_request_body(Request_Data &request, std::string str)
 				if (request.chunk_size == 0)
 				{
 					request.is_finished = true;
-					std::cout << "************finished***********\n\n";
 					return;
 				}
 				request.chunk_string.erase(0, pos + 2);
@@ -167,7 +166,6 @@ void Request::parse_request(std::string str, Request_Data &request)
 		request.is_error = false;
 		if (err_number)
 		{
-			std::cout << "dadfadsfadfasdfasdfasdfasdf\n";
 			std::cout << err_number << std::endl;
 			request.response = errorPage.get_page(err_number);
 			request.is_error = true;
@@ -218,7 +216,6 @@ void Request::get_request(int accept_fd, Response &response)
 					{
 						request_table.insert(std::make_pair(ready_fd, req));
 						parse_request(str, request_table[ready_fd]);
-						std::cout << "****" << str << "****" << std::endl;
 						if (request_table[ready_fd].is_error)
 						{
 							Utils::send_response_message(ready_fd, request_table[ready_fd].response);
@@ -245,6 +242,13 @@ void Request::get_request(int accept_fd, Response &response)
 						ufds[i].events = POLLOUT;
 					}
 				}
+				else if (ret == -1 || ret == 0)
+				{
+					request_table.erase(ready_fd);
+					ufds.erase(ufds.begin() + i);
+					close(ready_fd);
+					continue;
+				}
 			}
 			else if (ufds[i].revents == POLLOUT)
 			{
@@ -255,13 +259,10 @@ void Request::get_request(int accept_fd, Response &response)
 					// std::string str = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 					response_table.insert(std::make_pair(ready_fd, str));
 				}
-				std::cout << "@@@@@@@@@@@@@@@ RESPONSE @@@@@@@@@@@@@@" << std::endl;
-				std::cout << response_table[ready_fd] << std::endl;
-				std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
-				Utils::send_response_message(ready_fd, response_table[ready_fd]);
-				if (response_table[ready_fd].empty() == true)
+				std::cout << response_table[ready_fd] << "\n----------------------------------" << std::endl;
+				int send_ret = Utils::send_response_message(ready_fd, response_table[ready_fd]);
+				if (response_table[ready_fd].empty() == true || send_ret == -1)
 				{
-					std::cout << "I'm closing ready_fd" << std::endl;
 					request_table.erase(ready_fd);
 					response_table.erase(ready_fd);
 					ufds.erase(ufds.begin() + i);
