@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 		int			index = 0;
 
 		for (size_t i = 0; i < http.servers.size(); i++)
-			sock[i] = ft_socket(std::stoi(http.servers[i].attributes["listen"]), http.servers[i].attributes);
+			sock[i] = ft_socket(std::atol(http.servers[i].attributes["listen"].c_str()), http.servers[i].attributes);
 
         Response response(http);
         while (1)

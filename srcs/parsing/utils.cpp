@@ -357,13 +357,6 @@ std::string Utils::run_cgi(const Location &location, const std::map<std::string,
     cgiMap["BODY_FILE"] = body_file;
     cgiMap["FILE"] = url;
     cgiMap["QUERY_STRING"] = Utils::parse_uri(Utils::find_in_map(request, "location")).second;
-    std::cout << "*************" << std::endl;
-    std::cout << cgiMap["Content-Length"] << std::endl;
-    std::cout << cgiMap["Content-Type"] << std::endl;
-    std::cout << cgiMap["FILE"] << std::endl;
-    std::cout << cgiMap["BODY_FILE"] << std::endl;
-    std::cout << cgiMap["QUERY_STRING"] << std::endl;
-    std::cout << "*************" << std::endl;
     Cgi php(cgiName);
     std::string cgi_res = php.run(cgiMap);
 

@@ -138,7 +138,7 @@ std::string Response::redirection(std::string &redirect_str)
     if ((parse[0]).empty() || (parse[1]).empty())
         return std::string();
 
-    int int_code = std::stoi(parse[0]);
+    int int_code = std::atol(parse[0].c_str());
     std::string status_line = Utils::status_line(int_code);
     std::string location_line = Utils::location(parse[1]);
 

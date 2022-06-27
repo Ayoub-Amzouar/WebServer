@@ -103,7 +103,7 @@ int Cgi::cgi_status_code(void)
     if (it != out.end())
     {
         const std::string &line = it->second;
-        return std::stoi(line.substr(0, line.find(" ")));
+        return std::atol(line.substr(0, line.find(" ")).c_str());
     }
     else // default
         return 0;

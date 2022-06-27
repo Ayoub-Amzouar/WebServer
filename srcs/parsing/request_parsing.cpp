@@ -75,7 +75,7 @@ void parse_request_body(Request_Data &request, std::string str)
 		}
 		request.file_name = file_name;
 		if (Utils::find_in_map(request.attributes, "Content-Length").compare(""))
-			request.file_size = std::stoi(Utils::find_in_map(request.attributes, "Content-Length"));
+			request.file_size = std::atol(Utils::find_in_map(request.attributes, "Content-Length").c_str());
 		request.reading_size = 0;
 		request.chunk_size = -1;
 		request.first_enter = true;
@@ -104,16 +104,8 @@ void parse_request_body(Request_Data &request, std::string str)
 		}
 		if (request.chunk_string.length() >= request.chunk_size)
 		{
-			// std::cout << "*********************************************=\n"
-			// 		  << request.chunk_string;
-			// std::cout << "****************************************************=-------------------------\n";
 			myfile << request.chunk_string.substr(0, request.chunk_size);
-			// std::cout << "++++++++++++++++++++++++++++++++=\n"
-			// 		  << request.chunk_string.substr(0, request.chunk_size);
-			// std::cout << "++++++++++++++++++++++++++++++++=-------------------------\n";
 			request.chunk_string.erase(0, request.chunk_size + 2);
-			// std::cout << "chunk = " << request.chunk_size << "\n";
-			// request.chunk_string = request.chunk_string.erase(0, request.chunk_size + 2);
 			pos = request.chunk_string.find("\r\n");
 			if (pos != std::string::npos)
 			{
@@ -186,7 +178,7 @@ void Request::parse_request(std::string str, Request_Data &request)
 void Request::get_request(int accept_fd, Response &response)
 {
 	Request_Data req;
-	char buffer[1024];
+	char buffer[30000];
 	int ready_fd;
 
 	if (accept_fd > 0)
@@ -204,11 +196,11 @@ void Request::get_request(int accept_fd, Response &response)
 		poll(&ufds[0], ufds.size(), -1);
 		for (size_t i = 0; i < ufds.size(); i++)
 		{
-			bzero(buffer, 1024);
+			bzero(buffer, 30000);
 			if (ufds[i].revents == POLLIN)
 			{
 				ready_fd = ufds[i].fd;
-				int ret = recv(ready_fd, buffer, 1024, 0);
+				int ret = recv(ready_fd, buffer, 30000, 0);
 				std::string str(buffer, ret);
 				if (ret > 0)
 				{
@@ -259,7 +251,6 @@ void Request::get_request(int accept_fd, Response &response)
 					// std::string str = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 					response_table.insert(std::make_pair(ready_fd, str));
 				}
-				// std::cout << request_table[ready_fd]. << "\n----------------------------------" << std::endl;
 				int send_ret = Utils::send_response_message(ready_fd, response_table[ready_fd]);
 				if (response_table[ready_fd].empty() == true || send_ret == -1)
 				{
