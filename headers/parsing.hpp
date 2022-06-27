@@ -58,6 +58,7 @@ struct Response;
 class Request
 {
 		std::map<int, Request_Data>	request_table;
+		std::map<int, std::string>	response_table;
 		std::vector<struct pollfd>	ufds;
     public :
         Request (void);

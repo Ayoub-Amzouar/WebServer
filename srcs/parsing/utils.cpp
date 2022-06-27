@@ -293,20 +293,28 @@ std::string Utils::getFileExtension(std::string file_name)
     return file_name;
 }
 
-void Utils::send_response_message(int fd, const std::string &response_message)
+void    Utils::send_response_message(int fd, std::string &response_message)
 {
-    std::string rp_msg = response_message;
-    size_t len = rp_msg.length();
-    size_t send_ret;
+    size_t		len = response_message.length();
+	size_t		send_ret;
 
-    // while (len > 0)
+	if ( (send_ret = send(fd, response_message.c_str(), len, 0)) != -1 )
+	{
+		response_message = response_message.substr(send_ret);
+		len = response_message.length();
+	}
+    // std::string rp_msg = response_message;
+    // size_t len = rp_msg.length();
+    // size_t send_ret;
+
+    // // while (len > 0)
+    // // {
+    // if ((send_ret = send(fd, rp_msg.c_str(), len, 0)) != -1)
     // {
-    if ((send_ret = send(fd, rp_msg.c_str(), len, 0)) != -1)
-    {
-        rp_msg = rp_msg.substr(send_ret);
-        len = rp_msg.length();
-    }
+    //     rp_msg = rp_msg.substr(send_ret);
+    //     len = rp_msg.length();
     // }
+    // // }
 }
 
 void Utils::close_connection(int fd, const std::map<std::string, std::string> &request, std::map<int, Request_Data> &request_table)
@@ -375,5 +383,12 @@ std::string Utils::run_cgi(const Location &location, const std::map<std::string,
     Cgi php(cgiName);
     std::string cgi_res = php.run(cgiMap);
 
-    return (cgi_res);
+	return (cgi_res);
 }
+// std::string Utils::read_file(std::string file)
+// {
+//     std::ifstream f;
+//     std::string str;
+
+//     str.assign(std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
+// }
