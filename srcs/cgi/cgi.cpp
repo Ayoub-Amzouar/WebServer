@@ -148,6 +148,7 @@ std::string Cgi::run(const std::map<std::string, std::string> &map)
     std::string body_file = Utils::find_in_map(map, "BODY_FILE");
     std::string query = Utils::find_in_map(map, "QUERY_STRING");
     std::string cookie = Utils::find_in_map(map, "Cookie");
+    std::string host = Utils::find_in_map(map, "Host");
     setenv("QUERY_STRING", query.c_str(), true);
     setenv("REQUEST_METHOD", method.c_str(), true);
     setenv("SCRIPT_FILENAME", file.c_str(), true);
@@ -155,6 +156,7 @@ std::string Cgi::run(const std::map<std::string, std::string> &map)
     setenv("CONTENT_LENGTH", content_length.c_str(), true);
     setenv("CONTENT_TYPE", content_type.c_str(), true);
     setenv("HTTP_COOKIE", cookie.c_str(), true);
+    setenv("HTTP_HOST", host.c_str(), true);
     _file = file;
     execute(body_file);
     int cgi_code = cgi_status_code();

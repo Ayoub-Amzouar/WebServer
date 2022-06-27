@@ -357,6 +357,7 @@ std::string Utils::run_cgi(const Location &location, const std::map<std::string,
     cgiMap["BODY_FILE"] = body_file;
     cgiMap["FILE"] = url;
     cgiMap["QUERY_STRING"] = Utils::parse_uri(Utils::find_in_map(request, "location")).second;
+    cgiMap["HOST"] = Utils::find_in_map(request, "Host");
     Cgi php(cgiName);
     std::string cgi_res = php.run(cgiMap);
 
