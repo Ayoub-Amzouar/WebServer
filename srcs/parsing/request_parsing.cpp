@@ -90,8 +90,8 @@ void parse_request_body(Request_Data &request, std::string str)
 	if (!Utils::find_in_map(request.attributes, "Transfer-Encoding").compare("chunked"))
 	{
 		size_t pos;
-		request.chunk_string += str;
 
+		request.chunk_string += str;
 		if (request.first_enter)
 		{
 			request.first_enter = false;
@@ -126,13 +126,15 @@ void parse_request_body(Request_Data &request, std::string str)
 	else
 	{
 		myfile << str;
-		request.is_finished = true;
+		request.reading_size += str.length();
+		if (request.reading_size == request.file_size)
+			request.is_finished = true;
 	}
 }
 
 void Request::parse_request(std::string str, Request_Data &request)
 {
-	ErrorPage  errorPage("");
+	ErrorPage errorPage("");
 	std::map<std::string, std::string> tmp;
 	std::string line;
 	std::string str1;
@@ -158,7 +160,6 @@ void Request::parse_request(std::string str, Request_Data &request)
 		request.is_error = false;
 		if (err_number)
 		{
-			std::cout << err_number << std::endl;
 			request.response = errorPage.get_page(err_number);
 			request.is_error = true;
 			request.number = err_number;
@@ -166,7 +167,7 @@ void Request::parse_request(std::string str, Request_Data &request)
 		}
 		str = str.substr(pos + 3, str.length());
 	}
-	
+
 	if (!Utils::find_in_map(request.attributes, "method").compare("POST"))
 	{
 		parse_request_body(request, str);
@@ -178,7 +179,7 @@ void Request::parse_request(std::string str, Request_Data &request)
 void Request::get_request(int accept_fd, Response &response)
 {
 	Request_Data req;
-	char buffer[30000];
+	char buffer[1024];
 	int ready_fd;
 
 	if (accept_fd > 0)
@@ -196,11 +197,11 @@ void Request::get_request(int accept_fd, Response &response)
 		poll(&ufds[0], ufds.size(), -1);
 		for (size_t i = 0; i < ufds.size(); i++)
 		{
-			bzero(buffer, 30000);
+			bzero(buffer, 1024);
 			if (ufds[i].revents == POLLIN)
 			{
 				ready_fd = ufds[i].fd;
-				int ret = recv(ready_fd, buffer, 30000, 0);
+				int ret = recv(ready_fd, buffer, 1024, 0);
 				std::string str(buffer, ret);
 				if (ret > 0)
 				{
