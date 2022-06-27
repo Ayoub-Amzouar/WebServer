@@ -11,13 +11,9 @@ ToDo
 test.cpp
 server.c
 client.c
-*.py
 *.dSYM
-<<<<<<< HEAD
 srcs/response/tmp
 f
 test.cpp
 ToRemember
-=======
 srcs/response/tmp
->>>>>>> ynoam
