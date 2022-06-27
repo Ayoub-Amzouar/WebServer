@@ -12,7 +12,7 @@
 
 NAME = webserv
 CC = c++ -std=c++98
-# FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 
 DIR_SRCS = ./srcs/

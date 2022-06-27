@@ -135,7 +135,6 @@ std::string Utils::defaultErrPage(int code)
 file_stats Utils::get_file_stats(std::string filename)
 {
     struct stat fs;
-    int r;
     file_stats res;
 
     if (stat(filename.c_str(), &fs) < 0)
@@ -298,7 +297,7 @@ std::string Utils::getFileExtension(std::string file_name)
 int    Utils::send_response_message(int fd, std::string &response_message)
 {
     size_t		len = response_message.length();
-	size_t		send_ret;
+	int 		send_ret;
 
 	if ( (send_ret = send(fd, response_message.c_str(), len, 0)) != -1 )
 	{
@@ -306,18 +305,6 @@ int    Utils::send_response_message(int fd, std::string &response_message)
 		len = response_message.length();
 	}
     return (send_ret);
-    // std::string rp_msg = response_message;
-    // size_t len = rp_msg.length();
-    // size_t send_ret;
-
-    // // while (len > 0)
-    // // {
-    // if ((send_ret = send(fd, rp_msg.c_str(), len, 0)) != -1)
-    // {
-    //     rp_msg = rp_msg.substr(send_ret);
-    //     len = rp_msg.length();
-    // }
-    // // }
 }
 
 bool Utils::is_slash_at_end(std::string uri)

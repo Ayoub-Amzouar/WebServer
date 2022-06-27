@@ -60,8 +60,8 @@ std::string		Response::delete_method(const ErrorPage&err_page, const Location &l
 	else
 		status_code = resource_type_is_file(uri, location, stats);
 
-	// if (status_code == -42)
-	// 	return Utils::run_cgi(location, request, body_file, uri);
+	if (status_code == -42)
+		return Utils::run_cgi(location, request, body_file, "DELETE", uri);
 
 	if (status_code != 204)
 		return (err_page.get_page(status_code));

@@ -25,7 +25,6 @@ int upload_the_file(const Location &location, std::map<std::string, std::string>
 	std::vector<std::string> pars = Utils::parse_line(content_type, ";");
 	std::string mime = mimes.get_mime(pars[0]);
 	std::vector<std::string> strs = Utils::parse_line(body_file, "/");
-	std::cout << "#####################\n" <<  body_file << "\n#####################" << std::endl;
 	std::string file_name = strs.back();
 	file_name += mime.empty() ? "" : ("." + mime);
 	if (system(("mv " + body_file + " " + upload_path + "/" + file_name + " 2>/dev/null").c_str()) != 0)
@@ -33,7 +32,7 @@ int upload_the_file(const Location &location, std::map<std::string, std::string>
 	return (201);
 }
 
-static int		resource_type_is_directory( std::string uri, Location location, file_stats perms)
+static int		resource_type_is_directory( std::string uri, Location location)
 {
 	if (Utils::is_slash_at_end(uri))
 	{
@@ -52,7 +51,6 @@ static int		resource_type_is_directory( std::string uri, Location location, file
 			// 403 forbidden
 			return (403);
 	}
-	return (404);
 	// 301 moved permanently
 	return(301);
 }
@@ -82,7 +80,10 @@ std::string		Response::post_method(const ErrorPage&err_page, const Location &loc
 		// 404 Not Found
 		return (err_page.get_page(404));
 	else if (stats.type == FT_DIR)
-		status_code = resource_type_is_directory(uri, location, stats);
+	{
+		status_code = resource_type_is_directory(uri, location);
+		uri = uri + '/' + Utils::find_in_map(location.attributes, "index");
+	}
 	else
 		status_code = resource_type_is_file(uri, location);
 

@@ -44,7 +44,7 @@ public:
 	std::string							file_name;
 	std::string							chunk_string;
 	int         						file_size;
-    int                                 chunk_size;
+    size_t                              chunk_size;
     int                                 reading_size;
     int                                 serverId;
 	std::string							response;

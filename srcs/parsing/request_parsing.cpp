@@ -89,7 +89,7 @@ void parse_request_body(Request_Data &request, std::string str)
 	}
 	if (!Utils::find_in_map(request.attributes, "Transfer-Encoding").compare("chunked"))
 	{
-		int pos;
+		size_t pos;
 		request.chunk_string += str;
 
 		if (request.first_enter)

@@ -14,7 +14,6 @@ std::string ft_socket::get_host_ip(std::map<std::string, std::string> server)
 ft_socket::ft_socket(in_port_t port, std::map<std::string, std::string> server)
 {
 	sock_fd = socket(PF_INET, SOCK_STREAM, 0);
-	int var = 1;
 
 	if (fcntl(sock_fd, F_SETFL, O_NONBLOCK) < 0)
 	{
@@ -30,7 +29,6 @@ ft_socket::ft_socket(in_port_t port, std::map<std::string, std::string> server)
 		exit(EXIT_FAILURE); 
     }
 
-	// setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &var, sizeof(int));
 	if (bind(sock_fd, (const struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
 	{
 		std::cerr << "error: bind failed\n"; 
