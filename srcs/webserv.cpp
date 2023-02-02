@@ -4,9 +4,14 @@ int Http::http_count = 0;
 int Server::server_count = 0;
 int Location::location_count = 0;
 
-int main(int argc, char **argv)
+void	prompt_started(void)
 {
-    if (argc > 1)
+	std::cout << "Server Started Successfully!!\n";
+}
+
+int		main(int argc, char **argv)
+{
+    if (argc == 2)
     {
         Http http = parsing(argv[1]);
 		Request		req;
@@ -17,6 +22,8 @@ int main(int argc, char **argv)
 			sock[i] = ft_socket(std::atol(http.servers[i].attributes["listen"].c_str()), http.servers[i].attributes);
 
         Response response(http);
+		prompt_started();
+
         while (1)
         {
 			req.get_request(sock[index].accept_connections(), response);
