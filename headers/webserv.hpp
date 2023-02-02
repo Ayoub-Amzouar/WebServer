@@ -36,6 +36,8 @@
 #include <sstream>
 #include <arpa/inet.h>
 #include <iterator>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 
 
