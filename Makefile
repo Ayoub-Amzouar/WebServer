@@ -6,37 +6,37 @@
 #    By: mel-hadj <mel-hadj@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/04 13:00:30 by mel-hadj          #+#    #+#              #
-#    Updated: 2022/06/07 15:42:33 by mel-hadj         ###   ########.fr        #
+#    Updated: 2022/06/19 17:23:19 by mel-hadj         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = webserv
 CC = c++ -std=c++98
-# FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 
 DIR_SRCS = ./srcs/
 
 HEADERS = ./headers/webserv.hpp
-SRC = parsing/parsing.cpp webserv.cpp parsing/check_errors.cpp  parsing/utils.cpp cgi/cgi.cpp cgi/status_code.cpp \
-		cgi/utils.cpp
+SRC = parsing/request_parsing.cpp parsing/file_parsing.cpp webserv.cpp  parsing/utils.cpp socket/SocketClass.cpp response/response.cpp cgi/utils.cpp cgi/cgi.cpp \
+	response/get_method.cpp response/delete_method.cpp response/post_method.cpp
 
 SRCS =			$(addprefix $(DIR_SRCS), $(SRC))
 
 all : $(NAME)
 
-$(NAME) : $(SRCS)  $(HEADERS)
-			@echo "compiling.."
-			@$(CC) $(FLAGS) $(SRCS) -o $(NAME)
-			@echo "Done."
+$(NAME) : $(SRCS)
+		@echo "compiling.."
+		@$(CC) $(FLAGS) $(SRCS) -o $(NAME)
+		@echo "Done."
 
 clean :
-			@echo "cleaning.."
+		@echo "cleaning.."
 
-fclean :  clean 
+fclean:	clean 
 			@$(RM) $(NAME)
 
-re:				fclean all
+re:		fclean all
 			
 
-.PHONY:			all, clean, fclean, re
+.PHONY:	all, clean, fclean, re

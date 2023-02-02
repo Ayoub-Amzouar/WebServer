@@ -1,19 +1,31 @@
-#ifndef _RESPONSE_HPP_
-#define _RESPONSE_HPP_
+// #pragma once
 
-#include "webserv.hpp"
+ #include "webserv.hpp"
+ #include "utils.hpp"
+ #include "parsing.hpp"
+// class Http;
+
+#define ALLOWED_CHARACTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%"
 
 struct Response
 {
 private:
-    char** _env;
+    // char**  _env;
+    Http    &_http;
+    std::vector<ErrorPage> _serversErrors;
 
 private:
-
+    // std::string		 Utils::find_in_map(const std::map<std::string, std::string> &, const std::string &);
+    int             getServer(Http &, std::map<std::string, std::string> &);
+    int				maxBodySize(Server &, std::map<std::string, std::string> &);
+    int             getLocation(Server &server, std::map<std::string, std::string> &request);
+    std::string		get_method(const ErrorPage&, const Location&, const std::map<std::string, std::string> &, const std::string &);
+	std::string		post_method(const ErrorPage&, const Location &, const std::map<std::string, std::string> &, const std::string &);
+	std::string		delete_method(const ErrorPage&, const Location &, const std::map<std::string, std::string> &, const std::string &);
+    std::string		redirection(std::string &);
 
 public:
-    Response(char *env[]);
-    std::string run(std::string cgiExnt, std::string cgiName, std::string root, std::string method, std::string uri, std::string reqBody);
+    // Response(Http &http, char *env[]);
+    Response(Http &http);
+    std::string run(std::map<std::string, std::string> &headers, std::string &body_string);
 };
-
-#endif
