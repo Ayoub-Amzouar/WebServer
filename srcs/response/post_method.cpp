@@ -1,13 +1,13 @@
 #include "../../headers/webserv.hpp"
 
-bool			is_location_support_upload(const Location &location)
+bool		is_location_support_upload(const Location &location)
 {
 	if (Utils::find_in_map(location.attributes, "upload").empty() != true)
 		return (true);
 	return (false);
 }
 
-int upload_the_file(const Location &location, std::map<std::string, std::string> request, const std::string &body_file)
+int			upload_the_file(const Location &location, std::map<std::string, std::string> request, const std::string &body_file)
 {
 	std::string		root		= Utils::find_in_map(location.attributes, "root");
 	std::string		upload_path = root + '/' + Utils::find_in_map(location.attributes, "upload");
@@ -32,7 +32,7 @@ int upload_the_file(const Location &location, std::map<std::string, std::string>
 	return (201);
 }
 
-static int		resource_type_is_directory( std::string uri, Location location)
+static int	resource_type_is_directory( std::string uri, Location location)
 {
 	if (Utils::is_slash_at_end(uri))
 	{
@@ -55,7 +55,7 @@ static int		resource_type_is_directory( std::string uri, Location location)
 	return(301);
 }
 
-static int		resource_type_is_file( const std::string &uri, const Location &location )
+static int	resource_type_is_file( const std::string &uri, const Location &location )
 {
 	if (Utils::is_location_has_cgi(location, uri, FT_FILE))
 	{
@@ -66,7 +66,7 @@ static int		resource_type_is_file( const std::string &uri, const Location &locat
 	return (403);
 }
 
-std::string		Response::post_method(const ErrorPage&err_page, const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file)
+std::string	Response::post_method(const ErrorPage&err_page, const Location &location, const std::map<std::string, std::string> &request, const std::string &body_file)
 {
 	std::string		uri		= Utils::give_me_uri(location, request);
 	file_stats		stats	= Utils::get_file_stats(uri);
