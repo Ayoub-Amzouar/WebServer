@@ -38,7 +38,7 @@ As I said before our web server was inspired from nginx so our configuration fil
 
 First and foremost the mandatory directives which are of type group directives.
 
-```json
+```html
 <HTTP>
 	// HTTP holds all virtual servers
 	<server>
@@ -58,22 +58,26 @@ First and foremost the mandatory directives which are of type group directives.
 <HTTP>
 ```
 
-| Directive		 | Value			| Description |
-| -------------- | ---------------- | ----------- |
-| listen		 | ex. 9002			|				|
-| host			 | ex. 127.0.0.1	|				|
-| server-name 	 | ex. example.com  |				|
-| error-pages 	 | Absolute Path    |				|
-| max-body-size	 | ex. 1024			|				|
-| path			 | ex. /en/docs		|				|
-| index			 | ex. index.html	|				|
-| root 			 | Absolute Path	|				|
-| autoindex 	 |		|				|
-| return 		 |		|				|
-| methods 		 |		|				|
-| cgi 			 |		|				|
-| cgi-ext 		 |		|				|
-| upload 		 |		|				|
+| Server Directive	| Required	| Value									| Description													 		|
+| ----------------- | --------- | ------------------------------------- | --------------------------------------------------------------------- |
+| listen			| true		| ex. 9002								| The port you want the server to accept request from.			 		|
+| host				| true		| ex. 127.0.0.1						 	| The host IP address you want the servert to accept requst from. 		|
+| server-name 		| true		| ex. example.com  					 	| Sets names of a virtual server.								 		|
+| error-pages 		| false		| ex. /../../../../tests/scripts		| The absolute path to a directory containing custom HTML error pages.	|
+| max-body-size		| false		| ex. 1024								| Sets the maximum allowed size of the client request body.				|
+
+
+| Location Directive	| Required	| Value										| Description													 		|
+| --------------------- | --------- | ----------------------------------------- | --------------------------------------------------------------------- |
+| path					| true		| ex. /en/docs							 	| Sets the routes for example http://domain-name/**en/docs**			|
+| index					| true		| ex. index.html						 	| Defines the file that will be used as an index.						|
+| root 					| true		| Absolute Path						 		| Sets the root directory for requests.									|
+| autoindex 			| true		| ex. on/off							 	| Enables or disables the directory listing output.						|
+| return 				| false		| ex. 307/301 \| https://www.facebook.com	| Stops processing and returns the specified code to a client.			|
+| methods 				| false		| ex. DELETE, POST, GET						| Sets allowed HTTP methods for a specific route.						|
+| cgi 					| false		| ex. php-cgi								| Sets CGI name.														|
+| cgi-ext 				| false		| ex. php									| Sets file extension that a specific CGI can accept.					|
+| upload 				| false		| ex. upload								| Sets the route for uploading.											|
 
 
 ## Collaborators
