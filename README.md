@@ -4,7 +4,7 @@
 
 Webserv is a school project made by group of school mates, the purpose of it was to implement a simple HTTP server inspired by **Nginx** that runs **HTTP 1.1** version, it can server a fully static website, upload files through it and can also handle multiple clients at the same time as well as listen to multiple ports. You can provide the server with a configuration file to direct its behavior.
 
-> The project was fully written in C++ 98 programming language.
+> :memo: **Note:** The project was fully written in C++ 98 programming language.
 
 ## What I've Learned
 
@@ -30,11 +30,11 @@ Then run the executable `webserv` with a configuration file.
 
 And that's it you have a running Web Server.
 
-> Try to play with already existing config files in `./tests/configfiles/`.
+> :memo: **Note:** Try to play with already existing config files in `./tests/configfiles/`.
 
 ### Configuration File
 
-As I said before our web server was inspired from nginx so our configuration file, we used so called [Directives](https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/) to specify server options.
+As I said before our web server was inspired by nginx so our configuration file, we used so called [Directives](https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/) to specify server options.
 
 First and foremost the mandatory directives which are of type group directives.
 
@@ -58,7 +58,7 @@ First and foremost the mandatory directives which are of type group directives.
 <HTTP>
 ```
 
-| Server Directive	| Required	| Value									| Description													 		|
+| Server Directives	| Required	| Value									| Description													 		|
 | ----------------- | --------- | ------------------------------------- | --------------------------------------------------------------------- |
 | listen			| true		| ex. 9002								| The port you want the server to accept request from.			 		|
 | host				| true		| ex. 127.0.0.1						 	| The host IP address you want the servert to accept requst from. 		|
@@ -67,7 +67,7 @@ First and foremost the mandatory directives which are of type group directives.
 | max-body-size		| false		| ex. 1024								| Sets the maximum allowed size of the client request body.				|
 
 
-| Location Directive	| Required	| Value										| Description													 		|
+| Location Directives	| Required	| Value										| Description													 		|
 | --------------------- | --------- | ----------------------------------------- | --------------------------------------------------------------------- |
 | path					| true		| ex. /en/docs							 	| Sets the routes for example http://domain-name/**en/docs**			|
 | index					| true		| ex. index.html						 	| Defines the file that will be used as an index.						|
@@ -79,7 +79,43 @@ First and foremost the mandatory directives which are of type group directives.
 | cgi-ext 				| false		| ex. php									| Sets file extension that a specific CGI can accept.					|
 | upload 				| false		| ex. upload								| Sets the route for uploading.											|
 
+Here's an example of a valid configuration file.
+
+```html
+<HTTP>
+	<server>
+		error-pages=/Users/ynoam/Desktop/webserv/srcs/response
+		max-body-size=4000000
+		listen=9002
+		host=127.0.0.1
+		server-name=example.com
+		<location>
+			path=/
+			index=index.html
+			root=/home/USERNAME/Desktop/webserv/test_scripts/site/Graphic
+			return=307 | https://www.facebook.com
+			methods=DELETE, POST, GET
+			autoindex=on
+			cgi=php-cgi
+			cgi-ext=php
+		<location>
+		<location>
+			path=/upload
+			index=index.html
+			root=/home/USERNAME/Desktop/webserv/test_scripts/site/Graphic
+			upload=upload
+		<location>
+	<server>
+<HTTP>
+```
+
+> :memo: **Note:** The project has been test both in 🍏 macOS and 🐧 Linux machines.
 
 ## Collaborators
 
+- [El Hadjaoui Mohamed](https://github.com/yssefnoam)
+- [Youssef Noam](https://github.com/elhadjaoui)
+
 ## Resources
+
+- [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/html/)
