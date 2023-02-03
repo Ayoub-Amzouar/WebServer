@@ -109,12 +109,12 @@ Here's an example of a valid configuration file.
 <HTTP>
 ```
 
-> :memo: **Note:** The project has been test both in 🍏 macOS and 🐧 Linux machines.
+> :memo: **Note:** The project has been tested both in 🍏 macOS and 🐧 Linux machines.
 
 ## Collaborators
 
-- [El Hadjaoui Mohamed](https://github.com/yssefnoam)
-- [Youssef Noam](https://github.com/elhadjaoui)
+- [Youssef Noam](https://github.com/yssefnoam)
+- [El Hadjaoui Mohamed](https://github.com/elhadjaoui)
 
 ## Resources
 
