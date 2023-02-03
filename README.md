@@ -61,7 +61,7 @@ First and foremost the mandatory directives which are of type group directives.
 | Server Directives	| Required	| Value									| Description													 		|
 | ----------------- | --------- | ------------------------------------- | --------------------------------------------------------------------- |
 | listen			| true		| ex. 9002								| The port you want the server to accept request from.			 		|
-| host				| true		| ex. 127.0.0.1						 	| The host IP address you want the servert to accept requst from. 		|
+| host				| true		| ex. 127.0.0.1						 	| The host IP address you want the servert to accept request from. 		|
 | server-name 		| true		| ex. example.com  					 	| Sets names of a virtual server.								 		|
 | error-pages 		| false		| ex. /../../../../tests/scripts		| The absolute path to a directory containing custom HTML error pages.	|
 | max-body-size		| false		| ex. 1024								| Sets the maximum allowed size of the client request body.				|
@@ -69,7 +69,7 @@ First and foremost the mandatory directives which are of type group directives.
 
 | Location Directives	| Required	| Value										| Description													 		|
 | --------------------- | --------- | ----------------------------------------- | --------------------------------------------------------------------- |
-| path					| true		| ex. /en/docs							 	| Sets the routes for example http://domain-name/**en/docs**			|
+| path					| true		| ex. /en/docs							 	| Sets the routes for example http://domain-name/en/docs				|
 | index					| true		| ex. index.html						 	| Defines the file that will be used as an index.						|
 | root 					| true		| Absolute Path						 		| Sets the root directory for requests.									|
 | autoindex 			| true		| ex. on/off							 	| Enables or disables the directory listing output.						|
@@ -84,7 +84,7 @@ Here's an example of a valid configuration file.
 ```html
 <HTTP>
 	<server>
-		error-pages=/Users/ynoam/Desktop/webserv/srcs/response
+		error-pages=/home/USERNAME/Desktop/webserv/srcs/response
 		max-body-size=4000000
 		listen=9002
 		host=127.0.0.1
