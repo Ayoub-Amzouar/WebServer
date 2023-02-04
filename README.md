@@ -4,7 +4,7 @@
 
 Webserv is a school project made by group of school mates, the purpose of it was to implement a simple HTTP server inspired by **Nginx** that runs **HTTP 1.1** version, it can server a fully static website, upload files through it and can also handle multiple clients at the same time as well as listen to multiple ports. You can provide the server with a configuration file to direct its behavior.
 
-> :memo: **Note:** The project was fully written in C++ 98 programming language.
+> :memo: **Note:** The project was fully written in **C++ 98** programming language.
 
 ## What I've Learned
 
