@@ -118,24 +118,24 @@ Here's an example of a valid configuration file.
 
 ## Resources
 
-### HTTP Theory Stuff:
+#### HTTP Theory Stuff:
 - [Transport Layer | OSI Model](https://www.techopedia.com/definition/9760/transport-layer)
 - [The HTTP Server Explained](https://medium.com/@gabriellamedas/the-http-server-explained-c41380307917)
 - [HTTP Messages](https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages)
 - [List of RFCs](https://en.wikipedia.org/wiki/List_of_RFCs)
 
-### Socket Programming:
+#### Socket Programming:
 - [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/html/)
 - [SOCKETS - SERVER & CLIENT](https://bogotobogo.com/cplusplus/sockets_server_client.php)
 - [Socket Programming in C/C++](https://www.geeksforgeeks.org/socket-programming-cc/)
 
-### HTTP Server Components:
+#### HTTP Server Components:
 - [HTTP Server: Everything you need to know to Build a simple HTTP server from scratch](https://medium.com/from-the-scratch/http-server-what-do-you-need-to-know-to-build-a-simple-http-server-from-scratch-d1ef8945e4fa)
 - [Simple Http Web Server in Linux using C/C++ from Scratch](https://github.com/Dungyichao/http_server)
 - [HTTP request parser in C](https://codereview.stackexchange.com/questions/188384/http-request-parser-in-c)
 - [How does HTTP Deliver a Large File?](https://cabulous.medium.com/how-http-delivers-a-large-file-78af8840aad5)
 
-### Other:
+#### Other:
 - [Understanding the Nginx Configuration File Structure and Configuration Contexts](https://www.digitalocean.com/community/tutorials/understanding-the-nginx-configuration-file-structure-and-configuration-contexts)
 - [Chapter 3: CGI Environment Variables](http://www.cgi101.com/book/ch3/text.html)
 - [Load Testing Web Servers with Siege](https://www.linode.com/docs/guides/load-testing-with-siege/)
