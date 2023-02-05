@@ -6,7 +6,7 @@ Webserv is a school project made by group of school mates, the purpose of it was
 
 > :memo: **Note:** The project was fully written in **C++ 98** programming language.
 
-## What I've Learned
+## What I Learned
 
 I was responsible for socket programming and some HTTP response duties.
 
